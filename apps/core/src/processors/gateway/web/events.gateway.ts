@@ -44,6 +44,7 @@ export class WebEventsGateway
     const sockets = await server.of(`/${namespace}`).adapter.sockets(new Set())
     return sockets.size
   }
+
   async handleConnection(socket: SocketIO.Socket) {
     this.broadcast(BusinessEvents.VISITOR_ONLINE, await this.sendOnlineNumber())
 
@@ -70,6 +71,7 @@ export class WebEventsGateway
 
     super.handleConnect(socket)
   }
+
   async handleDisconnect(client: SocketIO.Socket) {
     super.handleDisconnect(client)
     this.broadcast(
@@ -79,11 +81,10 @@ export class WebEventsGateway
   }
 
   override broadcast(event: BusinessEvents, data: any) {
-    // TODO
-    // const emitter = this.cacheService.emitter
-    //
-    // emitter
-    //   .of(`/${namespace}`)
-    //   .emit('message', this.gatewayMessageFormat(event, data))
+    const emitter = this.cacheService.emitter
+
+    emitter
+      .of(`/${namespace}`)
+      .emit('message', this.gatewayMessageFormat(event, data))
   }
 }

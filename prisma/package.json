@@ -1,5 +1,5 @@
 {
-  "name": "@nest-http/prisma",
+  "name": "@meta-muse/prisma",
   "description": "",
   "author": "Innei <https://innei.in>",
   "private": true,
@@ -23,8 +23,5 @@
   "devDependencies": {
     "nestjs-zod-prisma": "3.0.1",
     "prisma": "5.2.0"
-  },
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
   }
 }

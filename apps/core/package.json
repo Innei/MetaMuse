@@ -1,5 +1,5 @@
 {
-  "name": "@nest-http/core",
+  "name": "@meta-muse/core",
   "version": "0.0.1",
   "description": "",
   "author": "Innei <https://innei.in>",
@@ -46,7 +46,9 @@
     "@nestjs/schedule": "3.0.3",
     "@nestjs/throttler": "5.0.0",
     "@nestjs/websockets": "10.2.4",
-    "@prisma/client": "workspace:@nest-http/prisma@*",
+    "@prisma/client": "workspace:@meta-muse/prisma@*",
+    "@socket.io/redis-adapter": "8.2.1",
+    "@socket.io/redis-emitter": "5.1.0",
     "axios": "1.5.0",
     "bcrypt": "5.1.1",
     "cache-manager": "5.2.3",

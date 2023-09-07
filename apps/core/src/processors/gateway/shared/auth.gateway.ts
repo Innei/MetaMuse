@@ -129,10 +129,9 @@ export const createAuthGateway = (
     }
 
     override broadcast(event: BusinessEvents, data: any) {
-      // TODO
-      // this.cacheService.emitter
-      //   .of(`/${namespace}`)
-      //   .emit('message', this.gatewayMessageFormat(event, data))
+      this.cacheService.emitter
+        .of(`/${namespace}`)
+        .emit('message', this.gatewayMessageFormat(event, data))
     }
   }
 
