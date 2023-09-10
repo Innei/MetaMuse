@@ -1,14 +1,12 @@
 import { createZodDto } from 'nestjs-zod/dto'
-import { z } from 'nestjs-zod/z'
+import { z } from 'zod'
 
-import { PostModel } from '@core/schemas'
+import { PostSchema } from '@prisma/client/zod'
 
 import { PostSchemaProjection } from './post.protect'
 
 export class PostDto extends createZodDto(
-  PostModel.extend({
-    slug: z.string().max(80),
-    title: z.string().max(80),
+  PostSchema.extend({
     related: z.array(z.string()).optional(),
   }).omit(PostSchemaProjection),
 ) {}

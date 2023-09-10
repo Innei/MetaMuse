@@ -2,10 +2,10 @@ import { omit } from 'lodash'
 import { createFixture } from 'zod-fixture'
 
 import { PostSchemaProjection } from '@core/modules/post/post.protect'
-import { PostModel } from '@core/schemas'
+import { PostSchema } from '@prisma/client/zod'
 
 export const generateMockPost = () => {
-  return omit(createFixture(PostModel), ...PostSchemaProjection.keys)
+  return omit(createFixture(PostSchema), ...PostSchemaProjection.keys)
 }
 const mockPostInputData = generateMockPost()
 

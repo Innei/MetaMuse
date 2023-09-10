@@ -22,7 +22,7 @@
     ]
   },
   "scripts": {
-    "prepare": "if [ \"$NODE_ENV\" = \"production\" ]; then  echo 'skip prepare in production' ;else corepack enable && husky install; fi",
+    "prepare": "if [ \"$NODE_ENV\" = \"production\" ]; then echo 'skip prepare in production' ;else corepack enable && husky install && pnpm run prisma:generate; fi",
     "prebuild": "rimraf dist && pnpm run prisma:generate",
     "init": "pnpm run prisma:generate && pnpm run migrate:dev",
     "build": "pnpm -C \"apps/core\" run build",
@@ -33,7 +33,7 @@
     "test": "dotenv -e .env.test vitest",
     "migrate:dev": "pnpm -C prisma run migrate:dev",
     "migrate:deploy": "pnpm -C prisma run migrate:deploy",
-    "prisma:generate": "pnpm -C prisma run prisma:generate"
+    "prisma:generate": "pnpm -C prisma run build"
   },
   "dependencies": {
     "cross-env": "7.0.3",
@@ -54,7 +54,6 @@
     "prisma": "5.2.0"
   },
   "devDependencies": {
-    "nestjs-zod-prisma": "3.0.1",
     "@anatine/zod-mock": "3.13.2",
     "@faker-js/faker": "8.0.2",
     "@innei/bump-version": "^1.5.10",

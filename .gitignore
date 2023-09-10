@@ -42,5 +42,7 @@ run
 
 prisma/client
 prisma/schemas
+prisma/zod
+prisma/dist
 
 apps/core/dist

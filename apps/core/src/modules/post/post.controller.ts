@@ -14,7 +14,6 @@ export class PostController {
 
   @Get('/')
   async gets(@Query() query: PagerDto) {
-    const { page, size, select, sortBy, sortOrder } = query
     const paginate = await this.service.paginatePosts(query)
     return paginate
   }

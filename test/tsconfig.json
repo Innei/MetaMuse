@@ -36,6 +36,9 @@
       ],
       "@prisma/client": [
         "../prisma/client"
+      ],
+      "@prisma/client/*": [
+        "../prisma/*"
       ]
     }
   },

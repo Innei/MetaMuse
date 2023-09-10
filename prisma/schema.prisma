@@ -6,34 +6,30 @@ generator client {
   output   = "./client"
 }
 
-generator zod {
-  provider = "nestjs-zod-prisma"
-  output   = "./schemas" // (default) the directory where generated zod schemas will be saved
+generator json {
+  provider  = "prisma-json-types-generator"
+  namespace = "PrismaJson"
 
-  relationModel = true // (default) Create and export both plain and related models.
-  // relationModel         = "default" // Do not export model without relations.
-  // relationModel         = false // Do not generate related model
+  allowAny = false
+}
 
-  generateDto = true // (default) Generate DTOs for NestJS
-
-  modelCase = "PascalCase" // (default) Output models using pascal case (ex. UserModel, PostModel)
-  // modelCase             = "camelCase" // Output models using camel case (ex. userModel, postModel)
-
-  modelSuffix = "Model" // (default) Suffix to apply to your prisma models when naming Zod schemas
-
-  dtoCase = "PascalCase" // (default) Output DTOs using pascal case (ex. UserDto, PostDto)
-  // dtoCase             = "camelCase" // Output DTOs using camel case (ex. userDto, postDto)
-
-  dtoSuffix = "Dto" // (default) Suffix to apply to your prisma models when naming DTOs
-
-  // useDecimalJs          = false // (default) represent the prisma Decimal type using as a JS number
-  useDecimalJs = true // represent the prisma Decimal type using Decimal.js (as Prisma does)
-
-  // imports = null // (default) will import the referenced file in generated schemas to be used via imports.someExportedVariable
-
-  // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
-  prismaJsonNullability = true // (default) uses prisma's scheme for JSON field nullability
-  // prismaJsonNullability = false // allows null assignment to optional JSON fields
+generator zod-prisma-types {
+  provider                         = "zod-prisma-types"
+  output                           = "./zod" // default is ./generated/zod
+  useMultipleFiles                 = true // default is false
+  writeBarrelFiles                 = true // default is true
+  createInputTypes                 = false // default is true
+  createModelTypes                 = true // default is true
+  addInputTypeValidation           = false // default is true
+  addIncludeType                   = false // default is true
+  addSelectType                    = false // default is true
+  validateWhereUniqueInput         = false // default is false
+  createOptionalDefaultValuesTypes = false // default is false
+  createRelationValuesTypes        = false // default is false
+  createPartialTypes               = false // default is false
+  useDefaultValidators             = true // default is true
+  coerceDate                       = true // default is true
+  writeNullishInModelTypes         = false // default is false
 }
 
 datasource db {
@@ -42,21 +38,21 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default("")
-  username      String    @unique @db.VarChar(80)
-  name          String    @db.VarChar(80)
-  introduce     String?   @db.VarChar(255)
-  avatar        String?   @db.VarChar(1024)
-  password      String    @db.VarChar(80)
-  mail          String?   @db.VarChar(80)
-  url           String?   @db.VarChar(1024)
-  lastLoginTime DateTime? @map("last_login_time")
+  id        String  @id @default("")
+  username  String  @unique @db.VarChar(80)
+  name      String  @db.VarChar(80)
+  introduce String? @db.VarChar(255)
+  avatar    String? @db.VarChar(1024)
+  password  String  @db.VarChar(80)
+  mail      String? @db.VarChar(80)
+  url       String? @db.VarChar(1024)
+  socialIds Json?   @default("{}") @map("social_ids")
 
-  lastLoginIp String?    @map("last_login_ip")
-  socialIds   Json?      @default("{}") @map("social_ids")
-  authCode    String     @map("auth_code")
-  apiTokens   ApiToken[]
-  oauths      OAuth[]
+  lastLoginTime DateTime?  @map("last_login_time")
+  lastLoginIp   String?    @map("last_login_ip")
+  authCode      String     @map("auth_code")
+  apiTokens     ApiToken[]
+  oauths        OAuth[]
 
   created  DateTime  @default(now()) @map("created_at")
   modified DateTime? @updatedAt @map("updated_at")
@@ -99,17 +95,12 @@ model PostTag {
   postId String?
 }
 
-// model ArticleCount {
-//   id   String @id @default("")
-//   read Int    @default(0)
-//   like Int    @default(0)
-//   Post Post[]
-// }
-
 model Post {
   id         String      @id @default("")
-  slug       String
+  /// @zod.string.max(255)
+  slug       String      @db.VarChar(255)
   text       String
+  /// @zod.string.max(80)
   title      String      @db.VarChar(255)
   created    DateTime    @default(now()) @map("created_at")
   modified   DateTime?   @updatedAt @map("updated_at")
@@ -121,14 +112,16 @@ model Post {
   allowComment Boolean   @default(true) @map("allow_comment")
   tags         PostTag[]
 
-  count Json @default("{\"read\": 0, \"like\": 0}")
+  /// [ArticleCount]
+  count Json @default("{\"read\": 0, \"like\": 0}") /// @zod.custom.omit(["model", "input"])
 
   pin      Boolean @default(false)
   pinOrder Int     @default(0) @map("pin_order")
 
+  // / @zod.array(zod.string()).optional()
   related     Post[]  @relation("RelatedPosts")
   relatedBy   Post?   @relation("RelatedPosts", fields: [relatedById], references: [id])
-  relatedById String? @map("related_by_id")
+  relatedById String? @map("related_by_id") /// @zod.custom.omit(["model", "input"])
 
   @@unique([slug, categoryId])
   @@index([slug])
@@ -137,7 +130,9 @@ model Post {
 
 model Category {
   id      String   @id @default("")
+  /// @zod.string.max(80)
   name    String   @unique
+  /// @zod.string.max(255)
   slug    String   @unique
   created DateTime @default(now()) @map("created_at")
   Post    Post[]
