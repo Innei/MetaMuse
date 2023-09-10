@@ -2,9 +2,7 @@ import { redisHelper } from './helper/redis-mock.helper'
 import { prisma } from './lib/prisma'
 import resetDb from './lib/reset-db'
 
-beforeAll(() => {})
-
-beforeEach(async () => {
+beforeAll(async () => {
   await resetDb()
 })
 

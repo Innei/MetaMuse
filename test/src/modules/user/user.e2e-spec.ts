@@ -7,7 +7,7 @@ import { UserModule } from '@core/modules/user/user.module'
 import { UserSchemaSerializeProjection } from '@core/modules/user/user.protect'
 import { createE2EApp } from '@test/helper/create-e2e-app'
 import { prisma } from '@test/lib/prisma'
-import { mockUserInputData1 } from '@test/mock/data/user.data'
+import { generateMockUser } from '@test/mock/data/user.data'
 
 describe('ROUTE /user', () => {
   const proxy = createE2EApp({
@@ -15,20 +15,20 @@ describe('ROUTE /user', () => {
   })
 
   it('POST /register', async () => {
+    const mockUser = generateMockUser()
     const data = await proxy.app.inject({
       method: 'POST',
       url: '/user/register',
-      body: mockUserInputData1,
+      body: mockUser,
     })
 
     expect(data.statusCode).toBe(201)
     const res = data.json()
     expect(res.password).toBeUndefined()
     expect(res).toMatchObject(
-      snakecaseKeys(
-        omit(mockUserInputData1, UserSchemaSerializeProjection.keys),
-        { deep: true },
-      ),
+      snakecaseKeys(omit(mockUser, UserSchemaSerializeProjection.keys), {
+        deep: true,
+      }),
     )
   })
 
@@ -36,7 +36,7 @@ describe('ROUTE /user', () => {
     const password = 'password'
     const { username } = await prisma.user.create({
       data: {
-        ...mockUserInputData1,
+        ...generateMockUser(),
         password: hashSync(password, 8),
         authCode: nanoid(8),
       },

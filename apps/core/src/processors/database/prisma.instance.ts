@@ -3,9 +3,9 @@ import { PaginationResult } from '@core/shared/interface/paginator.interface'
 import { Logger } from '@nestjs/common'
 import { Prisma, PrismaClient } from '@prisma/client'
 
-import { loggingMiddleware, QueryInfo } from './middlewares/logger.middleware'
 import { snowflakeGeneratorMiddleware } from './middlewares/snowflake.middleware'
 
+const logger = new Logger('PrismaClient')
 export const createExtendedPrismaClient = ({ url }: { url?: string } = {}) => {
   const prismaClient = new PrismaClient({
     datasources: {
@@ -13,20 +13,32 @@ export const createExtendedPrismaClient = ({ url }: { url?: string } = {}) => {
         url,
       },
     },
+    log: [
+      {
+        emit: 'event',
+        level: 'query',
+      },
+    ],
   })
   prismaClient.$use(snowflakeGeneratorMiddleware)
 
-  if (isDev)
-    prismaClient.$use(
-      loggingMiddleware({
-        logger: new Logger('Prisma'),
-        logLevel: 'log', // default is `debug`
-        logMessage: (query: QueryInfo) =>
-          `[Query] ${query.model}.${query.action} - ${query.executionTime}ms`,
-      }),
-    )
+  if (isDev) {
+    prismaClient.$on('query', async (e) => {
+      logger.debug(`Query: ${e.query}`)
 
+      logger.debug(`Duration: ${e.duration}ms`)
+    })
+  }
   const extendedPrismaClient = prismaClient.$extends({
+    result: {
+      // post: {
+      //   relatedIds: {
+      //     compute(post) {
+      //       return post.related.map((x) => x.id)
+      //     },
+      //   },
+      // },
+    },
     model: {
       $allModels: {
         async paginate<T, A>(

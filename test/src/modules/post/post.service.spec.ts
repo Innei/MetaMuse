@@ -105,4 +105,88 @@ describe('/modules/post/post.service', () => {
       proxy.service.getPostById('not-found'),
     ).rejects.toThrowErrorMatchingSnapshot()
   })
+
+  it('create post should has count object', async () => {
+    const cate = await createMockCategory()
+    const post = await prisma.post.create({
+      data: {
+        ...generateMockPost(),
+        categoryId: cate.id,
+      },
+    })
+
+    expect(post.count).toMatchInlineSnapshot(`
+      {
+        "like": 0,
+        "read": 0,
+      }
+    `)
+  })
+
+  it('should related other post', async () => {
+    const cate = await createMockCategory()
+    const basePost = await prisma.post.create({
+      data: {
+        ...generateMockPost(),
+        categoryId: cate.id,
+      },
+    })
+
+    const relatedIds = [basePost.id] as string[]
+
+    const basePost2 = await prisma.post.create({
+      data: {
+        ...generateMockPost(),
+        categoryId: cate.id,
+      },
+    })
+    relatedIds.push(basePost2.id)
+
+    const post = generateMockPost()
+    const hasRelatedPost = await proxy.service.create({
+      ...post,
+      categoryId: cate.id,
+      related: relatedIds,
+    })
+
+    expect(
+      prisma.post.findUnique({
+        where: {
+          id: hasRelatedPost.id,
+        },
+        select: {
+          related: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      }),
+    ).resolves.toMatchObject({
+      related: relatedIds.map((id) => ({ id })),
+    })
+
+    /// test related each other
+    //
+
+    const basePostInDb = await prisma.post.findFirstOrThrow({
+      where: { id: basePost.id },
+      // include: { related: { select: { id: true } } },
+      select: { related: { select: { id: true } } },
+    })
+
+    expect(basePostInDb).toMatchObject({
+      related: [{ id: hasRelatedPost.id }],
+    })
+
+    const basePostInDb2 = await prisma.post.findFirstOrThrow({
+      where: { id: basePost.id },
+      // include: { related: { select: { id: true } } },
+      select: { related: { select: { id: true } } },
+    })
+
+    expect(basePostInDb2).toMatchObject({
+      related: [{ id: hasRelatedPost.id }],
+    })
+  })
 })

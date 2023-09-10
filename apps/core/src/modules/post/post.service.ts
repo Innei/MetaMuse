@@ -32,21 +32,45 @@ export class PostService {
       throw new BizException(ErrorCodeEnum.PostExist)
     }
 
-    const hasCategory = await this.db.prisma.category.exists({
-      where: {
-        id: categoryId,
-      },
-    })
-    if (!hasCategory) {
-      throw new BizException(ErrorCodeEnum.CategoryNotFound)
-    }
+    const model = await this.db.prisma.$transaction(async (prisma) => {
+      const hasCategory = await this.db.prisma.category.exists({
+        where: {
+          id: categoryId,
+        },
+      })
+      if (!hasCategory) {
+        throw new BizException(ErrorCodeEnum.CategoryNotFound)
+      }
+      const newPost = await prisma.post.create({
+        data: {
+          ...dto,
+          related: { connect: dto.related?.map((id) => ({ id })) } || [],
+        },
+        include: {
+          category: true,
+        },
+      })
 
-    const model = await this.db.prisma.post.create({
-      data: {
-        ...dto,
-        related: { connect: dto.related?.map((id) => ({ id })) } || [],
-      },
-      include: { category: true },
+      if (dto.related?.length) {
+        await Promise.all(
+          dto.related.map((id) =>
+            prisma.post.update({
+              where: {
+                id,
+              },
+              data: {
+                related: {
+                  connect: {
+                    id: newPost.id,
+                  },
+                },
+              },
+            }),
+          ),
+        )
+      }
+
+      return newPost
     })
 
     this.eventService.event(BusinessEvents.POST_CREATE, model)
@@ -89,6 +113,21 @@ export class PostService {
         },
         include: {
           category: true,
+          related: {
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+              created: true,
+              category: {
+                select: {
+                  id: true,
+                  name: true,
+                  slug: true,
+                },
+              },
+            },
+          },
         },
       })
       .catch(

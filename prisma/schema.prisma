@@ -24,7 +24,7 @@ generator zod-prisma-types {
   addIncludeType                   = false // default is true
   addSelectType                    = false // default is true
   validateWhereUniqueInput         = false // default is false
-  createOptionalDefaultValuesTypes = false // default is false
+  createOptionalDefaultValuesTypes = true // default is false
   createRelationValuesTypes        = false // default is false
   createPartialTypes               = false // default is false
   useDefaultValidators             = true // default is true
@@ -119,9 +119,8 @@ model Post {
   pinOrder Int     @default(0) @map("pin_order")
 
   // / @zod.array(zod.string()).optional()
-  related     Post[]  @relation("RelatedPosts")
-  relatedBy   Post?   @relation("RelatedPosts", fields: [relatedById], references: [id])
-  relatedById String? @map("related_by_id") /// @zod.custom.omit(["model", "input"])
+  related   Post[] @relation("RelatedPosts")
+  relatedBy Post[] @relation("RelatedPosts")
 
   @@unique([slug, categoryId])
   @@index([slug])
