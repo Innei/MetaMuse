@@ -9,5 +9,6 @@ export class PostDto extends createZodDto(
   PostModel.extend({
     slug: z.string().max(80),
     title: z.string().max(80),
+    related: z.array(z.string()).optional(),
   }).omit(PostSchemaProjection),
 ) {}

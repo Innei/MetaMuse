@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "./client"
+  output   = "./client"
 }
 
 generator zod {
@@ -35,26 +35,6 @@ generator zod {
   prismaJsonNullability = true // (default) uses prisma's scheme for JSON field nullability
   // prismaJsonNullability = false // allows null assignment to optional JSON fields
 }
-
-// generator zod {
-//   provider                         = "zod-prisma-types"
-//   output                           = "../src/generated/zod" // default is ./generated/zod
-//   useMultipleFiles                 = true // default is false
-//   writeBarrelFiles                 = false // default is true
-//   createInputTypes                 = true // default is true
-//   createModelTypes                 = true // default is true
-//   addInputTypeValidation           = true // default is true
-//   addIncludeType                   = false // default is true
-//   addSelectType                    = false // default is true
-//   validateWhereUniqueInput         = false // default is false
-//   createOptionalDefaultValuesTypes = true // default is false
-//   createRelationValuesTypes        = true // default is false
-//   createPartialTypes               = true // default is false
-//   useDefaultValidators             = true // default is true
-//   coerceDate                       = true // default is true
-//   writeNullishInModelTypes         = true // default is false
-//   prismaClientPath                 = "./path/to/prisma/client" // default is client output path
-// }
 
 datasource db {
   provider = "postgresql"
@@ -100,15 +80,55 @@ model OAuth {
   user     User   @relation(fields: [userId], references: [id])
 }
 
+model PostImage {
+  id     String @id @default("")
+  src    String
+  width  Float
+  height Float
+  accent String
+
+  type   String  @map("mine_type")
+  Post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String?
+}
+
+model PostTag {
+  id     String  @id @default("")
+  name   String  @unique
+  Post   Post?   @relation(fields: [postId], references: [id])
+  postId String?
+}
+
+// model ArticleCount {
+//   id   String @id @default("")
+//   read Int    @default(0)
+//   like Int    @default(0)
+//   Post Post[]
+// }
+
 model Post {
-  id         String    @id @default("")
+  id         String      @id @default("")
   slug       String
   text       String
-  title      String    @db.VarChar(255)
-  created    DateTime  @default(now()) @map("created_at")
-  modified   DateTime? @updatedAt @map("updated_at")
+  title      String      @db.VarChar(255)
+  created    DateTime    @default(now()) @map("created_at")
+  modified   DateTime?   @updatedAt @map("updated_at")
   categoryId String
-  category   Category  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  category   Category    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  images     PostImage[]
+  copyright  Boolean     @default(true)
+
+  allowComment Boolean   @default(true) @map("allow_comment")
+  tags         PostTag[]
+
+  count Json @default("{\"read\": 0, \"like\": 0}")
+
+  pin      Boolean @default(false)
+  pinOrder Int     @default(0) @map("pin_order")
+
+  related     Post[]  @relation("RelatedPosts")
+  relatedBy   Post?   @relation("RelatedPosts", fields: [relatedById], references: [id])
+  relatedById String? @map("related_by_id")
 
   @@unique([slug, categoryId])
   @@index([slug])
@@ -123,10 +143,4 @@ model Category {
   Post    Post[]
 
   @@index([slug], name: "slugIndex")
-}
-
-model Tag {
-  id      String   @id @default("")
-  name    String   @unique
-  created DateTime @default(now()) @map("created_at")
 }

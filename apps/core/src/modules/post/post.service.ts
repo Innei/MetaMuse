@@ -7,7 +7,7 @@ import { PagerDto } from '@core/shared/dto/pager.dto'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import { Injectable } from '@nestjs/common'
 
-import { PostInputSchema } from './post.protect'
+import { PostDto } from './post.dto'
 
 @Injectable()
 export class PostService {
@@ -16,7 +16,7 @@ export class PostService {
     private readonly eventService: EventManagerService,
   ) {}
 
-  async create(dto: PostInputSchema) {
+  async create(dto: PostDto) {
     const { slug, categoryId } = dto
     const exist = await this.db.prisma.post.findUnique({
       where: {
@@ -44,6 +44,7 @@ export class PostService {
     const model = await this.db.prisma.post.create({
       data: {
         ...dto,
+        related: { connect: dto.related?.map((id) => ({ id })) } || [],
       },
       include: { category: true },
     })
@@ -59,6 +60,15 @@ export class PostService {
       {
         include: {
           category: true,
+          related: {
+            select: {
+              id: true,
+              title: true,
+              category: true,
+              slug: true,
+              created: true,
+            },
+          },
         },
         orderBy: {
           created: 'desc',
