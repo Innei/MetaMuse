@@ -125,7 +125,7 @@ describe('ROUTE /posts', () => {
         categoryId: cate.id,
         pin: false,
         isPublished: false,
-        slug: 'testaaaaaaaaaaaaaa',
+        slug: snowflake.nextId().toString(),
       },
     })
 
@@ -146,7 +146,7 @@ describe('ROUTE /posts', () => {
         ...post,
         categoryId: cate.id,
         pin: false,
-        slug: 'testaaaaaaaaaaaaaaaaaaaaaaaaa',
+        slug: snowflake.nextId(),
       },
     })
 
