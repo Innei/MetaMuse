@@ -2,9 +2,8 @@ import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 
 export const basePagerSchema = z.object({
-  size: z.coerce.number().int().min(1).max(50).default(10),
-  page: z.coerce.number().int().min(1).default(1),
-  select: z.string().optional(),
+  size: z.coerce.number().int().min(1).max(50).default(10).optional(),
+  page: z.coerce.number().int().min(1).default(1).optional(),
   sortBy: z.string().optional(),
   sortOrder: z.coerce.number().or(z.literal(1)).or(z.literal(-1)).optional(),
 })

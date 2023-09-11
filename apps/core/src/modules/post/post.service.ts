@@ -113,8 +113,19 @@ export class PostService {
   }
 
   async paginatePosts(options: PostPagerDto) {
-    const { size, page, sortBy = 'created', sortOrder } = options
-    return this.db.prisma.post.paginate(
+    const {
+      select,
+      size = 10,
+      page = 1,
+      sortBy = 'created',
+      sortOrder = -1,
+    } = options
+    const nextSortOrder = {
+      ['-1']: 'desc',
+      [1]: 'asc',
+    }[sortOrder.toString()]
+
+    const data = await this.db.prisma.post.paginate(
       {
         include: {
           category: true,
@@ -130,10 +141,10 @@ export class PostService {
         },
         orderBy: [
           {
-            [sortBy]: sortOrder,
+            pin: 'desc',
           },
           {
-            pin: 'desc',
+            [sortBy]: nextSortOrder,
           },
         ],
       },
@@ -142,6 +153,22 @@ export class PostService {
         page,
       },
     )
+
+    if (select?.length) {
+      const nextData = [] as typeof data.data
+      for (const item of data.data) {
+        if (!item) continue
+        const currentItem = {} as any
+        for (const key of select) {
+          currentItem[key] = item[key]
+        }
+        nextData.push(currentItem)
+      }
+
+      data.data = nextData
+    }
+
+    return data
   }
 
   async getPostById(id: string) {

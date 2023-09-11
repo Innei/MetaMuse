@@ -1,4 +1,5 @@
 import { PostService } from '@core/modules/post/post.service'
+import { sleep } from '@core/shared/utils/tool.utils'
 import { Prisma } from '@prisma/client'
 import { createServiceUnitTestApp } from '@test/helper/create-service-unit'
 import { prisma } from '@test/lib/prisma'
@@ -87,7 +88,16 @@ describe('/modules/post/post.service', () => {
       size: 5,
     })
 
-    expect(pagination.pagination).toMatchSnapshot()
+    expect(pagination.pagination).toMatchInlineSnapshot(`
+      {
+        "currentPage": 1,
+        "hasNextPage": true,
+        "hasPrevPage": false,
+        "size": 5,
+        "total": 20,
+        "totalPage": 4,
+      }
+    `)
     expect(pagination.data[0]!.category).toMatchObject(cate)
   })
 
@@ -224,5 +234,66 @@ describe('/modules/post/post.service', () => {
         id: newPost.id,
       },
     ])
+  })
+
+  it('should pin work in pagination', async () => {
+    const cate = await createMockCategory()
+
+    for (let i = 0; i < 5; i++) {
+      const post = generateMockPost()
+      await prisma.post.create({
+        data: {
+          ...post,
+          categoryId: cate.id,
+          pin: false,
+        },
+      })
+    }
+
+    const post = generateMockPost()
+    const newPost = await proxy.service.create({
+      ...post,
+      categoryId: cate.id,
+      pin: true,
+    })
+
+    await sleep(20)
+    await proxy.service.create({
+      ...generateMockPost(),
+      categoryId: cate.id,
+      pin: false,
+    })
+
+    const pager = await proxy.service.paginatePosts({
+      page: 0,
+    })
+    expect(pager.data[0]!.id).toBe(newPost.id)
+  })
+
+  it('pagination select field should work', async () => {
+    const cate = await createMockCategory()
+
+    for (let i = 0; i < 5; i++) {
+      const post = generateMockPost()
+      await prisma.post.create({
+        data: {
+          ...post,
+          categoryId: cate.id,
+          pin: false,
+        },
+      })
+    }
+
+    const pager = await proxy.service.paginatePosts({
+      page: 0,
+      select: ['id', 'category'],
+    })
+
+    expect(pager.data[0]).toMatchObject({
+      id: expect.any(String),
+      category: {
+        ...cate,
+      },
+    })
   })
 })
