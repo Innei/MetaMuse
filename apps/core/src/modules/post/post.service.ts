@@ -5,6 +5,7 @@ import { DatabaseService } from '@core/processors/database/database.service'
 import { EventManagerService } from '@core/processors/helper/helper.event.service'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import { Injectable } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 
 import { PostDto, PostPagerDto } from './post.dto'
 import { PostIncluded } from './post.protect'
@@ -113,7 +114,10 @@ export class PostService {
     ])
   }
 
-  async paginatePosts(options: PostPagerDto) {
+  async paginatePosts(
+    options: PostPagerDto,
+    filter: Prisma.PostWhereInput = {},
+  ) {
     const {
       select,
       size = 10,
@@ -129,6 +133,8 @@ export class PostService {
     const data = await this.db.prisma.post.paginate(
       {
         include: PostIncluded,
+        where: filter,
+
         orderBy: [
           {
             pin: 'desc',
@@ -181,5 +187,26 @@ export class PostService {
       .catch(
         resourceNotFoundWrapper(new BizException(ErrorCodeEnum.PostNotFound)),
       )
+  }
+
+  async getCategoryBySlug(slug: string) {
+    return this.db.prisma.category.findUnique({ where: { slug } })
+  }
+
+  async getPostBySlug(slug: string, categorySlug: string) {
+    const category = await this.getCategoryBySlug(categorySlug)
+    if (!category) {
+      throw new BizException(ErrorCodeEnum.CategoryNotFound)
+    }
+
+    return this.db.prisma.post.findUnique({
+      where: {
+        slug_categoryId: {
+          slug,
+          categoryId: category.id,
+        },
+      },
+      include: PostIncluded,
+    })
   }
 }

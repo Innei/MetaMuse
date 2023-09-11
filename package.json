@@ -36,7 +36,6 @@
     "prisma:generate": "pnpm -C prisma run build"
   },
   "dependencies": {
-    "cross-env": "7.0.3",
     "@nestjs/cache-manager": "2.1.0",
     "@nestjs/common": "10.2.4",
     "@nestjs/config": "3.0.1",
@@ -49,9 +48,11 @@
     "@nestjs/schedule": "3.0.3",
     "@nestjs/throttler": "5.0.0",
     "@nestjs/websockets": "10.2.4",
-    "lodash": "4.17.21",
     "bcrypt": "5.1.1",
-    "prisma": "5.2.0"
+    "cross-env": "7.0.3",
+    "lodash": "4.17.21",
+    "prisma": "5.2.0",
+    "slugify": "1.6.6"
   },
   "devDependencies": {
     "@anatine/zod-mock": "3.13.2",
@@ -63,17 +64,22 @@
     "@nestjs/schematics": "10.0.2",
     "@nestjs/testing": "10.2.4",
     "@swc/cli": "0.1.62",
+    "@types/bcrypt": "5.0.0",
+    "@types/lodash": "4.14.198",
+    "dayjs": "1.11.9",
     "dotenv-cli": "7.3.0",
     "eslint": "^8.48.0",
     "fastify": "^4.22.2",
     "husky": "8.0.3",
-    "prisma": "5.2.0",
     "ioredis": "^5.3.2",
     "lint-staged": "14.0.1",
+    "nanoid": "3.3.6",
     "prettier": "3.0.3",
+    "prisma": "5.2.0",
     "prisma-mock": "0.8.2",
     "redis-memory-server": "0.7.0",
     "rimraf": "5.0.1",
+    "snakecase-keys": "5.4.6",
     "ts-loader": "9.4.4",
     "tsconfig-paths": "4.2.0",
     "typescript": "^5.2.2",
@@ -81,15 +87,10 @@
     "vite": "4.4.9",
     "vite-tsconfig-paths": "4.2.0",
     "vitest": "0.34.3",
+    "zod": "3.22.2",
     "zod-fixture": "2.5.0",
     "zod-prisma-types": "2.7.9",
-    "zx": "7.2.3",
-    "@types/lodash": "4.14.198",
-    "zod": "3.22.2",
-    "dayjs": "1.11.9",
-    "@types/bcrypt": "5.0.0",
-    "nanoid": "3.3.6",
-    "snakecase-keys": "5.4.6"
+    "zx": "7.2.3"
   },
   "resolutions": {
     "pino": "./external/pino",

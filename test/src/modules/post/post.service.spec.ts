@@ -332,4 +332,19 @@ describe('/modules/post/post.service', () => {
 
     expect(result).toMatchObject(post)
   })
+
+  it('should get post by slug and category successful', async () => {
+    const cate = await createMockCategory()
+
+    const post = await prisma.post.create({
+      data: {
+        ...generateMockPost(),
+        categoryId: cate.id,
+      },
+    })
+
+    const result = await proxy.service.getPostBySlug(post.slug, cate.slug)
+
+    expect(result).toMatchObject(post)
+  })
 })

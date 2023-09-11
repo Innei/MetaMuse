@@ -6,6 +6,7 @@ export enum ErrorCodeEnum {
   CategoryNotFound = 10002,
   CategoryCannotDeleted = 10003,
   CategoryAlreadyExists = 10004,
+  PostNotPublished = 10005,
 
   AuthFailUserNotExist = 20000,
   AuthFail = 20001,
@@ -23,8 +24,13 @@ export const ErrorCode = Object.freeze<
     400,
   ],
   [ErrorCodeEnum.PostNotFound]: ['post not found', '文章不存在', 404],
+  [ErrorCodeEnum.PostNotPublished]: ['post not found', '文章不存在', 404],
   [ErrorCodeEnum.PostExist]: ['post already exist', '文章已存在', 400],
-  [ErrorCodeEnum.CategoryNotFound]: ['category not found', '分类不存在', 404],
+  [ErrorCodeEnum.CategoryNotFound]: [
+    'category not found',
+    '该分类未找到 (｡•́︿•̀｡)',
+    404,
+  ],
   [ErrorCodeEnum.CategoryCannotDeleted]: [
     'there are other posts in this category, cannot be deleted',
     '该分类中有其他文章，无法被删除',

@@ -19,6 +19,7 @@ import {
 import { Reflector } from '@nestjs/core'
 
 import { getIp } from '../../shared/utils/ip.util'
+import { BizException } from '../exceptions/biz.exception'
 import { LoggingInterceptor } from '../interceptors/logging.interceptor'
 
 type myError = {
@@ -54,6 +55,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
       (exception as myError)?.message ||
       ''
 
+    const bizCode = (exception as BizException).code
+
     const url = request.raw.url!
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
       Logger.error(exception, undefined, 'Catch')
@@ -76,9 +79,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
       }
     } else {
       const ip = getIp(request)
-      const logMessage = `IP: ${ip} Error Info: (${status}) ${message} Path: ${decodeURI(
-        url,
-      )}`
+      const logMessage = `IP: ${ip} Error Info: (${status}${
+        bizCode ? ` ,B${bizCode}` : ''
+      }) ${message} Path: ${decodeURI(url)}`
       if (isTest) console.log(logMessage)
       this.logger.warn(logMessage)
     }

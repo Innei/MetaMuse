@@ -1,6 +1,8 @@
 import { API_VERSION } from '@core/app.config'
 import { isDev, isTest } from '@core/global/env.global'
-import { Controller, ControllerOptions } from '@nestjs/common'
+import { applyDecorators, Controller, ControllerOptions } from '@nestjs/common'
+
+import { Auth } from './auth.decorator'
 
 export const apiRoutePrefix = isDev || isTest ? '' : `/api/v${API_VERSION}`
 export const ApiController: (
@@ -34,5 +36,8 @@ export const ApiController: (
 }
 
 export const AdminApiController = (path: string) => {
-  return ApiController(`/admin/${path.replace(/^\/*/, '')}`)
+  return applyDecorators(
+    ApiController(`/admin/${path.replace(/^\/*/, '')}`),
+    Auth,
+  )
 }

@@ -7,6 +7,11 @@ export enum RedisKeys {
 
   /** 最大在线人数 */
   MaxOnlineCount = 'max_online_count',
+
+  // Article count
+  //
+  Read = 'read',
+  Like = 'like',
 }
 
 export enum CacheKeys {}
