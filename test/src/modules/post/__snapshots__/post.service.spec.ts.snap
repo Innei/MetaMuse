@@ -8,8 +8,8 @@ exports[`/modules/post/post.service > should paginate posts successful 1`] = `
   "hasNextPage": true,
   "hasPrevPage": false,
   "size": 5,
-  "total": 22,
-  "totalPage": 5,
+  "total": 20,
+  "totalPage": 4,
 }
 `;
 

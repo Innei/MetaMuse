@@ -3,11 +3,10 @@ import { BusinessEvents } from '@core/constants/business-event.constant'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { EventManagerService } from '@core/processors/helper/helper.event.service'
-import { PagerDto } from '@core/shared/dto/pager.dto'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import { Injectable } from '@nestjs/common'
 
-import { PostDto } from './post.dto'
+import { PostDto, PostPagerDto } from './post.dto'
 
 @Injectable()
 export class PostService {
@@ -41,6 +40,7 @@ export class PostService {
       if (!hasCategory) {
         throw new BizException(ErrorCodeEnum.CategoryNotFound)
       }
+
       const newPost = await prisma.post.create({
         data: {
           ...dto,
@@ -73,13 +73,47 @@ export class PostService {
       return newPost
     })
 
+    if (model.pin) {
+      await this.togglePin(model.id, true)
+    }
+
     this.eventService.event(BusinessEvents.POST_CREATE, model)
 
     return model
   }
 
-  async paginatePosts(options: PagerDto) {
-    const { size, page } = options
+  private togglePin(id: string, pin: boolean) {
+    if (!pin) {
+      return this.db.prisma.post.update({
+        where: {
+          id,
+        },
+        data: {
+          pin: false,
+        },
+      })
+    }
+    return this.db.prisma.$transaction([
+      this.db.prisma.post.update({
+        where: {
+          id,
+        },
+        data: {
+          pin: true,
+        },
+      }),
+
+      this.db.prisma.post.updateMany({
+        where: {
+          NOT: { id },
+        },
+        data: { pin: false },
+      }),
+    ])
+  }
+
+  async paginatePosts(options: PostPagerDto) {
+    const { size, page, sortBy = 'created', sortOrder } = options
     return this.db.prisma.post.paginate(
       {
         include: {
@@ -94,9 +128,14 @@ export class PostService {
             },
           },
         },
-        orderBy: {
-          created: 'desc',
-        },
+        orderBy: [
+          {
+            [sortBy]: sortOrder,
+          },
+          {
+            pin: 'desc',
+          },
+        ],
       },
       {
         size,

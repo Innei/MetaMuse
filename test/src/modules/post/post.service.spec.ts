@@ -2,6 +2,7 @@ import { PostService } from '@core/modules/post/post.service'
 import { Prisma } from '@prisma/client'
 import { createServiceUnitTestApp } from '@test/helper/create-service-unit'
 import { prisma } from '@test/lib/prisma'
+import resetDb from '@test/lib/reset-db'
 import { generateMockCategory } from '@test/mock/data/category.data'
 import { generateMockPost, mockPostInputData } from '@test/mock/data/post.data'
 import { mockedEventManagerService } from '@test/mock/helper/helper.event'
@@ -16,6 +17,10 @@ describe('/modules/post/post.service', () => {
       },
     })
   }
+
+  beforeEach(async () => {
+    await resetDb()
+  })
 
   it('should create post successful', async () => {
     const category = await createMockCategory()
@@ -188,5 +193,36 @@ describe('/modules/post/post.service', () => {
     expect(basePostInDb2).toMatchObject({
       related: [{ id: hasRelatedPost.id }],
     })
+  })
+
+  it('should toggle pin successful when creating', async () => {
+    const cate = await createMockCategory()
+
+    for (let i = 0; i < 5; i++) {
+      const post = generateMockPost()
+      await prisma.post.create({
+        data: {
+          ...post,
+          categoryId: cate.id,
+          pin: true,
+        },
+      })
+    }
+    const post = generateMockPost()
+
+    const newPost = await proxy.service.create({
+      ...post,
+      categoryId: cate.id,
+      pin: true,
+    })
+
+    expect(prisma.post.count({ where: { pin: true } })).resolves.toBe(1)
+    expect(
+      prisma.post.findMany({ where: { pin: true }, select: { id: true } }),
+    ).resolves.toStrictEqual([
+      {
+        id: newPost.id,
+      },
+    ])
   })
 })

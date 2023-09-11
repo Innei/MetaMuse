@@ -115,8 +115,7 @@ model Post {
   /// [ArticleCount]
   count Json @default("{\"read\": 0, \"like\": 0}") /// @zod.custom.omit(["model", "input"])
 
-  pin      Boolean @default(false)
-  pinOrder Int     @default(0) @map("pin_order")
+  pin Boolean @default(false)
 
   // / @zod.array(zod.string()).optional()
   related   Post[] @relation("RelatedPosts")
