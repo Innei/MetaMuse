@@ -32,3 +32,7 @@ export const ApiController: (
     )
   }
 }
+
+export const AdminApiController = (path: string) => {
+  return ApiController(`/admin/${path.replace(/^\/*/, '')}`)
+}

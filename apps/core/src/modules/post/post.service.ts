@@ -7,6 +7,7 @@ import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import { Injectable } from '@nestjs/common'
 
 import { PostDto, PostPagerDto } from './post.dto'
+import { PostIncluded } from './post.protect'
 
 @Injectable()
 export class PostService {
@@ -127,18 +128,7 @@ export class PostService {
 
     const data = await this.db.prisma.post.paginate(
       {
-        include: {
-          category: true,
-          related: {
-            select: {
-              id: true,
-              title: true,
-              category: true,
-              slug: true,
-              created: true,
-            },
-          },
-        },
+        include: PostIncluded,
         orderBy: [
           {
             pin: 'desc',
@@ -171,30 +161,22 @@ export class PostService {
     return data
   }
 
+  async getLastPost() {
+    return this.db.prisma.post.findFirst({
+      orderBy: {
+        created: 'desc',
+      },
+      include: PostIncluded,
+    })
+  }
+
   async getPostById(id: string) {
     return this.db.prisma.post
       .findUniqueOrThrow({
         where: {
           id,
         },
-        include: {
-          category: true,
-          related: {
-            select: {
-              id: true,
-              title: true,
-              slug: true,
-              created: true,
-              category: {
-                select: {
-                  id: true,
-                  name: true,
-                  slug: true,
-                },
-              },
-            },
-          },
-        },
+        include: PostIncluded,
       })
       .catch(
         resourceNotFoundWrapper(new BizException(ErrorCodeEnum.PostNotFound)),

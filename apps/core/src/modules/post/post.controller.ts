@@ -1,10 +1,11 @@
 import { ApiController } from '@core/common/decorators/api-controller.decorator'
+import { VisitDocument } from '@core/common/decorators/update-count.decorator'
 import { BizException } from '@core/common/exceptions/biz.exception'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { SnowflakeIdDto } from '@core/shared/dto/id.dto'
-import { Body, Get, Param, Post, Query } from '@nestjs/common'
+import { Get, Param, Query } from '@nestjs/common'
 
-import { PostDto, PostPagerDto } from './post.dto'
+import { PostPagerDto } from './post.dto'
 import { PostService } from './post.service'
 
 @ApiController('posts')
@@ -23,10 +24,10 @@ export class PostController {
     return this.service.getPostById(id)
   }
 
-  @Post('/')
-  // @Auth()
-  async create(@Body() body: PostDto) {
-    return this.service.create(body)
+  @Get('/latest')
+  @VisitDocument('Post')
+  async getLatest() {
+    return await this.service.getLastPost()
   }
 
   @Get('/*')

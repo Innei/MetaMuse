@@ -121,6 +121,8 @@ model Post {
   related   Post[] @relation("RelatedPosts")
   relatedBy Post[] @relation("RelatedPosts")
 
+  meta Json? @default("{}")  /// @zod.custom.omit(["model", "input"])
+
   @@unique([slug, categoryId])
   @@index([slug])
   @@index([created])

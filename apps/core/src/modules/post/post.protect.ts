@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import { createProjectionOmit } from '@core/shared/utils/schema.util'
+import { Prisma } from '@prisma/client'
 import { PostSchema } from '@prisma/client/zod'
 
 export const PostSchemaProjection = createProjectionOmit(
@@ -17,3 +18,22 @@ export type PostInputSchema = Omit<
   z.infer<typeof PostSchema>,
   keyof typeof PostSchemaProjection
 >
+
+export const PostIncluded: Prisma.PostInclude = {
+  category: true,
+  related: {
+    select: {
+      id: true,
+      title: true,
+      category: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      },
+      slug: true,
+      created: true,
+    },
+  },
+}

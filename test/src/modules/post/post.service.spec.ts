@@ -296,4 +296,40 @@ describe('/modules/post/post.service', () => {
       },
     })
   })
+
+  it('should get latest post successful', async () => {
+    const cate = await createMockCategory()
+
+    for (let i = 0; i < 5; i++) {
+      const post = generateMockPost()
+      await prisma.post.create({
+        data: {
+          ...post,
+          categoryId: cate.id,
+          pin: false,
+        },
+      })
+    }
+
+    {
+      const post = generateMockPost()
+      await prisma.post.create({
+        data: {
+          ...post,
+          categoryId: cate.id,
+          pin: true,
+        },
+      })
+    }
+    const post = await prisma.post.create({
+      data: {
+        ...generateMockPost(),
+        categoryId: cate.id,
+      },
+    })
+
+    const result = await proxy.service.getLastPost()
+
+    expect(result).toMatchObject(post)
+  })
 })
