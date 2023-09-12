@@ -103,7 +103,7 @@ model Post {
   /// @zod.string.max(80)
   title      String      @db.VarChar(255)
   created    DateTime    @default(now()) @map("created_at")
-  modified   DateTime?   @updatedAt @map("updated_at")
+  modified   DateTime?   @map("updated_at")
   categoryId String
   category   Category    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   images     PostImage[]

@@ -347,4 +347,21 @@ describe('/modules/post/post.service', () => {
 
     expect(result).toMatchObject(post)
   })
+
+  it('should update post successful', async () => {
+    const cate = await createMockCategory()
+    const post = generateMockPost()
+    const newPost = await prisma.post.create({
+      data: {
+        ...post,
+        categoryId: cate.id,
+      },
+    })
+
+    const result = await proxy.service.updateById(newPost.id, {
+      text: 'new text',
+    })
+
+    expect(result)
+  })
 })

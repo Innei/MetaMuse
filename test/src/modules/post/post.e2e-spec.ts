@@ -13,6 +13,16 @@ describe('ROUTE /posts', () => {
     imports: [PostModule],
   })
 
+  const createMockCategory = async () => {
+    return await prisma.category.create({
+      data: {
+        ...generateMockCategory(),
+        slug: `test${snowflake.nextId()}`,
+      },
+    })
+  }
+  beforeEach(async () => void (await prisma.post.deleteMany()))
+
   it('GET /posts when nothing', async () => {
     const res = await proxy.app.inject('/posts')
     expect(res.statusCode).toBe(200)
@@ -30,17 +40,6 @@ describe('ROUTE /posts', () => {
 }
 `)
   })
-
-  const createMockCategory = async () => {
-    return await prisma.category.create({
-      data: {
-        ...generateMockCategory(),
-        slug: `test${snowflake.nextId()}`,
-      },
-    })
-  }
-
-  beforeEach(async () => void (await prisma.post.deleteMany()))
 
   test('GET /posts when has data and un published', async () => {
     const cate = await createMockCategory()
@@ -125,7 +124,6 @@ describe('ROUTE /posts', () => {
         categoryId: cate.id,
         pin: false,
         isPublished: false,
-        slug: snowflake.nextId().toString(),
       },
     })
 
@@ -146,7 +144,6 @@ describe('ROUTE /posts', () => {
         ...post,
         categoryId: cate.id,
         pin: false,
-        slug: snowflake.nextId(),
       },
     })
 
@@ -163,5 +160,49 @@ describe('ROUTE /posts', () => {
         category: reDeserializeData(cate),
       }),
     )
+  })
+
+  test('POST /admin/posts create post', async () => {
+    const cate = await createMockCategory()
+    const res = await proxy.app.inject({
+      method: 'POST',
+
+      url: '/admin/posts',
+      payload: {
+        ...generateMockPost(),
+
+        categoryId: cate.id,
+        slug: 'I I',
+      },
+    })
+
+    expect(res.statusCode).toBe(201)
+    const data = res.json()
+    expect(data.slug).toBe('i-i')
+  })
+
+  test('PUT /admin/posts put post', async () => {
+    const cate = await createMockCategory()
+    const { id: postId } = await prisma.post.create({
+      data: {
+        ...generateMockPost(),
+        categoryId: cate.id,
+      },
+    })
+    const updatedValue = generateMockPost()
+    const res = await proxy.app.inject({
+      method: 'put',
+
+      url: `/admin/posts/${postId}`,
+      payload: {
+        ...updatedValue,
+
+        categoryId: cate.id,
+        slug: 'I I',
+      },
+    })
+
+    const data = res.json()
+    expect(data.title).toBe(updatedValue.title)
   })
 })

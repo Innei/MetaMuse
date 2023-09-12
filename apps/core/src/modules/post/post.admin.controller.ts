@@ -1,8 +1,8 @@
 import { AdminApiController } from '@core/common/decorators/api-controller.decorator'
 import { SnowflakeIdDto } from '@core/shared/dto/id.dto'
-import { Body, Get, Param, Post, Query } from '@nestjs/common'
+import { Body, Get, Param, Patch, Post, Put, Query } from '@nestjs/common'
 
-import { PostDto, PostPagerDto } from './post.dto'
+import { PostDto, PostPagerDto, PostPatchDto } from './post.dto'
 import { PostService } from './post.service'
 
 @AdminApiController('posts')
@@ -26,5 +26,19 @@ export class PostAdminController {
     const doc = await this.service.getPostById(id)
 
     return doc
+  }
+
+  @Put('/:id')
+  async update(@Param() params: SnowflakeIdDto, @Body() body: PostDto) {
+    const { id } = params
+    await this.service.updateById(id, body)
+
+    return this.service.getPostById(id)
+  }
+
+  @Patch('/:id')
+  async patch(@Param() params: SnowflakeIdDto, @Body() body: PostPatchDto) {
+    const { id } = params
+    await this.service.updateById(id, body)
   }
 }

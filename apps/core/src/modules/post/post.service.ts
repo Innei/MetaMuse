@@ -4,10 +4,11 @@ import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { EventManagerService } from '@core/processors/helper/helper.event.service'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
+import { isDefined } from '@core/shared/utils/validator.util'
 import { Injectable } from '@nestjs/common'
-import { Prisma } from '@prisma/client'
+import { Post, Prisma } from '@prisma/client'
 
-import { PostDto, PostPagerDto } from './post.dto'
+import { PostDto, PostPagerDto, PostPatchDto } from './post.dto'
 import { PostIncluded } from './post.protect'
 
 @Injectable()
@@ -53,27 +54,12 @@ export class PostService {
         },
       })
 
-      if (dto.related?.length) {
-        await Promise.all(
-          dto.related.map((id) =>
-            prisma.post.update({
-              where: {
-                id,
-              },
-              data: {
-                related: {
-                  connect: {
-                    id: newPost.id,
-                  },
-                },
-              },
-            }),
-          ),
-        )
-      }
-
       return newPost
     })
+
+    if (dto.related?.length) {
+      await this.relateEachOther(model.id, dto.related)
+    }
 
     if (model.pin) {
       await this.togglePin(model.id, true)
@@ -82,6 +68,25 @@ export class PostService {
     this.eventService.event(BusinessEvents.POST_CREATE, model)
 
     return model
+  }
+
+  private async relateEachOther(postId: string, relatedIds: string[]) {
+    await this.db.prisma.$transaction(
+      relatedIds.map((id) =>
+        this.db.prisma.post.update({
+          where: {
+            id,
+          },
+          data: {
+            related: {
+              connect: {
+                id: postId,
+              },
+            },
+          },
+        }),
+      ),
+    )
   }
 
   private togglePin(id: string, pin: boolean) {
@@ -208,5 +213,60 @@ export class PostService {
       },
       include: PostIncluded,
     })
+  }
+
+  async updateById(id: string, data: PostPatchDto) {
+    await this.db.prisma.$transaction(async (prisma) => {
+      const originPost = await prisma.post.findUnique({
+        where: { id },
+        select: {
+          categoryId: true,
+          modified: true,
+        },
+      })
+
+      if (!originPost) {
+        throw new BizException(ErrorCodeEnum.PostNotFound)
+      }
+
+      const { categoryId } = data
+
+      if (categoryId && categoryId !== originPost.categoryId) {
+        await prisma.category
+          .findUniqueOrThrow({
+            where: {
+              id: categoryId,
+            },
+          })
+          .catch(
+            resourceNotFoundWrapper(
+              new BizException(ErrorCodeEnum.CategoryNotFound),
+            ),
+          )
+      }
+
+      const updatedData: Partial<Post> = {
+        ...data,
+      }
+
+      if ([data.text, data.title, data.slug].some((i) => isDefined(i))) {
+        const now = new Date()
+
+        updatedData.modified = now
+      }
+
+      await prisma.post.update({
+        where: {
+          id,
+        },
+        data: updatedData,
+      })
+    })
+
+    // 有关联文章
+    const related = data.related?.filter((i) => i !== id) || []
+    if (related.length) {
+      await this.relateEachOther(id, related)
+    }
   }
 }

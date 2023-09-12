@@ -1,11 +1,17 @@
-import { omit } from 'lodash'
-import { createFixture } from 'zod-fixture'
+import { snowflake } from '@core/processors/database/snowflake.util'
 
-import { PostSchemaProjection } from '@core/modules/post/post.protect'
-import { PostSchema } from '@prisma/client/zod'
-
+const getRandomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1)) + min
 export const generateMockPost = () => {
-  return omit(createFixture(PostSchema), ...PostSchemaProjection.keys)
+  return {
+    slug: `this-is-a-mock-post-${snowflake.nextId()}`,
+    text: `This is the text content of the mock post ${getRandomInt(1, 100)}.`,
+    title: `Mock Post Title ${getRandomInt(1, 100)}`,
+    copyright: true,
+    allowComment: true,
+    pin: false,
+    isPublished: true,
+  }
 }
 const mockPostInputData = generateMockPost()
 

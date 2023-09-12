@@ -11,11 +11,13 @@ import { ThrottlerGuard } from '@nestjs/throttler'
 import { AppController } from './app.controller'
 import { AllExceptionsFilter } from './common/filters/all-exception.filter'
 import { PrismaClientExceptionFilter } from './common/filters/prisma-client-exception.filter'
+import { RolesGuard } from './common/guards/role.guard'
 import { HttpCacheInterceptor } from './common/interceptors/cache.interceptor'
 import { IdempotenceInterceptor } from './common/interceptors/idempotence.interceptor'
 import { JSONTransformerInterceptor } from './common/interceptors/json-transformer.interceptor'
 import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 import { ZodValidationPipe } from './common/pipes/zod-validation.pipe'
+import { AuthModule } from './modules/auth/auth.module'
 import { CategoryModule } from './modules/category/category.module'
 import { PostModule } from './modules/post/post.module'
 import { UserModule } from './modules/user/user.module'
@@ -44,6 +46,7 @@ const appInterceptors: Type<any>[] = [
     GatewayModule,
 
     // BIZ
+    AuthModule,
     PostModule,
     UserModule,
     CategoryModule,
@@ -71,6 +74,11 @@ const appInterceptors: Type<any>[] = [
         return new PrismaClientExceptionFilter(httpAdapter)
       },
       inject: [HttpAdapterHost],
+    },
+
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
 
     {

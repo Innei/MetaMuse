@@ -38,6 +38,6 @@ export const ApiController: (
 export const AdminApiController = (path: string) => {
   return applyDecorators(
     ApiController(`/admin/${path.replace(/^\/*/, '')}`),
-    Auth,
+    Auth(),
   )
 }

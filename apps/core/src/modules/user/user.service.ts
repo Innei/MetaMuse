@@ -3,7 +3,6 @@ import { nanoid } from 'nanoid'
 
 import { BizException } from '@core/common/exceptions/biz.exception'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
-import { CacheService } from '@core/processors/cache/cache.service'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import {
@@ -20,9 +19,9 @@ import { UserSchemaProjection } from './user.protect'
 @Injectable()
 export class UserService {
   private Logger = new Logger(UserService.name)
+
   constructor(
     private readonly authService: AuthService,
-    private readonly redis: CacheService,
 
     private readonly db: DatabaseService,
   ) {}

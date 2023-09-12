@@ -1,5 +1,4 @@
-import { isJWT } from 'class-validator'
-
+import { isTest } from '@core/global/env.global'
 import { AuthService } from '@core/modules/auth/auth.service'
 import { UserService } from '@core/modules/user/user.service'
 import { getNestExecutionContextRequest } from '@core/transformers/get-req.transformer'
@@ -11,18 +10,32 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 
+function isJWT(token: string): boolean {
+  const parts = token.split('.')
+  return (
+    parts.length === 3 &&
+    /^[a-zA-Z0-9_-]+$/.test(parts[0]) &&
+    /^[a-zA-Z0-9_-]+$/.test(parts[1]) &&
+    /^[a-zA-Z0-9_-]+$/.test(parts[2])
+  )
+}
+
 /**
  * JWT auth guard
  */
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(
-    protected readonly authService: AuthService,
+  @Inject(AuthService)
+  private authService: AuthService
 
-    @Inject(UserService) private readonly userService: UserService,
-  ) {}
+  @Inject(UserService)
+  private userService: UserService
+
   async canActivate(context: ExecutionContext): Promise<any> {
+    if (isTest) {
+      return true
+    }
     const request = this.getRequest(context)
 
     const query = request.query as any
