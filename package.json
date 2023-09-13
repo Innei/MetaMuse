@@ -76,7 +76,6 @@
     "nanoid": "3.3.6",
     "prettier": "3.0.3",
     "prisma": "5.2.0",
-    "prisma-mock": "0.8.2",
     "redis-memory-server": "0.7.0",
     "rimraf": "5.0.1",
     "snakecase-keys": "5.4.6",

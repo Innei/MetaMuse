@@ -71,22 +71,49 @@ export class PostService {
   }
 
   private async relateEachOther(postId: string, relatedIds: string[]) {
-    await this.db.prisma.$transaction(
-      relatedIds.map((id) =>
-        this.db.prisma.post.update({
-          where: {
-            id,
+    // await this.db.prisma.$transaction(async (prisma) => {
+    //   await Promise.all(
+    //     relatedIds.map((id) =>
+    //       prisma.post.update({
+    //         where: {
+    //           id,
+    //         },
+    //         data: {
+    //           related: {
+    //             connect: {
+    //               id: postId,
+    //             },
+    //           },
+    //         },
+    //       }),
+    //     ),
+    //   )
+    // })
+
+    this.db.prisma.$transaction(async (prisma) => {
+      await prisma.post.update({
+        where: {
+          id: postId,
+        },
+        data: {
+          related: {
+            set: [],
           },
-          data: {
-            related: {
-              connect: {
-                id: postId,
-              },
-            },
+        },
+      })
+      await prisma.post.update({
+        where: {
+          id: postId,
+        },
+        data: {
+          related: {
+            connect: [
+              ...relatedIds.filter((i) => i !== postId).map((i) => ({ id: i })),
+            ],
           },
-        }),
-      ),
-    )
+        },
+      })
+    })
   }
 
   private togglePin(id: string, pin: boolean) {
@@ -248,6 +275,9 @@ export class PostService {
       const updatedData: Partial<Post> = {
         ...data,
       }
+
+      // @ts-expect-error
+      delete updatedData.related
 
       if ([data.text, data.title, data.slug].some((i) => isDefined(i))) {
         const now = new Date()

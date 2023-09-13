@@ -205,4 +205,35 @@ describe('ROUTE /posts', () => {
     const data = res.json()
     expect(data.title).toBe(updatedValue.title)
   })
+
+  test('PUT /admin/posts/:id update related post', async () => {
+    const posts = new Array(5).fill(0).map(() => generateMockPost())
+    const cate = await createMockCategory()
+    const postsModel = posts.map((post) => ({
+      ...post,
+      categoryId: cate.id,
+    }))
+
+    await prisma.post.createMany({
+      data: postsModel,
+    })
+    const createdPosts = await prisma.post.findMany({})
+
+    await proxy.app.inject({
+      method: 'patch',
+      url: `/admin/posts/${createdPosts[0].id}`,
+      payload: {
+        related: [createdPosts[1].id],
+      },
+    })
+
+    const res = await proxy.app.inject({
+      method: 'GET',
+      url: `/posts/${cate.slug}/${createdPosts[0].slug}`,
+    })
+
+    expect(res.json().related.map((r) => r.id)).toStrictEqual([
+      createdPosts[1].id,
+    ])
+  })
 })

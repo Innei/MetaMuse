@@ -10,7 +10,9 @@ export function makeOptionalPropsNullable<Schema extends z.AnyZodObject>(
   const newProps = entries.reduce(
     (acc, [key, value]) => {
       acc[key] =
-        value instanceof z.ZodOptional ? value.unwrap().nullable() : value
+        value instanceof z.ZodOptional
+          ? value.unwrap().nullable()
+          : value.optional()
       return acc
     },
     {} as {
@@ -18,7 +20,7 @@ export function makeOptionalPropsNullable<Schema extends z.AnyZodObject>(
         infer T
       >
         ? z.ZodOptional<T>
-        : Schema['shape'][key]
+        : z.ZodOptional<Schema['shape'][key]>
     },
   )
   return z.object(newProps)
