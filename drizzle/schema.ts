@@ -12,10 +12,15 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core'
 
+import { snowflake } from '@meta-muse/utils'
+
 export const user = pgTable(
   'User',
   {
-    id: text('id').default('').primaryKey().notNull(),
+    id: text('id')
+      .$defaultFn(() => snowflake.nextId())
+      .primaryKey()
+      .notNull(),
     username: varchar('username', { length: 80 }).notNull(),
     name: varchar('name', { length: 80 }).notNull(),
     introduce: varchar('introduce', { length: 255 }),
@@ -45,7 +50,10 @@ export const user = pgTable(
 export const apiToken = pgTable(
   'ApiToken',
   {
-    id: text('id').default('').primaryKey().notNull(),
+    id: text('id')
+      .$defaultFn(() => snowflake.nextId())
+      .primaryKey()
+      .notNull(),
     userId: text('userId')
       .notNull()
       .references(() => user.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
@@ -64,7 +72,10 @@ export const apiToken = pgTable(
 )
 
 export const oauth = pgTable('OAuth', {
-  id: text('id').default('').primaryKey().notNull(),
+  id: text('id')
+    .$defaultFn(() => snowflake.nextId())
+    .primaryKey()
+    .notNull(),
   userId: text('userId')
     .notNull()
     .references(() => user.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
@@ -75,7 +86,10 @@ export const oauth = pgTable('OAuth', {
 export const post = pgTable(
   'Post',
   {
-    id: text('id').default('').primaryKey().notNull(),
+    id: text('id')
+      .$defaultFn(() => snowflake.nextId())
+      .primaryKey()
+      .notNull(),
     slug: text('slug').notNull(),
     text: text('text').notNull(),
     title: varchar('title', { length: 255 }).notNull(),
@@ -115,7 +129,10 @@ export const post = pgTable(
 )
 
 export const postImage = pgTable('PostImage', {
-  id: text('id').default('').primaryKey().notNull(),
+  id: text('id')
+    .$defaultFn(() => snowflake.nextId())
+    .primaryKey()
+    .notNull(),
   src: text('src').notNull(),
   width: doublePrecision('width').notNull(),
   height: doublePrecision('height').notNull(),
@@ -130,7 +147,10 @@ export const postImage = pgTable('PostImage', {
 export const postTag = pgTable(
   'PostTag',
   {
-    id: text('id').default('').primaryKey().notNull(),
+    id: text('id')
+      .$defaultFn(() => snowflake.nextId())
+      .primaryKey()
+      .notNull(),
     name: text('name').notNull(),
     postId: text('postId').references(() => post.id, {
       onDelete: 'set null',
@@ -147,7 +167,10 @@ export const postTag = pgTable(
 export const category = pgTable(
   'Category',
   {
-    id: text('id').default('').primaryKey().notNull(),
+    id: text('id')
+      .$defaultFn(() => snowflake.nextId())
+      .primaryKey()
+      .notNull(),
     name: text('name').notNull(),
     slug: text('slug').notNull(),
     createdAt: timestamp('created_at', { precision: 3, mode: 'string' })

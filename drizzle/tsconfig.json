@@ -13,7 +13,11 @@
     "noImplicitAny": false,
     "incremental": true,
     "skipLibCheck": true,
-    "paths": {}
+    "paths": {
+      "@meta-muse/utils": [
+        "../packages/utils"
+      ]
+    }
   },
   "exclude": [
     "dist",

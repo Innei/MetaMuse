@@ -22,6 +22,9 @@
       ],
       "@core/*": [
         "./src/*"
+      ],
+      "@meta-muse/utils": [
+        "../../packages/utils"
       ]
     }
   },

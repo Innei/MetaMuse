@@ -5,6 +5,7 @@ import { DatabaseService } from '@core/processors/database/database.service'
 import { EventManagerService } from '@core/processors/helper/helper.event.service'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import { isDefined } from '@core/shared/utils/validator.util'
+import { eq, schema, sql } from '@meta-muse/drizzle'
 import { Injectable } from '@nestjs/common'
 import { Post, Prisma } from '@prisma/client'
 
@@ -20,20 +21,50 @@ export class PostService {
 
   async create(dto: PostDto) {
     const { slug, categoryId } = dto
-    const exist = await this.db.prisma.post.findUnique({
-      where: {
-        slug_categoryId: {
-          slug,
-          categoryId,
-        },
+
+    const exist = await this.db.drizzle.query.post.findFirst({
+      columns: {
+        id: true,
       },
-      select: { id: true },
+
+      where: (post, { eq }) => {
+        return eq(post.slug, slug) && eq(post.categoryId, categoryId)
+      },
     })
 
     if (exist) {
       throw new BizException(ErrorCodeEnum.PostExist)
     }
 
+    this.db.drizzle.transaction(async (db) => {
+      {
+        const result = await db
+          .select({
+            count: sql<number>`count(*)`,
+          })
+          .from(schema.category)
+          .where(eq(schema.category.id, categoryId))
+
+        if (result[0].count === 0) {
+          throw new BizException(ErrorCodeEnum.CategoryNotFound)
+        }
+      }
+      const result = await db
+        .insert(schema.post)
+        .values({
+          ...dto,
+        })
+        .returning()
+
+      return db.query.post.findFirst({
+        where: (post, { eq }) => {
+          return eq(post.id, result[0].id)
+        },
+        with: {
+          category: true,
+        },
+      })
+    })
     const model = await this.db.prisma.$transaction(async (prisma) => {
       const hasCategory = await this.db.prisma.category.exists({
         where: {

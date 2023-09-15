@@ -15,3 +15,7 @@ export const createDrizzle = (
     ...options,
   })
 }
+
+export { schema }
+
+export * from 'drizzle-orm'
