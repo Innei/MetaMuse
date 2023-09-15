@@ -46,3 +46,5 @@ prisma/zod
 prisma/dist
 
 apps/core/dist
+
+drizzle/dist

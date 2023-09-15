@@ -3,3 +3,4 @@ packages:
   - apps/*
   - prisma
   - test
+  - drizzle

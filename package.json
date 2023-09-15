@@ -33,27 +33,13 @@
     "test": "pnpm -C \"test\" run test",
     "migrate:dev": "pnpm -C prisma run migrate:dev",
     "migrate:deploy": "pnpm -C prisma run migrate:deploy",
-    "prisma:generate": "pnpm -C prisma run build"
+    "prisma:generate": "pnpm -C prisma run build",
+    "generate": "drizzle-kit generate:pg"
   },
   "dependencies": {
-    "@nestjs/cache-manager": "2.1.0",
-    "@nestjs/common": "10.2.4",
-    "@nestjs/config": "3.0.1",
-    "@nestjs/core": "10.2.4",
-    "@nestjs/event-emitter": "2.0.2",
-    "@nestjs/jwt": "10.1.1",
-    "@nestjs/passport": "10.0.1",
-    "@nestjs/platform-fastify": "10.2.4",
-    "@nestjs/platform-socket.io": "10.2.4",
-    "@nestjs/schedule": "3.0.3",
-    "@nestjs/throttler": "5.0.0",
-    "@nestjs/websockets": "10.2.4",
-    "bcrypt": "5.1.1",
     "cross-env": "7.0.3",
-    "drizzle-orm": "0.28.6",
     "lodash": "4.17.21",
-    "prisma": "5.2.0",
-    "slugify": "1.6.6"
+    "prisma": "5.2.0"
   },
   "devDependencies": {
     "@innei/bump-version": "^1.5.10",

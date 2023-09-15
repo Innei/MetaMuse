@@ -4,14 +4,13 @@ import { argv } from 'zx-cjs'
 import { parseBooleanishValue } from './constants/parser.utilt'
 import { isDev } from './shared/utils/environment.util'
 import { machineIdSync } from './shared/utils/machine.util'
+import { mergeArgv } from './utils/env.util'
 
 export const API_VERSION = 1
 
 console.log(argv)
 
-const { PORT: ENV_PORT, MX_ENCRYPT_KEY } = process.env
-
-export const PORT = argv.port || ENV_PORT || 3333
+export const PORT = mergeArgv('port') || 3333
 
 export const CROSS_DOMAIN = {
   allowedOrigins: [
@@ -28,18 +27,22 @@ export const CROSS_DOMAIN = {
 }
 
 export const REDIS = {
-  host: argv.redis_host || 'localhost',
-  port: argv.redis_port || 6379,
-  password: argv.redis_password || null,
+  host: mergeArgv('redis_host') || 'localhost',
+  port: mergeArgv('redis_port') || 6379,
+  password: mergeArgv('redis_password') || null,
   ttl: null,
   httpCacheTTL: 5,
   max: 5,
   disableApiCache:
-    (isDev || argv.disable_cache) && !process.env['ENABLE_CACHE_DEBUG'],
+    (isDev || mergeArgv('disable_cache')) && mergeArgv('enable_cache_debug'),
+}
+
+export const DATABASE = {
+  url: mergeArgv('database_url'),
 }
 
 export const SECURITY = {
-  jwtSecret: argv.jwtSecret || 'asjhczxiucipoiopiqm2376',
+  jwtSecret: mergeArgv('jwtSecret') || 'asjhczxiucipoiopiqm2376',
   jwtExpire: '7d',
 }
 
@@ -48,14 +51,16 @@ export const AXIOS_CONFIG: AxiosRequestConfig = {
 }
 
 export const CLUSTER = {
-  enable: argv.cluster ?? false,
-  workers: argv.cluster_workers,
+  enable: mergeArgv('cluster') ?? false,
+  workers: mergeArgv('cluster_workers'),
 }
 
-const ENCRYPT_KEY = argv.encrypt_key || MX_ENCRYPT_KEY
+const ENCRYPT_KEY = mergeArgv('encrypt_key') || mergeArgv('mx_encrypt_key')
 
 export const ENCRYPT = {
   key: ENCRYPT_KEY || machineIdSync(),
-  enable: parseBooleanishValue(argv.encrypt_enable) ? !!ENCRYPT_KEY : false,
-  algorithm: argv.encrypt_algorithm || 'aes-256-ecb',
+  enable: parseBooleanishValue(mergeArgv('encrypt_enable'))
+    ? !!ENCRYPT_KEY
+    : false,
+  algorithm: mergeArgv('encrypt_algorithm') || 'aes-256-ecb',
 }
