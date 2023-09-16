@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@meta-muse/prisma'
 
 export function resourceNotFoundWrapper(desiredErr: Error) {
   return (err: any) => {

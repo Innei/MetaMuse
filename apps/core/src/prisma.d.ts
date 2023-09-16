@@ -1,1 +1,1 @@
-import '@prisma/client/global'
+import '@meta-muse/prisma/global'

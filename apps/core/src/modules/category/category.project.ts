@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 import { createProjectionOmit } from '@core/shared/utils/schema.util'
-import { CategorySchema } from '@prisma/client/zod'
+import { CategorySchema } from '@meta-muse/prisma/zod'
 
 export const categorySchemaProjection = createProjectionOmit(
   CategorySchema.shape,

@@ -1,6 +1,6 @@
 import { createZodDto } from 'nestjs-zod/dto'
 
-import { CategorySchema } from '@prisma/client/zod'
+import { CategorySchema } from '@meta-muse/prisma/zod'
 
 import { categorySchemaProjection } from './category.project'
 

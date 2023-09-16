@@ -1,4 +1,4 @@
-import { Post } from '@prisma/client'
+import { Post } from '@meta-muse/prisma'
 
 export const enum BusinessEvents {
   GATEWAY_CONNECT = 'GATEWAY_CONNECT',
