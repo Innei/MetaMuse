@@ -14,6 +14,7 @@ module.exports = {
         prefer: 'no-type-imports',
       },
     ],
+    'import/no-default-export': 0,
     'unused-imports/no-unused-vars': [
       'warn',
       {

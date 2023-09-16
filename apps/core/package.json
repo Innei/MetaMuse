@@ -5,18 +5,6 @@
   "author": "Innei <https://innei.in>",
   "private": true,
   "license": "MIT",
-  "packageManager": "pnpm@8.7.4",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "prettier --ignore-path ./.prettierignore --write ",
-      "eslint --cache --fix"
-    ]
-  },
   "bump": {
     "before": [
       "git pull --rebase"
@@ -81,7 +69,6 @@
     "@types/passport-jwt": "3.0.9",
     "@types/supertest": "2.0.12",
     "@types/ua-parser-js": "0.7.37",
-    "fastify": "^4.22.2",
     "ioredis": "^5.3.2",
     "zod-prisma-types": "2.7.9",
     "zx": "7.2.3"
