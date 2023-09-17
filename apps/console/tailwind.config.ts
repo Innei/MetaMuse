@@ -1,10 +1,5 @@
 import daisyui from 'daisyui'
 import { withTV } from 'tailwind-variants/transformer'
-import {
-  createVariableColors,
-  variableColorsPlugin,
-} from 'tailwindcss-variable-colors'
-import twColors from 'tailwindcss/colors'
 import { PluginAPI } from 'tailwindcss/types/config'
 
 import { addDynamicIconSelectors } from '@iconify/tailwind'
@@ -37,11 +32,6 @@ const twConfig: Config = {
       maxHeight: {
         screen: '100vh',
       },
-
-      colors: {
-        ...createVariableColors(twColors),
-        always: { ...twColors },
-      },
     },
   },
 
@@ -58,7 +48,6 @@ const twConfig: Config = {
     daisyui,
 
     require('tailwind-scrollbar'),
-    variableColorsPlugin(twColors),
   ],
 }
 

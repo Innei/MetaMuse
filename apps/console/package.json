@@ -13,6 +13,9 @@
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.4",
+    "@vue/reactivity": "3.3.4",
+    "@vue/runtime-core": "3.3.4",
+    "@vueuse/core": "10.4.1",
     "axios": "1.5.0",
     "camelcase-keys": "9.0.0",
     "jojoo": "0.0.8",

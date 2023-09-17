@@ -1,6 +1,11 @@
-import React, { createElement, Fragment, Suspense } from 'react'
+import React, {
+  createElement,
+  Fragment,
+  Suspense,
+  useLayoutEffect,
+} from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { Outlet, redirect, RouteObject } from 'react-router-dom'
+import { Outlet, RouteObject, useLocation, useNavigate } from 'react-router-dom'
 
 import { RouteExtendObject, RouteMeta } from './interface'
 
@@ -56,11 +61,25 @@ for (const rawPath in appPages) {
   }
 }
 
-const appRoutes = [] as RouteObject[]
+const appRoutes = [] as RouteExtendObject[]
 
 for (const fsPath in fsPath2LazyComponentMapping) {
   const { routePath, lazyComponent } = fsPath2LazyComponentMapping[fsPath]
 
+  const isFirstLevelRoute = routePath.split('/').length === 1
+  if (isFirstLevelRoute) {
+    appRoutes.push({
+      path: routePath,
+      Component: () => (
+        <Fragment>
+          <Suspense>{lazyComponent}</Suspense>
+        </Fragment>
+      ),
+      children: [],
+      // loader: async () => routeObject,
+    })
+    continue
+  }
   const parentRoutePath = routePath.split('/').slice(0, -1).join('/')
 
   let parentRoute = appRoutes.find((route) => route.path === parentRoutePath)
@@ -77,7 +96,7 @@ for (const fsPath in fsPath2LazyComponentMapping) {
           </Suspense>,
         ),
       children: [],
-      loader: async () => parentRoute,
+      // loader: async () => parentRoute,
     }
     appRoutes.push(parentRoute)
   }
@@ -92,7 +111,7 @@ for (const fsPath in fsPath2LazyComponentMapping) {
       </Fragment>
     ),
     children: [],
-    loader: async () => routeObject,
+    // loader: async () => routeObject,
   }
   parentRoute!.children!.push(routeObject)
 }
@@ -111,9 +130,11 @@ function dts(
   const currentRoutePath = `/${route.path}` || '/'
   const parentRoutePath = parentRoute?.path?.replace(/\/$/, '') || ''
   const fullPath = parentRoute
-    ? `${
-        parentRoutePath ? `/${parentRoutePath}/` : ''
-      }${currentRoutePath.replace(/^\//, '')}`
+    ? `${parentRoutePath ? `/${parentRoutePath}` : ''}${
+        currentRoutePath.length > 0
+          ? `/${currentRoutePath.replace(/^\//, '')}`
+          : '/'
+      }`
     : currentRoutePath
   routePath2RouteObjectMapping[fullPath] = route
   if (route.children) {
@@ -138,20 +159,32 @@ for (const path of Object.keys(fsPath2MetaMapping)) {
   }
 
   if (defaultExport.redirect) {
-    const redirectFn = defaultExport.redirect
+    delete route.element
+    const memoedRedirect = defaultExport.redirect
+    route.Component = () => {
+      const navigate = useNavigate()
+      // const navigation = useNavigation()
+      const location = useLocation()
 
-    const originalRouteLoader = route.loader
-    route.loader = (ctx) => {
-      if (originalRouteLoader) {
-        return originalRouteLoader(ctx)
-      }
-      return redirectFn instanceof Function
-        ? redirectFn()
-        : redirect(redirectFn)
+      useLayoutEffect(() => {
+        const redirectTo =
+          typeof memoedRedirect === 'function'
+            ? memoedRedirect()
+            : memoedRedirect
+        if (redirectTo === location.pathname) return
+        navigate(redirectTo)
+      }, [])
+      return <Outlet />
     }
   }
 
   route.meta = defaultExport
+
+  if (route.meta.priority) {
+    ;(route.parent?.children as RouteExtendObject[])?.sort((b, a) => {
+      return (b.meta?.priority || 0) - (a.meta?.priority || 0)
+    })
+  }
 }
 
 export { appPages, appRoutes, routePath2RouteObjectMapping }
