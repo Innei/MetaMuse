@@ -1,12 +1,4 @@
-import { Outlet } from 'react-router-dom'
-
 export default {
-  title: 'bianji',
-  icon: <div>Icon</div>,
-  layout: (
-    <div>
-      Layout
-      <Outlet />
-    </div>
-  ),
+  title: '撰写',
+  icon: <i className="icon-[mingcute--pen-line]" />,
 }

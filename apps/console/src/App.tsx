@@ -1,11 +1,17 @@
+import { Suspense } from 'react'
 import { SWRConfig } from 'swr'
 
+import { InitialDataProvider } from './providers/initial'
 import { Router } from './router'
 
 export function App() {
   return (
     <SWRConfig>
-      <Router></Router>
+      <Suspense>
+        <InitialDataProvider>
+          <Router />
+        </InitialDataProvider>
+      </Suspense>
     </SWRConfig>
   )
 }

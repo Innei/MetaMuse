@@ -2,7 +2,7 @@ import React, { createElement, Fragment, Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Outlet, redirect, RouteObject } from 'react-router-dom'
 
-import { RouteMeta } from './interface'
+import { RouteExtendObject, RouteMeta } from './interface'
 
 const appPages = import.meta.glob('../pages/app/**/*.tsx') as any as Record<
   string,
@@ -98,7 +98,7 @@ for (const fsPath in fsPath2LazyComponentMapping) {
 }
 
 const routePath2RouteObjectMapping = {} as {
-  [routePath: string]: RouteObject & { meta?: RouteMeta; parent?: RouteObject }
+  [routePath: string]: RouteExtendObject
 }
 
 function dts(

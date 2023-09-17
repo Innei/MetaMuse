@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import AppLayout from '../pages/app/layout'
 import { appRoutes } from './builder'
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     path: '/',
     element: createElement(AppLayout),
