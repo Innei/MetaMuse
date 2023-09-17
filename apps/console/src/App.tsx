@@ -1,12 +1,11 @@
-import { BrowserRouter } from 'react-router-dom'
 import { SWRConfig } from 'swr'
+
+import { Router } from './router'
 
 export function App() {
   return (
-    <BrowserRouter>
-      <SWRConfig>
-        <div id={'app'}></div>
-      </SWRConfig>
-    </BrowserRouter>
+    <SWRConfig>
+      <Router></Router>
+    </SWRConfig>
   )
 }

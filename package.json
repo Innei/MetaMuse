@@ -27,6 +27,7 @@
     "init": "pnpm run prisma:generate && pnpm run migrate:dev",
     "build": "pnpm -C \"apps/core\" run build",
     "dev": "pnpm -C \"apps/core\" run start",
+    "dev:console": "pnpm -C \"apps/console\" run dev",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "pretest": "dotenv -e .env.test pnpm -C prisma run migrate:dev",
