@@ -1,5 +1,7 @@
 export enum ErrorCodeEnum {
   NoContentCanBeModified = 1000,
+  NotReady = 5000,
+  NotInitialized = 5001,
 
   PostNotFound = 10000,
   PostExist = 10001,
@@ -22,6 +24,16 @@ export const ErrorCode = Object.freeze<
     'no content can be modified',
     '没有内容可以被修改',
     400,
+  ],
+  [ErrorCodeEnum.NotReady]: [
+    'not ready, please try again later',
+    '服务暂时不可用，请稍后再试',
+    503,
+  ],
+  [ErrorCodeEnum.NotInitialized]: [
+    'not initialized, site owner is missing',
+    '站点未初始化，站长信息缺失',
+    503,
   ],
   [ErrorCodeEnum.PostNotFound]: ['post not found', '文章不存在', 404],
   [ErrorCodeEnum.PostNotPublished]: ['post not found', '文章不存在', 404],

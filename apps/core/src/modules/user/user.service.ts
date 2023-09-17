@@ -14,7 +14,10 @@ import {
 
 import { AuthService } from '../auth/auth.service'
 import { UserRegisterDto } from './dtos/register.dto'
-import { UserSchemaProjection } from './user.protect'
+import {
+  UserSchemaProjection,
+  UserSchemaSerializeProjection,
+} from './user.protect'
 
 @Injectable()
 export class UserService {
@@ -53,7 +56,7 @@ export class UserService {
    * 修改密码
    *
    * @async
-   * @param {string} id - 用户id
+   * @param {string} id - 用户 id
    * @param {Partial} data - 部分修改数据
    */
   async patchUserData(id: string, data: Partial<Prisma.UserCreateInput>) {
@@ -130,11 +133,16 @@ export class UserService {
   }
 
   getOwner() {
-    // TODO omit keys
     return this.db.prisma.user
       .findFirstOrThrow()
       .catch(
         resourceNotFoundWrapper(new BizException(ErrorCodeEnum.UserNotFound)),
       )
+      .then((res) => {
+        UserSchemaSerializeProjection.keys.forEach((key) => {
+          delete res[key]
+        })
+        return res
+      })
   }
 }

@@ -1,3 +1,4 @@
+import { NextUIProvider } from '@nextui-org/react'
 import { Suspense } from 'react'
 import { SWRConfig } from 'swr'
 
@@ -9,9 +10,11 @@ export function App() {
   return (
     <SWRConfig>
       <Suspense>
-        <InitialDataProvider>
-          <Router />
-        </InitialDataProvider>
+        <NextUIProvider>
+          <InitialDataProvider>
+            <Router />
+          </InitialDataProvider>
+        </NextUIProvider>
         <ColorModeObserver />
       </Suspense>
     </SWRConfig>

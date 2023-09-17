@@ -1,4 +1,4 @@
-import { clsxm } from '~/utils/helper'
+import { clsxm } from '~/lib/helper'
 
 interface Props {
   loadingText?: string

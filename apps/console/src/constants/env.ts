@@ -4,7 +4,7 @@ export const API_URL = (() => {
     localStorage.getItem('__api') ||
     window.injectData.BASE_API ||
     (import.meta.env.VITE_APP_BASE_API as string) ||
-    ''
+    '/api'
 
   return url.endsWith('/') ? url.slice(0, -1) : url
 })()

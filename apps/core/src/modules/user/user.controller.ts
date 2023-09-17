@@ -1,6 +1,8 @@
 import { ApiController } from '@core/common/decorators/api-controller.decorator'
 import { HTTPDecorators } from '@core/common/decorators/http.decorator'
-import { Body, HttpCode, Post } from '@nestjs/common'
+import { BizException } from '@core/common/exceptions/biz.exception'
+import { ErrorCodeEnum } from '@core/constants/error-code.constant'
+import { Body, Get, HttpCode, Post } from '@nestjs/common'
 import { Throttle } from '@nestjs/throttler'
 
 import { AuthService } from '../auth/auth.service'
@@ -50,5 +52,17 @@ export class UserController {
       auth_token: jwt,
       ...newUser,
     }
+  }
+
+  @Get('/')
+  async getOwnerProfile() {
+    return this.userService.getOwner().catch((err) => {
+      if (
+        err instanceof BizException &&
+        err.code === ErrorCodeEnum.UserNotFound
+      ) {
+        throw new BizException(ErrorCodeEnum.NotInitialized)
+      }
+    })
   }
 }

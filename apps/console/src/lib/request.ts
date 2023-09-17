@@ -4,6 +4,7 @@ import camelcaseKeys from 'camelcase-keys'
 import { API_URL } from '~/constants/env'
 import { router } from '~/router'
 
+import { BizError } from './biz-error'
 import { getToken } from './cookie'
 
 const genUUID = () => {
@@ -43,12 +44,31 @@ $axios.interceptors.response.use(
   (response) => {
     response.raw = response.data
     response.data = camelcaseKeys(response.data, { deep: true })
-    return response
+    Object.defineProperty(response.data, '$$raw', response)
+    return response.data
   },
   (error) => {
-    if (error?.response?.status === 401) {
+    if (!error.response) {
+      return Promise.reject(error)
+    }
+    const res = error.response
+
+    if (res?.status === 401) {
       router.navigate(
         `/login?from=${encodeURIComponent(router.state.location.pathname)}`,
+      )
+    }
+
+    const data = res.data || {}
+    if (typeof data.code === 'number') {
+      return Promise.reject(
+        new BizError(
+          data.code,
+          data.message,
+          data.chMessage,
+          res.status,
+          error,
+        ),
       )
     }
     return Promise.reject(error)

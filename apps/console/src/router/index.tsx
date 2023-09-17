@@ -10,6 +10,15 @@ export const router = createBrowserRouter([
     element: createElement(AppLayout),
     children: appRoutes,
   },
+  {
+    path: '/login',
+    Component: React.lazy(() => import('../pages/login/page')),
+  },
+
+  {
+    path: '/setup',
+    Component: React.lazy(() => import('../pages/setup/page')),
+  },
 ])
 
 export const Router = () => {

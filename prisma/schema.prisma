@@ -38,13 +38,18 @@ datasource db {
 }
 
 model User {
-  id        String  @id @default("")
-  username  String  @unique @db.VarChar(80)
-  name      String  @db.VarChar(80)
+  id       String @id @default("")
+  username String @unique @db.VarChar(80)
+  name     String @db.VarChar(80)
+
+  /// @zod.string.max(255)
   introduce String? @db.VarChar(255)
+  /// @zod.string.url()
   avatar    String? @db.VarChar(1024)
   password  String  @db.VarChar(80)
+  /// @zod.string.email()
   mail      String? @db.VarChar(80)
+  /// @zod.string.url()
   url       String? @db.VarChar(1024)
   socialIds Json?   @default("{}") @map("social_ids")
 

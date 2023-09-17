@@ -1,4 +1,4 @@
-import { clsxm } from '~/utils/helper'
+import { clsxm } from '~/lib/helper'
 
 interface Props {
   errorText?: string
@@ -19,3 +19,5 @@ export const Error: Component<Props> = (props) => {
     </div>
   )
 }
+
+export { Error as ErrorComponent }
