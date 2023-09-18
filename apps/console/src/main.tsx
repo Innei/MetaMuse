@@ -5,6 +5,11 @@ import { App } from './App'
 
 import './styles/index.css'
 
+import { setStore } from 'jojoo'
+import { getDefaultStore } from 'jotai/vanilla'
+
+setStore(getDefaultStore())
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />

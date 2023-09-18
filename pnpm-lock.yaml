@@ -98,6 +98,9 @@ importers:
       camelcase-keys:
         specifier: 9.0.0
         version: 9.0.0
+      foxact:
+        specifier: 0.2.20
+        version: 0.2.20(react@18.2.0)
       framer-motion:
         specifier: 10.16.4
         version: 10.16.4(react-dom@18.2.0)(react@18.2.0)
@@ -125,6 +128,9 @@ importers:
       react-router-dom:
         specifier: 6.16.0
         version: 6.16.0(react-dom@18.2.0)(react@18.2.0)
+      sonner:
+        specifier: 0.7.2
+        version: 0.7.2(react-dom@18.2.0)(react@18.2.0)
       swr:
         specifier: ^2.1.3
         version: 2.2.2(react@18.2.0)
@@ -7274,6 +7280,19 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
+  /foxact@0.2.20(react@18.2.0):
+    resolution: {integrity: sha512-7Mez3d+t1xD+Qq85Xst03OFrLw+DlTXK7qn6bicIPIgnIDEopnRG5Bkz3/RgQp74+wvWb47BrUeq+tIFGbHxIg==}
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      client-only: 0.0.1
+      react: 18.2.0
+      server-only: 0.0.1
+    dev: false
+
   /fraction.js@4.3.6:
     resolution: {integrity: sha512-n2aZ9tNfYDwaHhvFTkhFErqOMIb8uyzSQ+vGJBjZyanAKZVbGUQ1sngfk9FdkBw7G26O7AgNjLcecLffD1c7eg==}
     dev: true
@@ -10326,6 +10345,10 @@ packages:
       randombytes: 2.1.0
     dev: true
 
+  /server-only@0.0.1:
+    resolution: {integrity: sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==}
+    dev: false
+
   /set-blocking@2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
     dev: false
@@ -10481,6 +10504,16 @@ packages:
       - bufferutil
       - supports-color
       - utf-8-validate
+    dev: false
+
+  /sonner@0.7.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-CQwJSvWFCIz/BACARdnphA9gt7aSLeeZPEbIs+Hp9yJoRYFtx0fqln3JFBxhyRMkLd4ePtEVO6hEOxTfUhb+TQ==}
+    peerDependencies:
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /sort-keys-length@1.0.1:

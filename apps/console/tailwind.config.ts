@@ -50,7 +50,7 @@ const twConfig: Config = {
 
     typography,
     daisyui,
-    nextui,
+    nextui(),
     require('tailwind-scrollbar'),
   ],
 }
