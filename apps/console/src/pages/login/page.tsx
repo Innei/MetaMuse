@@ -5,6 +5,7 @@ import { User } from '@model'
 import clsx from 'clsx'
 import { toast } from 'sonner'
 import useSWR from 'swr'
+import useMutation from 'swr/mutation'
 
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 
@@ -21,17 +22,23 @@ export default function LoginPage() {
     return $axios.get('/user')
   })
 
+  const { trigger: login } = useMutation('/user', async (key) => {
+    return userStore.login(data!.username, password)
+  })
+
   const nav = useNavigate()
   const [password, setPassword] = useState('')
 
   const handleLogin = async () => {
     if (password.length === 0) return
-    await userStore.login(data!.username, password).catch((err) => {
+    await login().catch((err) => {
       if (err instanceof BizError) {
         toast.error(err.chMessage || err.message)
       }
       throw err
     })
+
+    nav('/dashboard', { replace: true })
   }
 
   if (error && error instanceof BizError) {
@@ -75,7 +82,10 @@ export default function LoginPage() {
           }}
           endContent={
             <button
-              onClick={handleLogin}
+              onClick={(e) => {
+                e.stopPropagation()
+                handleLogin()
+              }}
               className="flex items-center"
               type="submit"
             >

@@ -21,7 +21,7 @@ export class UserController {
   @Post('/login')
   @Throttle({
     default: {
-      limit: 1,
+      limit: 5,
       ttl: 1_000,
     },
   })
