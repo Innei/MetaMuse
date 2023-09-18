@@ -7,10 +7,10 @@ type AppTheme = 'dark' | 'light' | 'system'
 
 export const useTheme = () => {
   const [theme, setTheme] = useAtom(themeAtom)
-  const [systemTheme, setSystemTheme] =
-    useState<Exclude<AppTheme, 'system'>>('light')
-
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+  const [systemTheme, setSystemTheme] = useState<Exclude<AppTheme, 'system'>>(
+    () => (mediaQuery.matches ? 'dark' : 'light'),
+  )
 
   const updateActualTheme = () => {
     setSystemTheme(mediaQuery.matches ? 'dark' : 'light')

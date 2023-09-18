@@ -11,7 +11,7 @@ import { RouteExtendObject } from '~/router/interface'
 export const LayoutHeader = () => {
   const { seo } = useAppInitialData()
   return (
-    <header className="border-b-[0.5px] border-zinc-200 bg-white/80 px-6 backdrop-blur dark:border-neutral-900 dark:bg-zinc-900/80">
+    <header className="fixed left-0 right-0 top-0 border-b-[0.5px] border-zinc-200 bg-white/80 px-6 backdrop-blur dark:border-neutral-900 dark:bg-zinc-900/80">
       <nav className="flex h-16 items-center">
         <div className="flex items-center space-x-3">
           <button className="p-2 text-2xl">𝕄</button>

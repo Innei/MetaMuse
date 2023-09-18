@@ -11,6 +11,6 @@ export const ColorModeObserver = () => {
   })
   useEffect(() => {
     document.documentElement.dataset.theme = theme
-  }, [])
+  }, [theme])
   return <Toaster theme={theme} />
 }

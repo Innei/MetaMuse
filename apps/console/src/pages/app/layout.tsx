@@ -14,7 +14,9 @@ export default function Layout() {
   return (
     <>
       <LayoutHeader />
-      <Outlet />
+      <main className="mt-28 p-4">
+        <Outlet />
+      </main>
       <SeoObserver />
     </>
   )

@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client'
 import { App } from './App'
 
 import './styles/index.css'
+import './i18n'
 
 import { setStore } from 'jojoo'
 import { getDefaultStore } from 'jotai/vanilla'
