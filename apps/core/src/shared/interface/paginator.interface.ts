@@ -2,7 +2,8 @@ export interface PaginationResult<T> {
   data: T[]
   pagination: Paginator
 }
-export class Paginator {
+
+export interface Paginator {
   /**
    * 总条数
    */
