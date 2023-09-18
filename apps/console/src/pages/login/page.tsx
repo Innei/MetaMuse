@@ -1,13 +1,11 @@
 import { Avatar, Input } from '@nextui-org/react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User } from '@model'
 import clsx from 'clsx'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 import useMutation from 'swr/mutation'
-
-import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 
 import { ErrorComponent } from '~/components/common/Error'
 import { BizError } from '~/lib/biz-error'
@@ -41,11 +39,11 @@ export default function LoginPage() {
     nav('/dashboard', { replace: true })
   }
 
-  if (error && error instanceof BizError) {
-    if (error.code === ErrorCodeEnum.NotInitialized) {
-      nav('/setup')
-    }
-  }
+  useEffect(() => {
+    document.addEventListener('keydown', () => {})
+  }, [])
+
+  const ref = useRef(null)
 
   if (error) {
     return <ErrorComponent errorText={error.message} />
@@ -65,7 +63,6 @@ export default function LoginPage() {
         className="relative z-[1] flex flex-col items-center space-y-8"
         onSubmit={(e) => {
           e.preventDefault()
-          handleLogin()
         }}
       >
         <Avatar
@@ -80,10 +77,13 @@ export default function LoginPage() {
             inputWrapper:
               '!bg-slate-50/30 px-3 dark:!bg-slate-900/30 rounded-full backdrop-blur-sm',
           }}
+          ref={ref}
+          autoFocus
           endContent={
             <button
               onClick={(e) => {
                 e.stopPropagation()
+                e.preventDefault()
                 handleLogin()
               }}
               className="flex items-center"

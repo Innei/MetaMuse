@@ -55,7 +55,6 @@ model User {
 
   lastLoginTime DateTime?  @map("last_login_time")
   lastLoginIp   String?    @map("last_login_ip")
-  authCode      String     @map("auth_code")
   apiTokens     ApiToken[]
   oauths        OAuth[]
 

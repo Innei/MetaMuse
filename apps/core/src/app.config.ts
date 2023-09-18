@@ -42,7 +42,7 @@ export const DATABASE = {
 }
 
 export const SECURITY = {
-  jwtSecret: mergeArgv('jwtSecret') || 'asjhczxiucipoiopiqm2376',
+  jwtSecret: mergeArgv('jwt_secret') || 'asjhczxiucipoiopiqm2376',
   jwtExpire: '7d',
 }
 

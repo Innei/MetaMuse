@@ -1,5 +1,4 @@
 import { compareSync, hashSync } from 'bcrypt'
-import { nanoid } from 'nanoid'
 
 import { BizException } from '@core/common/exceptions/biz.exception'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
@@ -40,10 +39,8 @@ export class UserService {
       throw new BizException(ErrorCodeEnum.UserExist)
     }
 
-    const authCode = await this.authService.generateAuthCode()
     const model = await this.db.prisma.user.create({
       data: {
-        authCode,
         ...userDto,
         password: hashSync(userDto.password, 10),
       },
@@ -88,10 +85,6 @@ export class UserService {
       if (isSamePassword) {
         throw new UnprocessableEntityException('密码可不能和原来的一样哦')
       }
-
-      // 2. 认证码重新生成
-      const newCode = nanoid(10)
-      doc.authCode = newCode
     }
 
     await this.db.prisma.user.update({
@@ -140,7 +133,7 @@ export class UserService {
       )
       .then((res) => {
         UserSchemaSerializeProjection.keys.forEach((key) => {
-          delete res[key]
+          Reflect.deleteProperty(res, key)
         })
         return res
       })

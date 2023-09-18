@@ -1,6 +1,7 @@
 import { User } from '@model'
 import { makeAutoObservable } from 'mobx'
 
+import { setToken } from '~/lib/cookie'
 import { $axios } from '~/lib/request'
 
 class UserStore {
@@ -20,24 +21,29 @@ class UserStore {
   }
 
   async login(username: string, password: string) {
-    const user = await $axios.post<User>('/user/login', {
+    const user = await $axios.post<
+      User & {
+        authToken: string
+      }
+    >('/user/login', {
       username,
       password,
     })
 
     this.user = user
     this.isLogged = true
+
+    setToken(user.authToken)
     return user
   }
 
-  async loginByToken(token: string) {
-    const user = await $axios.put<User>('/user/login', {
-      token,
-    })
+  async loginByToken() {
+    const { authToken } = await $axios.put<{
+      authToken: string
+    }>('/user/login')
 
-    this.user = user
     this.isLogged = true
-    return user
+    setToken(authToken)
   }
 }
 

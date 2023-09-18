@@ -1,11 +1,13 @@
 import axios from 'axios'
 import camelcaseKeys from 'camelcase-keys'
 
+import { ErrorCodeEnum } from '@core/constants/error-code.constant'
+
 import { API_URL } from '~/constants/env'
 import { router } from '~/router'
 
 import { BizError } from './biz-error'
-import { getToken } from './cookie'
+import { getToken, removeToken } from './cookie'
 
 const genUUID = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -54,6 +56,7 @@ $axios.interceptors.response.use(
     const res = error.response
 
     if (res?.status === 401) {
+      removeToken()
       router.navigate(
         `/login?from=${encodeURIComponent(router.state.location.pathname)}`,
       )
@@ -61,6 +64,10 @@ $axios.interceptors.response.use(
 
     const data = res.data || {}
     if (typeof data.code === 'number') {
+      if (data.code === ErrorCodeEnum.NotInitialized) {
+        router.navigate('/setup')
+      }
+
       return Promise.reject(
         new BizError(
           data.code,
