@@ -8,3 +8,17 @@
   outline: 0 !important;
   box-shadow: theme(colors.primary) 0px 0px 0px 2px !important;
 }
+
+@layer components {
+  .modal-card {
+    @apply !w-[60rem] !max-w-[90vw];
+
+    &.sm {
+      @apply !w-[40rem];
+    }
+
+    &.xs {
+      @apply !w-[30rem];
+    }
+  }
+}

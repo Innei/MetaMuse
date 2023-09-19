@@ -21,6 +21,7 @@ export type PostInputSchema = Omit<
 
 export const PostIncluded: Prisma.PostInclude = {
   category: true,
+  tags: true,
   related: {
     select: {
       id: true,

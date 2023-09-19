@@ -1,5 +1,6 @@
-import { Category, Post } from '@model'
+import { Category, Post, PostTag } from '@model'
 
-export type PostWithCategory = Post & {
+export type PostModel = Post & {
   category: Category
+  tags: PostTag[]
 }

@@ -2,18 +2,16 @@ import { Avatar, Input } from '@nextui-org/react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User } from '@model'
-import clsx from 'clsx'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 import useMutation from 'swr/mutation'
 
 import { ErrorComponent } from '~/components/common/Error'
+import { Background } from '~/components/ui/Background'
 import { BizError } from '~/lib/biz-error'
 import { clsxm } from '~/lib/helper'
 import { $axios } from '~/lib/request'
 import { userStore } from '~/store/user'
-
-import styles from './index.module.css'
 
 export default function LoginPage() {
   const { data, error } = useSWR<User>('/user', async () => {
@@ -51,14 +49,7 @@ export default function LoginPage() {
 
   return (
     <div className="relative flex h-screen min-h-[500px] w-full min-w-[600px] items-center justify-center">
-      <div className="absolute h-full w-full overflow-hidden">
-        <div
-          className={clsx(
-            'absolute inset-[-100px] z-0 blur-md filter',
-            styles.bg,
-          )}
-        ></div>
-      </div>
+      <Background />
       <form
         className="relative z-[1] flex flex-col items-center space-y-8"
         onSubmit={(e) => {

@@ -33,7 +33,8 @@
     "sonner": "0.7.2",
     "swr": "^2.1.3",
     "tailwind-merge": "^1.13.1",
-    "tailwindcss-animate": "^1.0.6"
+    "tailwindcss-animate": "^1.0.6",
+    "zod": "3.22.2"
   },
   "devDependencies": {
     "@iconify-json/mingcute": "1.1.9",

@@ -1,5 +1,6 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import camelcaseKeys from 'camelcase-keys'
+import { toast } from 'sonner'
 
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 
@@ -28,11 +29,22 @@ const $axios = axios.create({
   timeout: 5000,
 })
 
+declare module 'axios' {
+  interface InternalAxiosRequestConfig {
+    /** if true, will not throw BizError
+     * @default false
+     */
+    ignoreBizError?: boolean
+  }
+}
+
 $axios.interceptors.request.use((config) => {
   config.headers['X-Request-Id'] = genUUID()
 
   config.params = config.params || {}
   config.params._t = Date.now()
+
+  config.ignoreBizError = config.ignoreBizError || false
 
   const token = getToken()
   if (token) {
@@ -49,7 +61,7 @@ $axios.interceptors.response.use(
     Object.defineProperty(response.data, '$$raw', response)
     return response.data
   },
-  (error) => {
+  (error: AxiosError) => {
     if (!error.response) {
       return Promise.reject(error)
     }
@@ -62,12 +74,15 @@ $axios.interceptors.response.use(
       )
     }
 
-    const data = res.data || {}
+    const data: any = res.data || {}
     if (typeof data.code === 'number') {
       if (data.code === ErrorCodeEnum.NotInitialized) {
         router.navigate('/setup')
       }
 
+      if (!error.config?.ignoreBizError) {
+        toast.error(data.chMessage || data.message)
+      }
       return Promise.reject(
         new BizError(
           data.code,
@@ -78,6 +93,7 @@ $axios.interceptors.response.use(
         ),
       )
     }
+
     return Promise.reject(error)
   },
 )
