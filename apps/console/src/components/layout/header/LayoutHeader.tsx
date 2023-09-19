@@ -1,3 +1,4 @@
+import { Avatar } from '@nextui-org/react'
 import { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
@@ -7,6 +8,9 @@ import { useAppInitialData } from '~/providers/initial'
 import { appRoutes } from '~/router/builder'
 import { useCurrentRouteObject } from '~/router/hooks'
 import { RouteExtendObject } from '~/router/interface'
+import { userStore } from '~/store/user'
+
+import { ThemeToggle } from './ThemeToggle'
 
 export const LayoutHeader = () => {
   const { seo } = useAppInitialData()
@@ -20,10 +24,29 @@ export const LayoutHeader = () => {
           <BreadcrumbDivider className={'opacity-20'} />
         </div>
 
-        <HeaderMenu />
+        <div className="relative flex min-w-0 flex-grow items-center justify-between">
+          <HeaderMenu />
+
+          <RightBar />
+        </div>
       </nav>
       <SecondaryNavLine />
     </header>
+  )
+}
+
+const RightBar = () => {
+  return (
+    <div className="relative flex space-x-2">
+      <ThemeToggle />
+      <Avatar
+        size="sm"
+        src={userStore.user?.avatar || ''}
+        isBordered
+        showFallback
+        name={userStore.user?.name}
+      />
+    </div>
   )
 }
 
