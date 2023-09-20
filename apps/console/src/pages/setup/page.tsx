@@ -1,7 +1,7 @@
 import { Button, Input } from '@nextui-org/react'
+import { useMutation } from '@tanstack/react-query'
 import { useForceUpdate } from 'framer-motion'
 import { toast } from 'sonner'
-import useSWRMutation from 'swr/mutation'
 
 import { UserRegisterDto } from '@core/modules/user/dtos/register.dto'
 
@@ -33,7 +33,7 @@ const RegisterStep = () => {
   const [update] = useForceUpdate()
   const isPasswordConfirmValid = () => passwordConfirm() === password()
 
-  const { trigger } = useSWRMutation('/user', async () => {
+  const { mutateAsync: register } = useMutation(async () => {
     const payload = {
       username: username(),
       password: password(),
@@ -57,7 +57,7 @@ const RegisterStep = () => {
     update()
 
     if (!isPasswordConfirmValid()) return
-    trigger()
+    register()
   }
 
   return (

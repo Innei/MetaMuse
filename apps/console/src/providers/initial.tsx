@@ -1,5 +1,5 @@
+import { useQuery } from '@tanstack/react-query'
 import { createContext, FC, PropsWithChildren, useContext } from 'react'
-import useSWR from 'swr'
 
 import { Error } from '~/components/common/Error'
 import { Loading } from '~/components/common/Loading'
@@ -12,7 +12,7 @@ interface InitialData {
 
 const InitialDataContext = createContext<InitialData>(null! as InitialData)
 export const InitialDataProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { data, error, isLoading } = useSWR(['initial-data'], async () => {
+  const { data, error, isLoading } = useQuery(['initial-data'], async () => {
     return {
       seo: {
         title: '静かな森',

@@ -37,7 +37,7 @@ export const LayoutHeader = () => {
 
 const RightBar = () => {
   return (
-    <div className="relative flex space-x-2">
+    <div className="relative flex items-center space-x-2">
       <ThemeToggle />
       <Avatar
         size="sm"

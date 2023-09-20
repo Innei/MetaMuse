@@ -1,10 +1,9 @@
 import { Avatar } from '@nextui-org/react'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User } from '@model'
 import { toast } from 'sonner'
-import useSWR from 'swr'
-import useMutation from 'swr/mutation'
 
 import { ErrorComponent } from '~/components/common/Error'
 import { Background } from '~/components/ui/Background'
@@ -14,11 +13,11 @@ import { $axios } from '~/lib/request'
 import { userStore } from '~/store/user'
 
 export default function LoginPage() {
-  const { data, error } = useSWR<User>('/user', async () => {
+  const { data, error } = useQuery<User, Error>(['/user'], async () => {
     return $axios.get('/user')
   })
 
-  const { trigger: login } = useMutation('/user', async (key) => {
+  const { mutateAsync: login } = useMutation(async () => {
     return userStore.login(data!.username, password)
   })
 

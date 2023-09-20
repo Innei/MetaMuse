@@ -13,11 +13,11 @@ import {
   TableHeader,
   TableRow,
 } from '@nextui-org/react'
-import { useMemo, useRef, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { FC, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import useSWR from 'swr'
 
 import { PaginationResult } from '@core/shared/interface/paginator.interface'
 
@@ -26,7 +26,9 @@ import { RelativeTime } from '~/components/ui/DateTime'
 import { useBeforeMounted } from '~/hooks/use-before-mounted'
 import { buildNSKey } from '~/lib/key'
 import { $axios } from '~/lib/request'
+import { routeBuilder, Routes } from '~/lib/route-builder'
 import { PostModel } from '~/models/post'
+import { router } from '~/router'
 
 enum ViewStyle {
   Table,
@@ -186,7 +188,7 @@ export default () => {
     } catch {}
   })
 
-  const { data, isLoading } = useSWR(
+  const { data, isLoading } = useQuery(
     ['/posts', page, size],
     async () => {
       return $axios.get<PaginationResult<PostModel>>('/admin/posts', {
@@ -258,16 +260,27 @@ function renderPostKeyValue(data: PostModel, key: any) {
       return <RelativeTime time={data[key]} />
 
     case 'action': {
-      return <Actions />
+      return <Actions data={data} />
     }
   }
   return getKeyValue(data, key)
 }
 
-const Actions = () => {
+const Actions: FC<{ data: PostModel }> = ({ data }) => {
   return (
     <div className="flex items-center space-x-2">
-      <Button color="secondary" size="sm" variant="light">
+      <Button
+        onClick={() => {
+          router.navigate(
+            routeBuilder(Routes.PostEditOrNew, {
+              id: data.id,
+            }),
+          )
+        }}
+        color="secondary"
+        size="sm"
+        variant="light"
+      >
         编辑
       </Button>
       <Button size="sm" variant="light" className="hover:text-red-500">

@@ -1,9 +1,10 @@
 import { NextUIProvider } from '@nextui-org/react'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { Suspense } from 'react'
-import { SWRConfig } from 'swr'
 
 import { ColorModeObserver } from './components/common/ColorModeObserver'
 import { InitialDataProvider } from './providers/initial'
+import { queryClient } from './providers/query-core'
 import { Router } from './router'
 import { userStore } from './store/user'
 
@@ -11,7 +12,7 @@ userStore.loginByToken()
 
 export function App() {
   return (
-    <SWRConfig>
+    <QueryClientProvider client={queryClient}>
       <Suspense>
         <NextUIProvider>
           <InitialDataProvider>
@@ -20,6 +21,6 @@ export function App() {
         </NextUIProvider>
         <ColorModeObserver />
       </Suspense>
-    </SWRConfig>
+    </QueryClientProvider>
   )
 }
