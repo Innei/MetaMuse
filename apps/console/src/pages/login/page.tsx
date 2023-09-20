@@ -1,4 +1,4 @@
-import { Avatar, Input } from '@nextui-org/react'
+import { Avatar } from '@nextui-org/react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User } from '@model'
@@ -38,10 +38,19 @@ export default function LoginPage() {
   }
 
   useEffect(() => {
-    document.addEventListener('keydown', () => {})
+    const handler = () => {
+      ref.current?.focus()
+    }
+
+    handler()
+    document.addEventListener('keydown', handler)
+
+    return () => {
+      document.removeEventListener('keydown', handler)
+    }
   }, [])
 
-  const ref = useRef(null)
+  const ref = useRef<HTMLInputElement>(null)
 
   if (error) {
     return <ErrorComponent errorText={error.message} />
@@ -62,15 +71,16 @@ export default function LoginPage() {
           src={data?.avatar || ''}
           size="lg"
         />
-        <Input
-          type="password"
-          classNames={{
-            inputWrapper:
-              '!bg-slate-50/30 px-3 dark:!bg-slate-900/30 rounded-full backdrop-blur-sm',
-          }}
-          ref={ref}
-          autoFocus
-          endContent={
+
+        <div className="relative flex h-[35px] space-x-2 rounded-full bg-slate-50/30 px-3 py-2 backdrop-blur-sm dark:bg-slate-900/30">
+          <input
+            ref={ref}
+            className="h-full flex-grow appearance-none border-0 bg-transparent outline-none ring-0"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+          ></input>
+          <div className="flex flex-shrink-0 items-center justify-center">
             <button
               onClick={(e) => {
                 e.stopPropagation()
@@ -87,12 +97,8 @@ export default function LoginPage() {
                 )}
               />
             </button>
-          }
-          placeholder=""
-          value={password}
-          size="sm"
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          </div>
+        </div>
       </form>
     </div>
   )

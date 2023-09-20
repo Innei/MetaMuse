@@ -1,5 +1,4 @@
 import { nextui } from '@nextui-org/react'
-import daisyui from 'daisyui'
 import { withTV } from 'tailwind-variants/transformer'
 import { PluginAPI } from 'tailwindcss/types/config'
 
@@ -49,7 +48,7 @@ const twConfig: Config = {
     addShortcutPlugin,
 
     typography,
-    daisyui,
+    // daisyui,
     nextui(),
     require('tailwind-scrollbar'),
   ],
