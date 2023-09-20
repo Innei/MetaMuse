@@ -1,6 +1,11 @@
 import {
   Button,
   getKeyValue,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Select,
+  SelectItem,
   Table,
   TableBody,
   TableCell,
@@ -8,15 +13,15 @@ import {
   TableHeader,
   TableRow,
 } from '@nextui-org/react'
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useAtom } from 'jotai'
+import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import useSWR from 'swr'
 
 import { PaginationResult } from '@core/shared/interface/paginator.interface'
 
-import { AddCircleLine } from '~/components/icons'
+import { AddCircleLine, FilterLineIcon } from '~/components/icons'
 import { RelativeTime } from '~/components/ui/DateTime'
 import { useBeforeMounted } from '~/hooks/use-before-mounted'
 import { buildNSKey } from '~/lib/key'
@@ -29,12 +34,94 @@ enum ViewStyle {
 }
 
 const viewStyleAtom = atomWithStorage(buildNSKey('view-style'), ViewStyle.Table)
+const filterAtom = atom([] as string[])
+const sortingAtom = atom({ key: 'created', order: 'desc' } as {
+  key: string
+  order: 'asc' | 'desc'
+})
+
+const Filter = () => {
+  return null
+  // TODO
+  return (
+    <div className="w-full px-1 py-2">
+      <p className="text-small text-foreground font-bold"></p>
+      <div className="mt-2 flex w-full flex-col gap-2"></div>
+    </div>
+  )
+}
+
+const sortingKeyMap = {
+  created: '创建时间',
+  modified: '修改时间',
+}
+
+const sortingOrderList = [
+  {
+    key: 'asc',
+    label: '升序',
+  },
+  {
+    key: 'desc',
+    label: '降序',
+  },
+]
+
+const Sorting = () => {
+  const [sorting, setSorting] = useAtom(sortingAtom)
+  const sortingKey = useMemo(() => new Set([sorting.key]), [sorting.key])
+  const sortingOrder = useMemo(() => new Set([sorting.order]), [sorting.order])
+  // TODO
+  return (
+    <div className="w-full space-y-2 px-2 py-3">
+      <Select
+        size="sm"
+        label="按照以下字段排序"
+        selectedKeys={sortingKey}
+        onSelectionChange={(value) => {
+          if (typeof value === 'string') return
+          setSorting((prev) => ({
+            ...prev,
+            key: value.keys()[0],
+          }))
+        }}
+      >
+        {Object.entries(sortingKeyMap).map(([key, value]) => (
+          <SelectItem key={key} value={key}>
+            {value}
+          </SelectItem>
+        ))}
+      </Select>
+
+      <Select
+        size="sm"
+        label="排序方式"
+        onSelectionChange={(value) => {
+          if (typeof value === 'string') return
+          setSorting((prev) => ({
+            ...prev,
+            order: value.keys()[0],
+          }))
+        }}
+        selectedKeys={sortingOrder}
+        className="w-full"
+      >
+        {sortingOrderList.map(({ key, label }) => (
+          <SelectItem key={key} value={key}>
+            {label}
+          </SelectItem>
+        ))}
+      </Select>
+    </div>
+  )
+}
+
 const Header = () => {
   const [viewStyle, setViewStyle] = useAtom(viewStyleAtom)
   return (
-    <div className="mb-6 flex h-12 justify-end space-x-2">
+    <div className="mb-6 flex h-12 justify-between space-x-2">
       <Button
-        variant="light"
+        variant="flat"
         isIconOnly
         onClick={() => {
           setViewStyle((prev) => {
@@ -51,13 +138,35 @@ const Header = () => {
           <i className="icon-[mingcute--menu-line]" />
         )}
       </Button>
-      <Button variant="flat" color="primary">
-        <AddCircleLine />
-        新建
-      </Button>
+
+      <div className="space-x-2">
+        <Popover
+          classNames={{
+            base: 'p-0',
+          }}
+        >
+          <PopoverTrigger>
+            <Button isIconOnly variant="flat">
+              <FilterLineIcon />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <div className="w-52">
+              <Filter />
+              <Sorting />
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        <Button variant="flat" color="primary">
+          <AddCircleLine />
+          新建
+        </Button>
+      </div>
     </div>
   )
 }
+
 export default () => {
   const [page, setPage] = useState(1)
   const [size, setSize] = useState(10)
