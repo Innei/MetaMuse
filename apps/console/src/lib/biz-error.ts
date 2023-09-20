@@ -1,6 +1,5 @@
+import { ErrorCodeEnum } from '@constants'
 import { AxiosError } from 'axios'
-
-import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 
 export class BizError extends Error {
   constructor(

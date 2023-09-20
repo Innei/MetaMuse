@@ -1,8 +1,7 @@
+import { ErrorCodeEnum } from '@constants'
 import axios, { AxiosError } from 'axios'
 import camelcaseKeys from 'camelcase-keys'
 import { toast } from 'sonner'
-
-import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 
 import { API_URL } from '~/constants/env'
 import { router } from '~/router'

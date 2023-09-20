@@ -47,3 +47,5 @@ prisma/dist
 
 apps/core/dist
 apps/console/dist
+
+packages/*/dist

@@ -18,6 +18,10 @@ export default defineConfig({
         find: /^@model/,
         replacement: resolve(__dirname, '../../prisma/client/index.d.ts'),
       },
+      {
+        find: /^@constants$/,
+        replacement: resolve(__dirname, '../../packages/constants/index.ts'),
+      },
     ],
   },
   build: {

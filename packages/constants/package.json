@@ -1,0 +1,16 @@
+{
+  "name": "@meta-muse/constants",
+  "version": "0.0.0",
+  "main": "index.ts",
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs"
+  },
+  "scripts": {
+    "build": "tsup index.ts --format cjs,esm"
+  },
+  "devDependencies": {
+    "tsup": "7.2.0"
+  }
+}

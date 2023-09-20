@@ -20,14 +20,13 @@ import { useSearchParams } from 'react-router-dom'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 
-import { PaginationResult } from '@core/shared/interface/paginator.interface'
-
 import { AddCircleLine, FilterLineIcon } from '~/components/icons'
 import { RelativeTime } from '~/components/ui/DateTime'
 import { useBeforeMounted } from '~/hooks/use-before-mounted'
 import { buildNSKey } from '~/lib/key'
 import { $axios } from '~/lib/request'
 import { routeBuilder, Routes } from '~/lib/route-builder'
+import { PaginationResult } from '~/models/paginator'
 import { PostModel } from '~/models/post'
 import { router } from '~/router'
 
