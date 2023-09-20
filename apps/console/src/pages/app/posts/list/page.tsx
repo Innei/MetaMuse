@@ -1,6 +1,7 @@
 import {
   Button,
   getKeyValue,
+  Pagination,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -15,7 +16,7 @@ import {
 } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
 import { FC, useMemo, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 
@@ -173,11 +174,13 @@ export default () => {
   const [page, setPage] = useState(1)
   const [size, setSize] = useState(10)
 
-  const { search } = useLocation()
+  const [search, setSearch] = useSearchParams()
 
   useBeforeMounted(() => {
+    if (!search.get('page')) setSearch((p) => ({ ...p, page: 1 }))
+    if (!search.get('size')) setSearch((p) => ({ ...p, size: 10 }))
     try {
-      new URLSearchParams(search).forEach((value, key) => {
+      search.forEach((value, key) => {
         if (key === 'page') {
           setPage(Number(value))
         }
@@ -202,6 +205,11 @@ export default () => {
   )
 
   const currentSelectionRef = useRef<Set<string>>()
+
+  const currentPage = useMemo(
+    () => parseInt(search.get('page')!) || 1,
+    [search],
+  )
   return (
     <>
       <Header />
@@ -225,7 +233,9 @@ export default () => {
           </TableColumn>
           <TableColumn key={'created'}>创建时间</TableColumn>
           <TableColumn key={'modified'}>修改时间</TableColumn>
-          <TableColumn key={'action'}>操作</TableColumn>
+          <TableColumn className="text-center" width={1} key={'action'}>
+            操作
+          </TableColumn>
         </TableHeader>
         <TableBody
           isLoading={isLoading}
@@ -241,9 +251,24 @@ export default () => {
           )}
         </TableBody>
       </Table>
+
+      {!!data && data.pagination.totalPage > 1 && (
+        <div className="mt-8 flex w-full items-center justify-end gap-4">
+          <Pagination
+            total={data?.pagination.totalPage}
+            initialPage={currentPage}
+            variant={'light'}
+            onChange={(page) => {
+              setPage(page)
+              setSearch((p) => ({ ...p, page }))
+            }}
+          />
+        </div>
+      )}
     </>
   )
 }
+
 function renderPostKeyValue(data: PostModel, key: any) {
   switch (key) {
     case 'category':
