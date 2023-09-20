@@ -92,6 +92,9 @@ importers:
       camelcase-keys:
         specifier: 9.0.0
         version: 9.0.0
+      dayjs:
+        specifier: 1.11.9
+        version: 1.11.9
       foxact:
         specifier: 0.2.20
         version: 0.2.20(react@18.2.0)

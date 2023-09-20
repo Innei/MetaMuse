@@ -17,6 +17,7 @@ import useSWR from 'swr'
 import { PaginationResult } from '@core/shared/interface/paginator.interface'
 
 import { AddCircleLine } from '~/components/icons'
+import { RelativeTime } from '~/components/ui/DateTime'
 import { useBeforeMounted } from '~/hooks/use-before-mounted'
 import { buildNSKey } from '~/lib/key'
 import { $axios } from '~/lib/request'
@@ -142,6 +143,10 @@ function renderPostKeyValue(data: PostModel, key: any) {
       return data.count?.like
     case 'tags':
       return data.tags.map((tag) => tag.name).join(',')
+
+    case 'created':
+    case 'modified':
+      return <RelativeTime time={data[key]} />
 
     case 'action': {
       return <Actions />
