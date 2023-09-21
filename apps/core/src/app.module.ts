@@ -26,6 +26,7 @@ import { DatabaseModule } from './processors/database/database.module'
 import { GatewayModule } from './processors/gateway/gateway.module'
 import { HelperModule } from './processors/helper/helper.module'
 import { LoggerModule } from './processors/logger/logger.module'
+import { tRPCModule } from './processors/trpc/trpc.module'
 
 // Request ----->
 // Response <-----
@@ -44,6 +45,7 @@ const appInterceptors: Type<any>[] = [
     HelperModule,
     LoggerModule,
     GatewayModule,
+    tRPCModule,
 
     // BIZ
     AuthModule,
