@@ -160,7 +160,13 @@ const Header = () => {
           </PopoverContent>
         </Popover>
 
-        <Button variant="flat" color="primary">
+        <Button
+          onClick={() => {
+            router.navigate(routeBuilder(Routes.PostEditOrNew, {}))
+          }}
+          variant="flat"
+          color="primary"
+        >
           <AddCircleLine />
           新建
         </Button>

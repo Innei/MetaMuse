@@ -14,5 +14,17 @@
   },
   "editor.codeActionsOnSave": {},
   "material-icon-theme.activeIconPack": "nest",
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "tailwindCSS.experimental.classRegex": [
+    [
+      "/\\*tw\\*/ ([^;]*);",
+      "'([^']*)'"
+    ],
+    [
+      "[a-zA-Z]*className='([^']+)'"
+    ],
+    [
+      "classNames='([^']+)'"
+    ]
+  ]
 }

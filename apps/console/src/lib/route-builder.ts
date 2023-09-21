@@ -12,9 +12,6 @@ type Pagination = {
   page?: number
 }
 
-type WithId = {
-  id: string | number
-}
 export type PostsParams = Pagination & {
   sortBy?: string
   orderBy?: 'desc' | 'asc'
@@ -42,8 +39,9 @@ export function routeBuilder<T extends Routes>(
       break
     }
     case Routes.PostEditOrNew: {
-      const p = params as OnlyId
-      href += `?id=${p.id}`
+      const p = params as Partial<OnlyId>
+
+      p.id && (href += `?id=${p.id}`)
       break
     }
     case Routes.PostList: {

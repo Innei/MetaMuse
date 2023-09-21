@@ -35,6 +35,13 @@ declare module 'axios' {
      */
     ignoreBizError?: boolean
   }
+
+  interface AxiosRequestConfig {
+    /** if true, will not throw BizError
+     * @default false
+     */
+    ignoreBizError?: boolean
+  }
 }
 
 $axios.interceptors.request.use((config) => {
@@ -68,9 +75,11 @@ $axios.interceptors.response.use(
 
     if (res?.status === 401) {
       removeToken()
-      router.navigate(
-        `/login?from=${encodeURIComponent(router.state.location.pathname)}`,
-      )
+      if (!router.state.location.pathname.startsWith('/login')) {
+        router.navigate(
+          `/login?from=${encodeURIComponent(router.state.location.pathname)}`,
+        )
+      }
     }
 
     const data: any = res.data || {}

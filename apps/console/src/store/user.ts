@@ -38,9 +38,11 @@ class UserStore {
   }
 
   async loginByToken() {
-    const { authToken } = await $axios.put<{
+    const { authToken } = (await $axios.put('/user/login', undefined, {
+      ignoreBizError: true,
+    })) as {
       authToken: string
-    }>('/user/login')
+    }
 
     this.isLogged = true
     setToken(authToken)
