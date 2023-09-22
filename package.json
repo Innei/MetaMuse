@@ -4,7 +4,7 @@
   "author": "Innei <https://innei.in>",
   "private": true,
   "license": "MIT",
-  "packageManager": "pnpm@8.7.4",
+  "packageManager": "pnpm@8.7.6",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -45,7 +45,7 @@
     "@innei/bump-version": "^1.5.10",
     "@innei/eslint-config-ts": "^0.11.1",
     "@innei/prettier": "^0.11.1",
-    "@nestjs/cli": "10.1.17",
+    "@nestjs/cli": "10.1.18",
     "@nestjs/schematics": "10.0.2",
     "dotenv-cli": "7.3.0",
     "eslint": "^8.49.0",
