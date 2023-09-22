@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { Global, Module } from '@nestjs/common'
 import { DiscoveryModule } from '@nestjs/core'
 
 import { tRPCService } from './trpc.service'
@@ -8,4 +8,5 @@ import { tRPCService } from './trpc.service'
   providers: [tRPCService],
   imports: [DiscoveryModule],
 })
+@Global()
 export class tRPCModule {}

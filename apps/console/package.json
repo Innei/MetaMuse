@@ -19,6 +19,8 @@
     "@tanstack/query-core": "4.35.3",
     "@tanstack/react-query": "4.35.3",
     "@tanstack/react-query-persist-client": "4.35.5",
+    "@trpc/client": "10.38.4",
+    "@trpc/react-query": "10.38.4",
     "axios": "1.5.0",
     "camelcase-keys": "9.0.0",
     "dayjs": "1.11.9",
