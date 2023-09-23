@@ -11,6 +11,7 @@ import { SpiderGuard } from './common/guards/spider.guard'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 import { consola } from './global/consola.global'
 import { MyLogger } from './processors/logger/logger.service'
+import { tRPCService } from './processors/trpc/trpc.service'
 import { isDev } from './shared/utils/environment.util'
 
 // const APIVersion = 1
@@ -38,6 +39,9 @@ export async function bootstrap() {
 
   isDev && app.useGlobalInterceptors(new LoggingInterceptor())
   app.useGlobalGuards(new SpiderGuard())
+
+  const trpcService = app.get(tRPCService)
+  trpcService.applyMiddleware(app)
 
   await app.listen(+PORT, '0.0.0.0', async () => {
     app.useLogger(app.get(MyLogger))

@@ -12,6 +12,8 @@ export enum ErrorCodeEnum {
 
   AuthFailUserNotExist = 20000,
   AuthFail = 20001,
+  JWTExpired = 20002,
+  JWTInvalid = 20003,
 
   UserNotFound = 30000,
   UserExist = 30001,
@@ -63,6 +65,8 @@ export const ErrorCode = Object.freeze<
     '认证失败，请检查用户名和密码',
     400,
   ],
+  [ErrorCodeEnum.JWTExpired]: ['jwt expired', 'jwt 已过期', 401],
+  [ErrorCodeEnum.JWTInvalid]: ['jwt invalid', 'jwt 无效', 401],
   [ErrorCodeEnum.UserNotFound]: ['user not found', '用户不存在', 404],
   [ErrorCodeEnum.UserExist]: ['user already exist', '用户已存在', 400],
 })

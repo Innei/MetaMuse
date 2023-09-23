@@ -26,6 +26,7 @@ import { DatabaseModule } from './processors/database/database.module'
 import { GatewayModule } from './processors/gateway/gateway.module'
 import { HelperModule } from './processors/helper/helper.module'
 import { LoggerModule } from './processors/logger/logger.module'
+import { tRPCModule } from './processors/trpc/trpc.module'
 
 // Request ----->
 // Response <-----
@@ -50,6 +51,9 @@ const appInterceptors: Type<any>[] = [
     PostModule,
     UserModule,
     CategoryModule,
+
+    // waiting for all biz modules loaded
+    tRPCModule,
   ],
   controllers: [AppController],
   providers: [

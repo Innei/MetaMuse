@@ -55,4 +55,41 @@ export class AuthService {
       return isExpired ? false : true
     }
   }
+
+  /**
+   * 验证 custom token and jwt token
+   * @param token
+   * @returns ErrorCodeEnum | true
+   */
+  async validate(token: string) {
+    if (this.isCustomToken(token)) {
+      const isValid = await this.verifyCustomToken(token)
+      if (!isValid) {
+        return ErrorCodeEnum.JWTInvalid
+      }
+
+      return true
+    }
+
+    const jwt = token.replace(/[Bb]earer /, '')
+
+    if (!isJWT(jwt)) {
+      return ErrorCodeEnum.JWTInvalid
+    }
+    const ok = await this.jwtServicePublic.verify(jwt)
+    if (!ok) {
+      return ErrorCodeEnum.JWTExpired
+    }
+    return true
+  }
+}
+
+function isJWT(token: string): boolean {
+  const parts = token.split('.')
+  return (
+    parts.length === 3 &&
+    /^[a-zA-Z0-9_-]+$/.test(parts[0]) &&
+    /^[a-zA-Z0-9_-]+$/.test(parts[1]) &&
+    /^[a-zA-Z0-9_-]+$/.test(parts[2])
+  )
 }

@@ -95,6 +95,12 @@ importers:
       '@tanstack/react-query-persist-client':
         specifier: 4.35.5
         version: 4.35.5(@tanstack/react-query@4.35.3)
+      '@trpc/client':
+        specifier: 10.38.4
+        version: 10.38.4(@trpc/server@10.38.4)
+      '@trpc/react-query':
+        specifier: 10.38.4
+        version: 10.38.4(@tanstack/react-query@4.35.3)(@trpc/client@10.38.4)(@trpc/server@10.38.4)(react-dom@18.2.0)(react@18.2.0)
       axios:
         specifier: 1.5.0
         version: 1.5.0
@@ -264,6 +270,9 @@ importers:
       '@socket.io/redis-emitter':
         specifier: 5.1.0
         version: 5.1.0
+      '@trpc/server':
+        specifier: 10.38.4
+        version: 10.38.4
       axios:
         specifier: 1.5.0
         version: 1.5.0
@@ -370,6 +379,9 @@ importers:
       ioredis:
         specifier: ^5.3.2
         version: 5.3.2
+      ts-toolbelt:
+        specifier: 9.6.0
+        version: 9.6.0
       zod-prisma-types:
         specifier: 2.7.9
         version: 2.7.9
@@ -4550,6 +4562,34 @@ packages:
 
   /@tokenizer/token@0.3.0:
     resolution: {integrity: sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==}
+
+  /@trpc/client@10.38.4(@trpc/server@10.38.4):
+    resolution: {integrity: sha512-svpZ9Iq9cnn+XfXQZF8PMt1YxAtNYeGiKZ/pGpcume7RqJrra/kWwU41gbax8d/cAg3YKUgNft9dZFKMYtXuYw==}
+    peerDependencies:
+      '@trpc/server': 10.38.4
+    dependencies:
+      '@trpc/server': 10.38.4
+    dev: false
+
+  /@trpc/react-query@10.38.4(@tanstack/react-query@4.35.3)(@trpc/client@10.38.4)(@trpc/server@10.38.4)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-wEreUn9E+ZMKn/oRWlhHzmSgG5SG9WpmE1F27PPjn3I0S92aYRQvVsmV43v2OAL1VUYP2aHLk7gXx2luKLLRyw==}
+    peerDependencies:
+      '@tanstack/react-query': ^4.18.0
+      '@trpc/client': 10.38.4
+      '@trpc/server': 10.38.4
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@tanstack/react-query': 4.35.3(react-dom@18.2.0)(react@18.2.0)
+      '@trpc/client': 10.38.4(@trpc/server@10.38.4)
+      '@trpc/server': 10.38.4
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@trpc/server@10.38.4:
+    resolution: {integrity: sha512-xSMTwnKA/Unxu5fbAkQ7cApHeWj1rTEA3XgrGDcPHn03fmeIidIKxronM46N46ZF4CCexey4JWzu89XxA16uIA==}
+    dev: false
 
   /@types/bcrypt@5.0.0:
     resolution: {integrity: sha512-agtcFKaruL8TmcvqbndlqHPSJgsolhf/qPWchFlgnW1gECTN/nKbFcoFnvKAQRFfKbh+BO6A3SWdJu9t+xF3Lw==}
@@ -11281,6 +11321,10 @@ packages:
       semver: 7.5.2
       typescript: 5.2.2
       webpack: 5.88.2
+    dev: true
+
+  /ts-toolbelt@9.6.0:
+    resolution: {integrity: sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==}
     dev: true
 
   /tsconfck@2.1.2(typescript@5.2.2):

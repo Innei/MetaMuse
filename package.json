@@ -26,6 +26,7 @@
     "prebuild": "rimraf dist && pnpm run prisma:generate",
     "init": "pnpm run prisma:generate && pnpm run migrate:dev",
     "build": "pnpm -C \"apps/core\" run build",
+    "dev:core:tsc": "pnpm -C \"apps/core\" run start -b tsc",
     "dev": "pnpm -C \"apps/core\" run start",
     "dev:console": "pnpm -C \"apps/console\" run dev",
     "p-dev": "run-p dev:console dev",
