@@ -1,10 +1,14 @@
 import {
-  createTRPCProxyClient,
   createTRPCReact,
   httpBatchLink,
+  inferReactQueryProcedureOptions,
 } from '@trpc/react-query'
 
-import { AppRouter } from '@core/processors/trpc/trpc.service'
+import {
+  AppRouter,
+  RouterInputs,
+  RouterOutputs,
+} from '@core/processors/trpc/trpc.instance'
 
 import { API_URL } from '~/constants/env'
 
@@ -12,7 +16,7 @@ import { getToken } from './cookie'
 
 export const trpc = createTRPCReact<AppRouter>()
 
-export const tRpcClient = createTRPCProxyClient<AppRouter>({
+export const tRpcClient = trpc.createClient({
   links: [
     httpBatchLink({
       url: `${API_URL}/trpc`,
@@ -25,3 +29,7 @@ export const tRpcClient = createTRPCProxyClient<AppRouter>({
     }),
   ],
 })
+
+export type ReactQueryOptions = inferReactQueryProcedureOptions<AppRouter>
+
+export type { RouterInputs, RouterOutputs }

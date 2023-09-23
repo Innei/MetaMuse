@@ -10,15 +10,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 
-function isJWT(token: string): boolean {
-  const parts = token.split('.')
-  return (
-    parts.length === 3 &&
-    /^[a-zA-Z0-9_-]+$/.test(parts[0]) &&
-    /^[a-zA-Z0-9_-]+$/.test(parts[1]) &&
-    /^[a-zA-Z0-9_-]+$/.test(parts[2])
-  )
-}
+import { BizException } from '../exceptions/biz.exception'
 
 /**
  * JWT auth guard
@@ -47,30 +39,16 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('未登录')
     }
 
-    if (this.authService.isCustomToken(Authorization)) {
-      const isValid = await this.authService.verifyCustomToken(Authorization)
-      if (!isValid) {
-        throw new UnauthorizedException('令牌无效')
-      }
-      const owner = await this.userService.getOwner()
-      request.owner = owner
-      request.token = Authorization
-      return true
-    }
+    const result = await this.authService.validate(Authorization)
 
-    const jwt = Authorization.replace(/[Bb]earer /, '')
-
-    if (!isJWT(jwt)) {
-      throw new UnauthorizedException('令牌无效')
-    }
-    const ok = await this.authService.jwtServicePublic.verify(jwt)
-    if (!ok) {
-      throw new UnauthorizedException('身份过期')
+    if (result !== true) {
+      throw new BizException(result)
     }
 
     const owner = await this.userService.getOwner()
     request.owner = owner
-    request.token = jwt
+    request.token = Authorization.split(' ')[1]
+
     return true
   }
 

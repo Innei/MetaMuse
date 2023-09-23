@@ -1,8 +1,12 @@
 import { inferAsyncReturnType } from '@trpc/server'
-import { CreateFastifyContextOptions } from '@trpc/server/adapters/fastify'
+import * as trpcNext from '@trpc/server/adapters/next'
 
-export function createContext({ req, res }: CreateFastifyContextOptions) {
-  // const user = { name: req.headers.username ?? 'anonymous' }
-  return { req, res }
+export async function createContext({
+  req,
+  res,
+}: trpcNext.CreateNextContextOptions) {
+  return {
+    authorization: req.headers.authorization as string | null,
+  }
 }
 export type Context = inferAsyncReturnType<typeof createContext>

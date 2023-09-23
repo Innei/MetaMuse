@@ -45,13 +45,15 @@ const appInterceptors: Type<any>[] = [
     HelperModule,
     LoggerModule,
     GatewayModule,
-    tRPCModule,
 
     // BIZ
     AuthModule,
     PostModule,
     UserModule,
     CategoryModule,
+
+    // waiting for all biz modules loaded
+    tRPCModule,
   ],
   controllers: [AppController],
   providers: [
