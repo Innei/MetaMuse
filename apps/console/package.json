@@ -47,7 +47,7 @@
     "@iconify/tailwind": "0.1.3",
     "@innei/eslint-config-react-ts": "0.11.1",
     "@tailwindcss/typography": "0.5.10",
-    "@types/node": "20.6.3",
+    "@types/node": "20.6.4",
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
     "@vitejs/plugin-react": "4.0.4",
