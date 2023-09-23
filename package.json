@@ -48,7 +48,7 @@
     "@nestjs/cli": "10.1.18",
     "@nestjs/schematics": "10.0.2",
     "dotenv-cli": "7.3.0",
-    "eslint": "^8.49.0",
+    "eslint": "^8.50.0",
     "husky": "8.0.3",
     "lint-staged": "14.0.1",
     "prettier": "3.0.3",
