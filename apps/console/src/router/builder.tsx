@@ -14,62 +14,100 @@ const appPages = import.meta.glob('../pages/app/**/*.tsx') as any as Record<
   () => Promise<{ default: React.ComponentType<any> | RouteMeta }>
 >
 
-const fsPath2LazyComponentMapping = {} as {
-  [fsPath: string]: {
-    lazyComponent: React.ReactNode
-    routePath: string
+async function builder() {
+  const fsPath2LazyComponentMapping = {} as {
+    [fsPath: string]: {
+      lazyComponent: React.ReactNode
+      routePath: string
+    }
   }
-}
 
-const fsPath2MetaMapping = {} as {
-  [fsPath: string]: () => Promise<{ default: RouteMeta }>
-}
+  const fsPath2MetaMapping = {} as {
+    [fsPath: string]: () => Promise<{ default: RouteMeta }>
+  }
 
-const globalOmitPaths = ['page.tsx', 'layout.tsx']
+  const globalOmitPaths = ['page.tsx', 'layout.tsx']
 
-for (const rawPath in appPages) {
-  if (globalOmitPaths.some((omitPath) => rawPath === omitPath)) continue
+  for (const rawPath in appPages) {
+    if (globalOmitPaths.some((omitPath) => rawPath === omitPath)) continue
 
-  const path = rawPath.replace('../pages/app/', '')
-  // dashboard/page.tsx
-  // layout.tsx
-  // posts/edit/page.tsx
+    const path = rawPath.replace('../pages/app/', '')
+    // dashboard/page.tsx
+    // layout.tsx
+    // posts/edit/page.tsx
 
-  const tailingFileName = path.split('/').pop()
+    const tailingFileName = path.split('/').pop()
 
-  switch (tailingFileName) {
-    case 'page.tsx': {
-      if (!(appPages[rawPath] instanceof Function)) {
-        continue
+    switch (tailingFileName) {
+      case 'page.tsx': {
+        if (!(appPages[rawPath] instanceof Function)) {
+          continue
+        }
+        fsPath2LazyComponentMapping[path] = {
+          routePath: path.replace('/page.tsx', ''),
+          lazyComponent: (
+            <ErrorBoundary
+              fallback={
+                <p className="text-red-500">Path: {path} render error</p>
+              }
+            >
+              {React.createElement(React.lazy(appPages[rawPath] as any))}
+            </ErrorBoundary>
+          ),
+        }
+        break
       }
-      fsPath2LazyComponentMapping[path] = {
-        routePath: path.replace('/page.tsx', ''),
-        lazyComponent: (
-          <ErrorBoundary
-            fallback={<p className="text-red-500">Path: {path} render error</p>}
-          >
-            {React.createElement(React.lazy(appPages[rawPath] as any))}
-          </ErrorBoundary>
+      case 'meta.tsx': {
+        // @ts-ignore
+        fsPath2MetaMapping[path] = appPages[rawPath]
+      }
+    }
+  }
+
+  const appRoutes = [] as RouteExtendObject[]
+
+  for (const fsPath in fsPath2LazyComponentMapping) {
+    const { routePath, lazyComponent } = fsPath2LazyComponentMapping[fsPath]
+
+    const isFirstLevelRoute = routePath.split('/').length === 1
+    if (isFirstLevelRoute) {
+      appRoutes.push({
+        path: routePath,
+        Component: () => (
+          <Fragment>
+            <Suspense>{lazyComponent}</Suspense>
+          </Fragment>
         ),
+        children: [],
+        // loader: async () => routeObject,
+      })
+      continue
+    }
+    const parentRoutePath = routePath.split('/').slice(0, -1).join('/')
+
+    let parentRoute = appRoutes.find((route) => route.path === parentRoutePath)
+
+    if (!parentRoute) {
+      parentRoute = {
+        path: parentRoutePath,
+        Component: () =>
+          createElement(
+            Fragment,
+            null,
+            <Suspense>
+              <Outlet />
+            </Suspense>,
+          ),
+        children: [],
+        // loader: async () => parentRoute,
       }
-      break
+      appRoutes.push(parentRoute)
     }
-    case 'meta.tsx': {
-      // @ts-ignore
-      fsPath2MetaMapping[path] = appPages[rawPath]
-    }
-  }
-}
 
-const appRoutes = [] as RouteExtendObject[]
+    if (!parentRoute.children) parentRoute.children = []
 
-for (const fsPath in fsPath2LazyComponentMapping) {
-  const { routePath, lazyComponent } = fsPath2LazyComponentMapping[fsPath]
-
-  const isFirstLevelRoute = routePath.split('/').length === 1
-  if (isFirstLevelRoute) {
-    appRoutes.push({
-      path: routePath,
+    const routeObject: RouteObject = {
+      path: routePath.replace(`${parentRoutePath}/`, ''),
       Component: () => (
         <Fragment>
           <Suspense>{lazyComponent}</Suspense>
@@ -77,114 +115,89 @@ for (const fsPath in fsPath2LazyComponentMapping) {
       ),
       children: [],
       // loader: async () => routeObject,
-    })
-    continue
-  }
-  const parentRoutePath = routePath.split('/').slice(0, -1).join('/')
-
-  let parentRoute = appRoutes.find((route) => route.path === parentRoutePath)
-
-  if (!parentRoute) {
-    parentRoute = {
-      path: parentRoutePath,
-      Component: () =>
-        createElement(
-          Fragment,
-          null,
-          <Suspense>
-            <Outlet />
-          </Suspense>,
-        ),
-      children: [],
-      // loader: async () => parentRoute,
     }
-    appRoutes.push(parentRoute)
+    parentRoute!.children!.push(routeObject)
   }
 
-  if (!parentRoute.children) parentRoute.children = []
-
-  const routeObject: RouteObject = {
-    path: routePath.replace(`${parentRoutePath}/`, ''),
-    Component: () => (
-      <Fragment>
-        <Suspense>{lazyComponent}</Suspense>
-      </Fragment>
-    ),
-    children: [],
-    // loader: async () => routeObject,
-  }
-  parentRoute!.children!.push(routeObject)
-}
-
-const routePath2RouteObjectMapping = {} as {
-  [routePath: string]: RouteExtendObject
-}
-
-function dts(
-  route: RouteObject & {
-    parent?: RouteObject
-  },
-  parentRoute?: RouteObject,
-) {
-  route.parent = parentRoute
-  const currentRoutePath = `/${route.path}` || '/'
-  const parentRoutePath = parentRoute?.path?.replace(/\/$/, '') || ''
-  const fullPath = parentRoute
-    ? `${parentRoutePath ? `/${parentRoutePath}` : ''}${
-        currentRoutePath.length > 0
-          ? `/${currentRoutePath.replace(/^\//, '')}`
-          : '/'
-      }`
-    : currentRoutePath
-  routePath2RouteObjectMapping[fullPath] = route
-  if (route.children) {
-    route.children.forEach((childRoute) => dts(childRoute, route))
-  }
-}
-
-appRoutes.forEach((route) => dts(route))
-
-for (const path of Object.keys(fsPath2MetaMapping)) {
-  const meta = fsPath2MetaMapping[path]
-  const module = await meta()
-  const defaultExport = module.default
-  let toRoutePath = path.replace('/meta.tsx', '')
-  if (toRoutePath[0] !== '/') {
-    toRoutePath = `/${toRoutePath}`
-  }
-  const route = routePath2RouteObjectMapping[toRoutePath]
-  if (!route) {
-    console.error(`Route not found: ${toRoutePath}`)
-    continue
+  const routePath2RouteObjectMapping = {} as {
+    [routePath: string]: RouteExtendObject
   }
 
-  if (defaultExport.redirect) {
-    delete route.element
-    const memoedRedirect = defaultExport.redirect
-    route.Component = () => {
-      const navigate = useNavigate()
-      // const navigation = useNavigation()
-      const location = useLocation()
-
-      useLayoutEffect(() => {
-        const redirectTo =
-          typeof memoedRedirect === 'function'
-            ? memoedRedirect()
-            : memoedRedirect
-        if (redirectTo === location.pathname) return
-        navigate(redirectTo)
-      }, [])
-      return <Outlet />
+  function dts(
+    route: RouteObject & {
+      parent?: RouteObject
+    },
+    parentRoute?: RouteObject,
+  ) {
+    route.parent = parentRoute
+    const currentRoutePath = `/${route.path}` || '/'
+    const parentRoutePath = parentRoute?.path?.replace(/\/$/, '') || ''
+    const fullPath = parentRoute
+      ? `${parentRoutePath ? `/${parentRoutePath}` : ''}${
+          currentRoutePath.length > 0
+            ? `/${currentRoutePath.replace(/^\//, '')}`
+            : '/'
+        }`
+      : currentRoutePath
+    routePath2RouteObjectMapping[fullPath] = route
+    if (route.children) {
+      route.children.forEach((childRoute) => dts(childRoute, route))
     }
   }
 
-  route.meta = defaultExport
+  appRoutes.forEach((route) => dts(route))
 
-  if (route.meta.priority) {
-    ;(route.parent?.children as RouteExtendObject[])?.sort((b, a) => {
-      return (b.meta?.priority || 0) - (a.meta?.priority || 0)
-    })
+  for (const path of Object.keys(fsPath2MetaMapping)) {
+    const meta = fsPath2MetaMapping[path]
+    const module = await meta()
+    const defaultExport = module.default
+    let toRoutePath = path.replace('/meta.tsx', '')
+    if (toRoutePath[0] !== '/') {
+      toRoutePath = `/${toRoutePath}`
+    }
+    const route = routePath2RouteObjectMapping[toRoutePath]
+    if (!route) {
+      console.error(`Route not found: ${toRoutePath}`)
+      continue
+    }
+
+    if (defaultExport.redirect) {
+      delete route.element
+      const memoedRedirect = defaultExport.redirect
+
+      // NOTE 只做一级路由的重定向
+
+      route.Component = () => {
+        const navigate = useNavigate()
+
+        const location = useLocation()
+
+        useLayoutEffect(() => {
+          if (`/${route.path}` !== location.pathname) return
+          const redirectTo =
+            typeof memoedRedirect === 'function'
+              ? memoedRedirect()
+              : memoedRedirect
+          if (redirectTo === location.pathname) return
+          navigate(redirectTo)
+        }, [])
+        return <Outlet />
+      }
+    }
+
+    route.meta = defaultExport
+
+    if (route.meta.priority) {
+      ;(route.parent?.children as RouteExtendObject[])?.sort((b, a) => {
+        return (b.meta?.priority || 0) - (a.meta?.priority || 0)
+      })
+    }
+  }
+
+  return {
+    appRoutes,
+    routePath2RouteObjectMapping,
   }
 }
-
+const { appRoutes, routePath2RouteObjectMapping } = await builder()
 export { appPages, appRoutes, routePath2RouteObjectMapping }

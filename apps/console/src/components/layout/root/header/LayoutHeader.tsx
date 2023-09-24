@@ -1,10 +1,11 @@
 import { Avatar } from '@nextui-org/react'
-import { ReactNode } from 'react'
+import { MouseEventHandler, ReactNode, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
 
 import { BreadcrumbDivider } from '~/components/icons'
 import { useAppInitialData } from '~/providers/initial'
+import { router } from '~/router'
 import { appRoutes } from '~/router/builder'
 import { useCurrentRouteObject } from '~/router/hooks'
 import { RouteExtendObject } from '~/router/interface'
@@ -65,7 +66,15 @@ const HeaderMenu = () => {
     .filter(Boolean) as { title: string; path: string; icon?: ReactNode }[]
 
   const routeObject = useCurrentRouteObject()
-  // const pathname = useLocation().pathname
+
+  const handleNav: MouseEventHandler<HTMLAnchorElement> = useCallback((e) => {
+    e.preventDefault()
+
+    const href = new URL((e.currentTarget as HTMLAnchorElement).href).pathname
+
+    if (href.startsWith(location.pathname)) return
+    router.navigate(href)
+  }, [])
 
   return (
     <ul className="ml-2 flex items-center space-x-2 text-sm">
@@ -79,6 +88,7 @@ const HeaderMenu = () => {
           <li key={menu.path}>
             <Link
               to={`/${menu.path}`}
+              onClick={handleNav}
               className={clsx(
                 'flex items-center space-x-1 rounded-md p-2 duration-200 hover:bg-slate-100 hover:dark:bg-neutral-700',
                 isActive ? 'bg-slate-200 dark:bg-zinc-800' : '',

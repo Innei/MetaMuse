@@ -1,6 +1,7 @@
 import { NextUIProvider } from '@nextui-org/react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { Suspense } from 'react'
+import { Translation } from 'react-i18next'
 
 import { ColorModeObserver } from './components/common/ColorModeObserver'
 import { trpc, tRpcClient } from './lib/trpc'
@@ -10,7 +11,6 @@ import { Router } from './router'
 import { userStore } from './store/user'
 
 userStore.loginByToken()
-
 export function App() {
   return (
     <trpc.Provider client={tRpcClient} queryClient={queryClient}>
@@ -18,7 +18,7 @@ export function App() {
         <Suspense>
           <NextUIProvider>
             <InitialDataProvider>
-              <Router />
+              <Translation>{() => <Router />}</Translation>
             </InitialDataProvider>
           </NextUIProvider>
           <ColorModeObserver />
