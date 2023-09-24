@@ -17,8 +17,12 @@ import { IdempotenceInterceptor } from './common/interceptors/idempotence.interc
 import { JSONTransformerInterceptor } from './common/interceptors/json-transformer.interceptor'
 import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 import { ZodValidationPipe } from './common/pipes/zod-validation.pipe'
+import { AggregateModule } from './modules/aggregate/aggregate.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { CategoryModule } from './modules/category/category.module'
+import { ConfigsModule } from './modules/configs/configs.module'
+import { NoteModule } from './modules/note/note.module'
+import { PageModule } from './modules/page/page.module'
 import { PostModule } from './modules/post/post.module'
 import { UserModule } from './modules/user/user.module'
 import { CacheModule } from './processors/cache/cache.module'
@@ -47,13 +51,18 @@ const appInterceptors: Type<any>[] = [
     GatewayModule,
 
     // BIZ
+    AggregateModule,
     AuthModule,
     PostModule,
     UserModule,
     CategoryModule,
+    ConfigsModule,
+    NoteModule,
 
     // waiting for all biz modules loaded
     tRPCModule,
+
+    PageModule,
   ],
   controllers: [AppController],
   providers: [

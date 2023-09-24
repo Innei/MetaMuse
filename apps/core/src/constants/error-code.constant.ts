@@ -1,5 +1,7 @@
 export enum ErrorCodeEnum {
   NoContentCanBeModified = 1000,
+  InvalidQuery = 1001,
+
   NotReady = 5000,
   NotInitialized = 5001,
 
@@ -27,6 +29,7 @@ export const ErrorCode = Object.freeze<
     '没有内容可以被修改',
     400,
   ],
+  [ErrorCodeEnum.InvalidQuery]: ['invalid query', '无效的查询', 400],
   [ErrorCodeEnum.NotReady]: [
     'not ready, please try again later',
     '服务暂时不可用，请稍后再试',

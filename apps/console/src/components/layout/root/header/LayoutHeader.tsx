@@ -3,8 +3,10 @@ import { MouseEventHandler, ReactNode, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
 
+import { SeoDto } from '@core/modules/configs/configs.dto'
+
 import { BreadcrumbDivider } from '~/components/icons'
-import { useAppInitialData } from '~/providers/initial'
+import { trpc } from '~/lib/trpc'
 import { router } from '~/router'
 import { appRoutes } from '~/router/builder'
 import { useCurrentRouteObject } from '~/router/hooks'
@@ -14,14 +16,16 @@ import { userStore } from '~/store/user'
 import { ThemeToggle } from './ThemeToggle'
 
 export const LayoutHeader = () => {
-  const { seo } = useAppInitialData()
+  const { data: seo } = trpc.aggregate.queryConfigByKey.useQuery({
+    key: 'seo',
+  })
   return (
     <header className="fixed left-0 right-0 top-0 border-b-[0.5px] border-zinc-200 bg-white/80 px-6 backdrop-blur dark:border-neutral-900 dark:bg-zinc-900/80">
       <nav className="flex h-16 items-center">
         <div className="flex items-center space-x-3">
           <button className="p-2 text-2xl">𝕄</button>
           <BreadcrumbDivider className={'opacity-20'} />
-          <span className="font-bold opacity-90">{seo.title}</span>
+          <span className="font-bold opacity-90">{(seo as SeoDto)?.title}</span>
           <BreadcrumbDivider className={'opacity-20'} />
         </div>
 

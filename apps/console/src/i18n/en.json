@@ -1,6 +1,7 @@
 {
   "common": {
     "edit": "Edit",
-    "editing": "Editing"
+    "editing": "Editing",
+    "title": "Title"
   }
 }

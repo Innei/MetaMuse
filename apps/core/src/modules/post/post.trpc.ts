@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { TRPCRouter } from '@core/common/decorators/trpc.decorator'
 import { DatabaseService } from '@core/processors/database/database.service'
-import { defineRouter } from '@core/processors/trpc/trpc.helper'
+import { defineTrpcRouter } from '@core/processors/trpc/trpc.helper'
 import { tRPCService } from '@core/processors/trpc/trpc.service'
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
 
@@ -29,7 +29,7 @@ export class PostTrpcRouter implements OnModuleInit {
   private createRouter() {
     const procedureAuth = this.trpcService.procedureAuth
 
-    return defineRouter('post', {
+    return defineTrpcRouter('post', {
       id: procedureAuth
         .input(
           z.object({

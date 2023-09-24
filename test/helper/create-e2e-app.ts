@@ -4,7 +4,6 @@ import { ResponseInterceptor } from '@core/common/interceptors/response.intercep
 import { AuthModule } from '@core/modules/auth/auth.module'
 import { UserModule } from '@core/modules/user/user.module'
 import { ModuleMetadata } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core'
 import { NestFastifyApplication } from '@nestjs/platform-fastify'
 import { MockedHelperModule } from '@test/mock/helper/helper.module'
@@ -24,9 +23,7 @@ export const createE2EApp = (module: ModuleMetadata) => {
     nestModule.imports ||= []
     nestModule.imports.push(
       MockedDatabaseModule,
-      ConfigModule.forRoot({
-        isGlobal: true,
-      }),
+
       CacheModule,
       MockedHelperModule,
       AuthModule,

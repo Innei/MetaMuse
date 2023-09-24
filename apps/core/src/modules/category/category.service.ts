@@ -68,4 +68,8 @@ export class CategoryService {
       })
     }
   }
+
+  async getAll() {
+    return await this.database.prisma.category.findMany()
+  }
 }

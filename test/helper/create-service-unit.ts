@@ -1,6 +1,5 @@
 import { CacheService } from '@core/processors/cache/cache.service'
 import { ModuleMetadata } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import { mockedEventManagerServiceProvider } from '@test/mock/helper/helper.event'
 import { MockedDatabaseModule } from '@test/mock/processors/database/database.module'
@@ -27,14 +26,7 @@ export const createServiceUnitTestApp = <T>(
         },
         ...(providers || []),
       ],
-      imports: [
-        MockedDatabaseModule,
-        ConfigModule.forRoot({
-          isGlobal: true,
-          envFilePath: ['.env.test', '.env'],
-        }),
-        ...(imports || []),
-      ],
+      imports: [MockedDatabaseModule, ...(imports || [])],
     }).compile()
     await app.init()
 
