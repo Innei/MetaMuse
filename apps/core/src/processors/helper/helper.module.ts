@@ -7,7 +7,6 @@ import { EventManagerService } from './helper.event.service'
 import { HttpService } from './helper.http.service'
 import { JWTService } from './helper.jwt.service'
 
-// console.log([...envPathCompose('.env')])
 const providers: Provider<any>[] = [
   HttpService,
   JWTService,
