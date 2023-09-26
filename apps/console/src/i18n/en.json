@@ -2,6 +2,7 @@
   "common": {
     "edit": "Edit",
     "editing": "Editing",
-    "title": "Title"
+    "title": "Title",
+    "submit": "Submit"
   }
 }

@@ -129,8 +129,8 @@ importers:
         specifier: 10.0.2
         version: 10.0.2
       jojoo:
-        specifier: 0.0.9
-        version: 0.0.9(immer@10.0.2)(jotai@2.4.2)(react@18.2.0)
+        specifier: 0.1.0
+        version: 0.1.0(immer@10.0.2)(jotai@2.4.2)(react@18.2.0)
       jotai:
         specifier: 2.4.2
         version: 2.4.2(@types/react@18.2.22)(react@18.2.0)
@@ -514,7 +514,7 @@ importers:
         version: 1.4.2(@swc/core@1.3.89)
       vite:
         specifier: 4.4.9
-        version: 4.4.9(@types/node@20.6.5)
+        version: 4.4.9(@types/node@20.6.2)
       vite-tsconfig-paths:
         specifier: 4.2.1
         version: 4.2.1(typescript@5.2.2)(vite@4.4.9)
@@ -8432,8 +8432,8 @@ packages:
     resolution: {integrity: sha512-3TV69ZbrvV6U5DfQimop50jE9Dl6J8O1ja1dvBbMba/sZ3YBEQqJ2VZRoQPVnhlzjNtU1vaXRZVrVjU4qtm8yA==}
     hasBin: true
 
-  /jojoo@0.0.9(immer@10.0.2)(jotai@2.4.2)(react@18.2.0):
-    resolution: {integrity: sha512-FXDV+AIYC1YFidrNqSAYSeI6KF/L1YxjGfQ68pTSP5Q0NyPd97y/9vq1Rej6F9P2erzttCVtM3h82a2ZT6V4dw==}
+  /jojoo@0.1.0(immer@10.0.2)(jotai@2.4.2)(react@18.2.0):
+    resolution: {integrity: sha512-XdWo/KIiKMQ9mYyiq7gZQLUfiaxYLs2eXdVWis4ly9DUzl8OSm8UD1+j8Jn7b0RYXWjALCJbOQz1yINvWzmfTg==}
     peerDependencies:
       immer: ^10.0.0
       jotai: ^2.0.0

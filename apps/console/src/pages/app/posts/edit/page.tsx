@@ -1,11 +1,14 @@
-import { Input } from '@nextui-org/react'
+import { Button, Input } from '@nextui-org/react'
 import { createModelDataProvider } from 'jojoo/react'
 import React, { FC, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { produce } from 'immer'
-import { atom } from 'jotai'
+import { atom, useAtom } from 'jotai'
 import { cloneDeep } from 'lodash-es'
 
+import {
+  BaseWritingProvider,
+  useBaseWritingContext,
+} from '~/components/biz/writing/provider'
 import { Loading } from '~/components/common/Loading'
 import { useI18n } from '~/i18n/hooks'
 import { RouterOutputs, trpc } from '~/lib/trpc'
@@ -19,11 +22,12 @@ type PostModel = Omit<
   | 'relatedBy'
   | 'related'
   | 'meta'
+  | 'count'
 > & {
   meta?: any
 }
 
-const craeteInitialEdtingData = (): PostModel => {
+const createInitialEdtingData = (): PostModel => {
   return {
     title: '',
     allowComment: true,
@@ -58,6 +62,7 @@ export default () => {
 const {
   useModelDataSelector,
   useSetModelData,
+  useGetModelData,
 
   ModelDataAtomProvider,
 } = createModelDataProvider<PostModel>()
@@ -68,49 +73,69 @@ const EditPage: FC<{
   const [editingData] = useState<PostModel>(() =>
     props.initialData
       ? cloneDeep(props.initialData)
-      : craeteInitialEdtingData(),
+      : createInitialEdtingData(),
   )
 
   const t = useI18n()
 
+  const editingAtom = useMemo(() => atom(editingData), [editingData])
+
   return (
     <div>
-      <ModelDataAtomProvider
-        overrideAtom={useMemo(() => atom(editingData), [editingData])}
-      >
-        {!!editingData && (
-          <p className="mb-3 text-lg font-medium">
-            {t('common.editing')} 「{editingData.title}」
-          </p>
-        )}
+      <ModelDataAtomProvider overrideAtom={editingAtom}>
+        <div className="flex justify-between">
+          <div>
+            {!!editingData && (
+              <p className="mb-3 text-lg font-medium">
+                {t('common.editing')} 「{editingData.title}」
+              </p>
+            )}
+          </div>
+
+          <div>
+            <ActionButtonGroup />
+          </div>
+        </div>
 
         <div className="lg:grid lg:grid-cols-3 lg:gap-4">
-          <div className="col-span-2">
-            <HeaderInput />
-          </div>
+          <BaseWritingProvider atom={editingAtom}>
+            <div className="col-span-2">
+              <HeaderInput />
+            </div>
+          </BaseWritingProvider>
+
           <div className="hidden flex-col lg:col-span-1 lg:flex">Sidebar</div>
         </div>
       </ModelDataAtomProvider>
     </div>
   )
 }
-
+const ActionButtonGroup = () => {
+  const t = useI18n()
+  const getData = useGetModelData()
+  return (
+    <>
+      <Button
+        color="primary"
+        variant="flat"
+        onClick={() => {
+          console.log(getData())
+        }}
+      >
+        {t('common.submit')}
+      </Button>
+    </>
+  )
+}
 const HeaderInput = () => {
-  const title = useModelDataSelector((data) => data?.title)
-  const setter = useSetModelData()
+  const [title, setTitle] = useAtom(useBaseWritingContext().title)
   const t = useI18n()
   return (
     <Input
       label={t('common.title')}
       value={title}
       variant="bordered"
-      onChange={(e) =>
-        setter(
-          produce((draft) => {
-            draft.title = e.target.value
-          }),
-        )
-      }
+      onChange={(e) => setTitle(e.target.value)}
     />
   )
 }
