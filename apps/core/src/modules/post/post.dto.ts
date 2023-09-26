@@ -8,7 +8,7 @@ import { PostOptionalDefaultsSchema, PostSchema } from '@meta-muse/prisma/zod'
 
 import { PostSchemaProjection } from './post.protect'
 
-const PostInputSchema = PostOptionalDefaultsSchema.extend({
+export const PostInputSchema = PostOptionalDefaultsSchema.extend({
   related: z.array(z.string()).optional(),
   slug: z
     .string()

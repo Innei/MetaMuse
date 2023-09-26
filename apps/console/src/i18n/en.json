@@ -4,6 +4,8 @@
     "editing": "Editing",
     "title": "Title",
     "submit": "Submit",
-    "new-post": "New post"
+    "new-post": "New post",
+    "save": "Save",
+    "save-success": "Saved successfully"
   }
 }

@@ -6,6 +6,7 @@ import { defineTrpcRouter } from '@core/processors/trpc/trpc.helper'
 import { tRPCService } from '@core/processors/trpc/trpc.service'
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
 
+import { PostInputSchema } from './post.dto'
 import { PostService } from './post.service'
 
 @TRPCRouter()
@@ -38,6 +39,19 @@ export class PostTrpcRouter implements OnModuleInit {
         )
         .query(async (opt) => {
           return this.service.getPostById(opt.input.id)
+        }),
+
+      update: procedureAuth
+        .input(
+          PostInputSchema.extend({
+            id: z.string(),
+          }),
+        )
+        .mutation(async (opt) => {
+          const { input } = opt
+          const { id, ...data } = input
+
+          await this.service.updateById(id, data)
         }),
     })
   }

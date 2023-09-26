@@ -3,7 +3,8 @@ import { createModelDataProvider } from 'jojoo/react'
 import React, { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { atom } from 'jotai'
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, isString } from 'lodash-es'
+import { toast } from 'sonner'
 import type { RouterOutputs } from '~/lib/trpc'
 import type { FC } from 'react'
 
@@ -20,14 +21,13 @@ type PostModel = Omit<
   | 'created'
   | 'modified'
   | 'relatedBy'
-  | 'related'
   | 'meta'
   | 'count'
 > & {
   meta?: any
 }
 
-const createInitialEdtingData = (): PostModel => {
+const createInitialEditingData = (): PostModel => {
   return {
     title: '',
     allowComment: true,
@@ -41,6 +41,7 @@ const createInitialEdtingData = (): PostModel => {
     tags: [],
     text: '',
     meta: {},
+    related: [],
   }
 }
 export default function EditPage_() {
@@ -73,7 +74,7 @@ const EditPage: FC<{
   const [editingData] = useState<PostModel>(() =>
     props.initialData
       ? cloneDeep(props.initialData)
-      : createInitialEdtingData(),
+      : createInitialEditingData(),
   )
 
   const t = useI18n()
@@ -115,13 +116,32 @@ const EditPage: FC<{
 const ActionButtonGroup = () => {
   const t = useI18n()
   const getData = useGetModelData()
+  const { mutateAsync: submit } = trpc.post.update.useMutation()
   return (
     <>
       <Button
         color="primary"
         variant="flat"
         onClick={() => {
-          console.log(getData())
+          const currentData = {
+            ...getData(),
+          } as Omit<PostModel, 'related'> & {
+            related: any
+          }
+
+          Reflect.deleteProperty(currentData, 'category')
+
+          if (currentData.related.length > 0) {
+            currentData.related = currentData.related.map((item: any) => {
+              return isString(item) ? item : item.id
+            })
+          }
+
+          submit(currentData).then(() => {
+            toast.success(t('common.save-success'))
+
+            // TODO back to list or dialog
+          })
         }}
       >
         {t('common.submit')}
