@@ -18,6 +18,10 @@ export class CategoryService {
     })
   }
 
+  async getDefaultCategory() {
+    return await this.database.prisma.category.findFirst()
+  }
+
   async create(dto: Prisma.CategoryCreateInput) {
     const { name, slug } = dto
     const existed = await this.database.prisma.category.exists({

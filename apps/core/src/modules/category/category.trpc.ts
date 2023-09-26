@@ -35,6 +35,21 @@ export class CategoryTRPCRouter extends TRPCRouterBase {
           }
           return result.slug
         }),
+
+      getCategoryOrDefaultById: t
+        .input(
+          z.object({
+            id: z.string(),
+          }),
+        )
+
+        .query(async ({ input: { id } }) => {
+          const result = await this.service.findById(id)
+          if (!result) {
+            return this.service.getDefaultCategory()
+          }
+          return result
+        }),
     })
   }
 }

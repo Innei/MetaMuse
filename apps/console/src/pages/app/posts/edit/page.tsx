@@ -1,17 +1,17 @@
-import { Button, Input } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
 import { createModelDataProvider } from 'jojoo/react'
-import React, { FC, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { atom, useAtom } from 'jotai'
+import { atom } from 'jotai'
 import { cloneDeep } from 'lodash-es'
+import type { RouterOutputs } from '~/lib/trpc'
+import type { FC } from 'react'
 
-import {
-  BaseWritingProvider,
-  useBaseWritingContext,
-} from '~/components/biz/writing/provider'
+import { BaseWritingProvider } from '~/components/biz/writing/provider'
+import { Writing } from '~/components/biz/writing/Writing'
 import { Loading } from '~/components/common/Loading'
 import { useI18n } from '~/i18n/hooks'
-import { RouterOutputs, trpc } from '~/lib/trpc'
+import { trpc } from '~/lib/trpc'
 
 type PostModel = Omit<
   RouterOutputs['post']['id'],
@@ -43,7 +43,7 @@ const createInitialEdtingData = (): PostModel => {
     meta: {},
   }
 }
-export default () => {
+export default function EditPage_() {
   const [search] = useSearchParams()
   const id = search.get('id')
   const { data, isLoading } = trpc.post.id.useQuery(
@@ -85,11 +85,15 @@ const EditPage: FC<{
       <ModelDataAtomProvider overrideAtom={editingAtom}>
         <div className="flex justify-between">
           <div>
-            {!!editingData && (
-              <p className="mb-3 text-lg font-medium">
-                {t('common.editing')} 「{editingData.title}」
-              </p>
-            )}
+            <p className="mb-3 text-lg font-medium">
+              {props.initialData ? (
+                <>
+                  {t('common.editing')} 「{editingData.title}」
+                </>
+              ) : (
+                t('common.new-post')
+              )}
+            </p>
           </div>
 
           <div>
@@ -100,7 +104,7 @@ const EditPage: FC<{
         <div className="lg:grid lg:grid-cols-3 lg:gap-4">
           <BaseWritingProvider atom={editingAtom}>
             <div className="col-span-2">
-              <HeaderInput />
+              <Writing />
             </div>
           </BaseWritingProvider>
 
@@ -125,17 +129,5 @@ const ActionButtonGroup = () => {
         {t('common.submit')}
       </Button>
     </>
-  )
-}
-const HeaderInput = () => {
-  const [title, setTitle] = useAtom(useBaseWritingContext().title)
-  const t = useI18n()
-  return (
-    <Input
-      label={t('common.title')}
-      value={title}
-      variant="bordered"
-      onChange={(e) => setTitle(e.target.value)}
-    />
   )
 }

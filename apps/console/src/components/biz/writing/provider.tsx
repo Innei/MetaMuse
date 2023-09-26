@@ -1,27 +1,42 @@
-import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
+import { createContext, useContext, useMemo } from 'react'
 import { produce } from 'immer'
-import { atom, PrimitiveAtom } from 'jotai'
+import { atom, useStore } from 'jotai'
+import { isString } from 'lodash-es'
+import type { PrimitiveAtom } from 'jotai'
+import type { PropsWithChildren } from 'react'
 
 type TBaseWritingContext = {
   title: PrimitiveAtom<string>
-  slug: PrimitiveAtom<string>
+  slug?: PrimitiveAtom<string> | null
+  categoryId?: PrimitiveAtom<string> | null
   text: PrimitiveAtom<string>
 }
 const BaseWritingContext = createContext<TBaseWritingContext>(null!)
-
-export const BaseWritingProvider = <
-  T extends { title: string; slug: string; text: string },
->(
+type BaseModeType = {
+  title: string
+  slug?: string
+  text: string
+  categoryId?: string
+}
+export const BaseWritingProvider = <T extends BaseModeType>(
   props: { atom: PrimitiveAtom<T> } & PropsWithChildren,
 ) => {
   const { atom: _atom } = props
+  const store = useStore()
   const ctxValue = useMemo<TBaseWritingContext>(
     () => ({
       title: buildCtxAtom(_atom, 'title'),
-      slug: buildCtxAtom(_atom, 'slug'),
+      // @ts-expect-error
+      slug: isString(store.get(_atom).slug)
+        ? buildCtxAtom(_atom, 'slug')
+        : null,
+      // @ts-expect-error
+      categoryId: isString(store.get(_atom).categoryId)
+        ? buildCtxAtom(_atom, 'categoryId')
+        : null,
       text: buildCtxAtom(_atom, 'text'),
     }),
-    [atom],
+    [_atom, store],
   )
 
   return (
@@ -35,14 +50,7 @@ export const useBaseWritingContext = () => {
   return useContext(BaseWritingContext)
 }
 
-const buildCtxAtom = <
-  T extends {
-    title: string
-    slug: string
-    text: string
-  },
-  K extends keyof T,
->(
+const buildCtxAtom = <T extends BaseModeType, K extends keyof T>(
   _atom: PrimitiveAtom<T>,
   key: K,
 ) => {
