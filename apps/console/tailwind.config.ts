@@ -1,15 +1,15 @@
 import { nextui } from '@nextui-org/react'
 import { withTV } from 'tailwind-variants/transformer'
-import { PluginAPI } from 'tailwindcss/types/config'
+import type { Config } from 'tailwindcss'
+import type { PluginAPI } from 'tailwindcss/types/config'
 
 import { addDynamicIconSelectors } from '@iconify/tailwind'
 import typography from '@tailwindcss/typography'
 
-import { Config } from 'tailwindcss'
-
 const twConfig: Config = {
   content: [
     './src/**/*.{js,jsx,ts,tsx}',
+    './index.html',
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   darkMode: ['class', '[data-theme="dark"]'],
@@ -49,7 +49,15 @@ const twConfig: Config = {
 
     typography,
     // daisyui,
-    nextui(),
+    nextui({
+      layout: {
+        borderWidth: {
+          small: '1px', // border-small
+          medium: '1px', // border-medium (default)
+          large: '2px', // border-large
+        },
+      },
+    }),
     require('tailwind-scrollbar'),
   ],
 }

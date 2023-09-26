@@ -1,4 +1,4 @@
-import { Skeleton } from '@nextui-org/react'
+import { Input, Skeleton } from '@nextui-org/react'
 import { useEffect } from 'react'
 import { useAtom } from 'jotai'
 import type { UrlDto } from '@core/modules/configs/configs.dto'
@@ -15,6 +15,7 @@ export const SlugInput = () => {
   const [categoryId, setCategoryId] = useAtom(
     useBaseWritingContext().categoryId!,
   )
+  const [slug, setSlug] = useAtom(useBaseWritingContext().slug!)
   const { data: category } = trpc.category.getCategoryOrDefaultById.useQuery({
     id: categoryId,
   })
@@ -25,20 +26,28 @@ export const SlugInput = () => {
 
   const isLoading = !urlConfig || !category
   return (
-    <div className="my-3 pl-2 text-sm text-gray-500">
+    <div className="my-3 flex items-center pl-2 text-sm text-gray-500">
       {isLoading ? (
         <Skeleton className="w-[120px]" />
       ) : (
         <label>{`${urlConfig?.webUrl}/${category?.slug}/`}</label>
       )}
 
-      {/* <UnderlineInput
-        class="ml-2"
-        value={data.slug}
-        onChange={(e) => {
-          data.slug = e
-        }}
-      /> */}
+      <div className="relative inline-flex min-w-[2rem] items-center [&_*]:leading-4">
+        <Input
+          size="sm"
+          variant="underlined"
+          color="primary"
+          className="absolute w-full translate-y-[1px]"
+          value={slug}
+          onChange={(e) => {
+            setSlug(e.target.value)
+          }}
+        />
+        <span className="pointer-events-none text-transparent">
+          {slug}&nbsp;&nbsp;
+        </span>
+      </div>
     </div>
   )
 }

@@ -1,16 +1,16 @@
 import { Avatar } from '@nextui-org/react'
-import { MouseEventHandler, ReactNode, useCallback } from 'react'
+import { useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
-
-import { SeoDto } from '@core/modules/configs/configs.dto'
+import type { SeoDto } from '@core/modules/configs/configs.dto'
+import type { RouteExtendObject } from '~/router/interface'
+import type { MouseEventHandler, ReactNode } from 'react'
 
 import { BreadcrumbDivider } from '~/components/icons'
 import { trpc } from '~/lib/trpc'
 import { router } from '~/router'
 import { appRoutes } from '~/router/builder'
 import { useCurrentRouteObject } from '~/router/hooks'
-import { RouteExtendObject } from '~/router/interface'
 import { userStore } from '~/store/user'
 
 import { ThemeToggle } from './ThemeToggle'
@@ -20,13 +20,13 @@ export const LayoutHeader = () => {
     key: 'seo',
   })
   return (
-    <header className="fixed left-0 right-0 top-0 border-b-[0.5px] border-zinc-200 bg-white/80 px-6 backdrop-blur dark:border-neutral-900 dark:bg-zinc-900/80">
+    <header className="fixed left-0 right-0 top-0 z-[19] border-b-[0.5px] border-zinc-200 bg-white/80 px-6 backdrop-blur dark:border-neutral-900 dark:bg-zinc-900/80">
       <nav className="flex h-16 items-center">
         <div className="flex items-center space-x-3">
           <button className="p-2 text-2xl">𝕄</button>
-          <BreadcrumbDivider className={'opacity-20'} />
+          <BreadcrumbDivider className="opacity-20" />
           <span className="font-bold opacity-90">{(seo as SeoDto)?.title}</span>
-          <BreadcrumbDivider className={'opacity-20'} />
+          <BreadcrumbDivider className="opacity-20" />
         </div>
 
         <div className="relative flex min-w-0 flex-grow items-center justify-between">
@@ -172,7 +172,7 @@ const Breadcrumb = () => {
         return (
           <span key={route.path} className={clsx('flex items-center py-1')}>
             <span>{route.meta?.title}</span>
-            {!isLast && <BreadcrumbDivider className={'opacity-20'} />}
+            {!isLast && <BreadcrumbDivider className="opacity-20" />}
           </span>
         )
       })}

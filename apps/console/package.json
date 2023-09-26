@@ -12,6 +12,13 @@
     "lint": "eslint --ext .ts,.tsx --ignore-path .gitignore . --fix"
   },
   "dependencies": {
+    "@milkdown/core": "7.3.0",
+    "@milkdown/plugin-clipboard": "7.3.0",
+    "@milkdown/plugin-history": "7.3.0",
+    "@milkdown/plugin-indent": "7.3.0",
+    "@milkdown/plugin-listener": "7.3.0",
+    "@milkdown/preset-commonmark": "7.3.0",
+    "@milkdown/react": "7.3.0",
     "@nextui-org/react": "2.1.13",
     "@nextui-org/system": "2.0.10",
     "@nextui-org/theme": "2.1.9",
@@ -44,6 +51,7 @@
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
     "use-immer": "0.9.0",
+    "usehooks-ts": "2.9.1",
     "zod": "3.22.2"
   },
   "devDependencies": {

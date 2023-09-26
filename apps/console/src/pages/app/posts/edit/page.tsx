@@ -81,37 +81,35 @@ const EditPage: FC<{
   const editingAtom = useMemo(() => atom(editingData), [editingData])
 
   return (
-    <div>
-      <ModelDataAtomProvider overrideAtom={editingAtom}>
-        <div className="flex justify-between">
-          <div>
-            <p className="mb-3 text-lg font-medium">
-              {props.initialData ? (
-                <>
-                  {t('common.editing')} 「{editingData.title}」
-                </>
-              ) : (
-                t('common.new-post')
-              )}
-            </p>
-          </div>
-
-          <div>
-            <ActionButtonGroup />
-          </div>
+    <ModelDataAtomProvider overrideAtom={editingAtom}>
+      <div className="flex justify-between">
+        <div>
+          <p className="mb-3 text-lg font-medium">
+            {props.initialData ? (
+              <>
+                {t('common.editing')} 「{editingData.title}」
+              </>
+            ) : (
+              t('common.new-post')
+            )}
+          </p>
         </div>
 
-        <div className="lg:grid lg:grid-cols-3 lg:gap-4">
-          <BaseWritingProvider atom={editingAtom}>
-            <div className="col-span-2">
-              <Writing />
-            </div>
-          </BaseWritingProvider>
-
-          <div className="hidden flex-col lg:col-span-1 lg:flex">Sidebar</div>
+        <div>
+          <ActionButtonGroup />
         </div>
-      </ModelDataAtomProvider>
-    </div>
+      </div>
+
+      <div className="flex-grow lg:grid lg:grid-cols-3 lg:gap-4">
+        <BaseWritingProvider atom={editingAtom}>
+          <div className="col-span-2 flex flex-grow flex-col overflow-auto">
+            <Writing />
+          </div>
+        </BaseWritingProvider>
+
+        <div className="hidden flex-col lg:col-span-1 lg:flex">Sidebar</div>
+      </div>
+    </ModelDataAtomProvider>
   )
 }
 const ActionButtonGroup = () => {

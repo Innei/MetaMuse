@@ -10,6 +10,9 @@ export const TitleInput = () => {
   const t = useI18n()
   return (
     <Input
+      classNames={{
+        inputWrapper: '!border-1',
+      }}
       color="primary"
       label={t('common.title')}
       value={title}
