@@ -6,6 +6,12 @@
     "submit": "Submit",
     "new-post": "New post",
     "save": "Save",
-    "save-success": "Saved successfully"
+    "save-success": "Saved successfully",
+    "category": "Category",
+    "tags": "Tags",
+    "isDraft": "Is draft",
+    "copy-link": "Copy link",
+    "preview": "Preview",
+    "copyright": "Copyright"
   }
 }

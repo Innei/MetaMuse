@@ -1,5 +1,5 @@
 import { Input, Skeleton } from '@nextui-org/react'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useAtom } from 'jotai'
 import type { UrlDto } from '@core/modules/configs/configs.dto'
 
@@ -15,20 +15,26 @@ export const SlugInput = () => {
   const [categoryId, setCategoryId] = useAtom(
     useBaseWritingContext().categoryId!,
   )
+
   const [slug, setSlug] = useAtom(useBaseWritingContext().slug!)
   const { data: category } = trpc.category.getCategoryOrDefaultById.useQuery({
     id: categoryId,
   })
 
+  const triggerOnceRef = useRef(false)
   useEffect(() => {
-    if (!categoryId && category) setCategoryId(category?.id)
+    if (triggerOnceRef.current) return
+    if (!categoryId && category) {
+      triggerOnceRef.current = true
+      setCategoryId(category.id)
+    }
   }, [category, categoryId, setCategoryId])
 
   const isLoading = !urlConfig || !category
   return (
     <div className="my-3 flex items-center pl-2 text-sm text-gray-500">
       {isLoading ? (
-        <Skeleton className="w-[120px]" />
+        <Skeleton className="h-4 w-[120px]" />
       ) : (
         <label>{`${urlConfig?.webUrl}/${category?.slug}/`}</label>
       )}

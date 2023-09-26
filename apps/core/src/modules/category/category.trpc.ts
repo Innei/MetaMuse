@@ -35,6 +35,15 @@ export class CategoryTRPCRouter extends TRPCRouterBase {
           }
           return result.slug
         }),
+      getAllForSelector: t.query(async () => {
+        const category = await this.service.getAll()
+
+        return category.map((cate) => ({
+          id: cate.id,
+          label: cate.name,
+          value: cate.id,
+        }))
+      }),
 
       getCategoryOrDefaultById: t
         .input(

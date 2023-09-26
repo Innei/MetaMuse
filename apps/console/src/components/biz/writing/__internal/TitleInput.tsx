@@ -11,7 +11,7 @@ export const TitleInput = () => {
   return (
     <Input
       classNames={{
-        inputWrapper: '!border-1',
+        input: 'font-medium',
       }}
       color="primary"
       label={t('common.title')}
