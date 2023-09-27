@@ -12,6 +12,16 @@
     "isDraft": "Is draft",
     "copy-link": "Copy link",
     "preview": "Preview",
-    "copyright": "Copyright"
+    "copyright": "Copyright",
+    "import": "Import",
+    "cancal": "Cancal",
+    "reset": "Reset",
+    "confirm": "Confirm",
+    "ok": "OK"
+  },
+  "module": {
+    "parse_md_yaml": {
+      "title": "Import markdown with YAML front matter format"
+    }
   }
 }

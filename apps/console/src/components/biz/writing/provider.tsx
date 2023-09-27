@@ -5,6 +5,8 @@ import { isString } from 'lodash-es'
 import type { PrimitiveAtom } from 'jotai'
 import type { PropsWithChildren } from 'react'
 
+import { jotaiStore } from '~/lib/store'
+
 type TBaseWritingContext = {
   title: PrimitiveAtom<string>
   slug?: PrimitiveAtom<string> | null
@@ -54,7 +56,7 @@ const buildCtxAtom = <T extends BaseModeType, K extends keyof T>(
   _atom: PrimitiveAtom<T>,
   key: K,
 ) => {
-  return atom(
+  const ctxAtom = atom(
     (get) => get(_atom)[key],
     (get, set, newValue: any) => {
       set(_atom, (value) =>
@@ -62,4 +64,18 @@ const buildCtxAtom = <T extends BaseModeType, K extends keyof T>(
       )
     },
   ) as PrimitiveAtom<T[K]>
+
+  ctxAtom.onMount = (setAtom) => {
+    const handler = () => {
+      console.log('handler')
+      const newValue = jotaiStore.get(_atom)[key]
+      setAtom(newValue)
+    }
+    const dispose = jotaiStore.sub(_atom, handler)
+
+    return () => {
+      dispose()
+    }
+  }
+  return ctxAtom
 }

@@ -39,11 +39,14 @@ export const SlugInput = () => {
         <label>{`${urlConfig?.webUrl}/${category?.slug}/`}</label>
       )}
 
-      <div className="relative inline-flex min-w-[2rem] items-center [&_*]:leading-4">
+      <div className="relative ml-1 inline-flex min-w-[2rem] items-center [&_*]:leading-4">
         <Input
           size="sm"
-          variant="underlined"
+          variant="faded"
           color="primary"
+          classNames={{
+            inputWrapper: 'px-1',
+          }}
           className="absolute w-full translate-y-[1px]"
           value={slug}
           onChange={(e) => {
@@ -51,7 +54,7 @@ export const SlugInput = () => {
           }}
         />
         <span className="pointer-events-none text-transparent">
-          {slug}&nbsp;&nbsp;
+          {slug}&nbsp;&nbsp;&nbsp;
         </span>
       </div>
     </div>

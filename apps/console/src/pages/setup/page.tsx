@@ -2,8 +2,7 @@ import { Button, Input } from '@nextui-org/react'
 import { useMutation } from '@tanstack/react-query'
 import { useForceUpdate } from 'framer-motion'
 import { toast } from 'sonner'
-
-import { UserRegisterDto } from '@core/modules/user/dtos/register.dto'
+import type { UserRegisterDto } from '@core/modules/user/dtos/register.dto'
 
 import { Background } from '~/components/ui/Background'
 import { useUncontrolledInput } from '~/hooks/use-uncontrolled-input'
@@ -24,11 +23,11 @@ export default function SetupPage() {
 }
 
 const RegisterStep = () => {
-  const [, username, usernameRef] = useUncontrolledInput('')
-  const [, password, passwordRef] = useUncontrolledInput('')
-  const [, passwordConfirm, passwordConfirmRef] = useUncontrolledInput('')
-  const [, email, emailRef] = useUncontrolledInput('')
-  const [, nickname, nicknameRef] = useUncontrolledInput('')
+  const [, username, usernameRef] = useUncontrolledInput()
+  const [, password, passwordRef] = useUncontrolledInput()
+  const [, passwordConfirm, passwordConfirmRef] = useUncontrolledInput()
+  const [, email, emailRef] = useUncontrolledInput()
+  const [, nickname, nicknameRef] = useUncontrolledInput()
 
   const [update] = useForceUpdate()
   const isPasswordConfirmValid = () => passwordConfirm() === password()
@@ -72,14 +71,14 @@ const RegisterStep = () => {
         }}
         className="flex flex-col space-y-4"
       >
-        <Input size="sm" label={'你的名字 (登录凭证)'} ref={usernameRef} />
-        <Input size="sm" label={'昵称'} ref={nicknameRef} />
-        <Input size="sm" label={'邮箱'} ref={emailRef} />
-        <Input size="sm" type="password" label={'密码'} ref={passwordRef} />
+        <Input size="sm" label="你的名字 (登录凭证)" ref={usernameRef} />
+        <Input size="sm" label="昵称" ref={nicknameRef} />
+        <Input size="sm" label="邮箱" ref={emailRef} />
+        <Input size="sm" type="password" label="密码" ref={passwordRef} />
         <Input
           size="sm"
           type="password"
-          label={'确认密码'}
+          label="确认密码"
           isInvalid={!isPasswordConfirmValid()}
           errorMessage={isPasswordConfirmValid() ? '' : '两次输入的密码不一致'}
           ref={passwordConfirmRef}

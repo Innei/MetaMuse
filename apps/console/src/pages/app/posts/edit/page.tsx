@@ -2,15 +2,17 @@ import { Button, Select, SelectItem } from '@nextui-org/react'
 import { createModelDataProvider } from 'jojoo/react'
 import React, { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import dayjs from 'dayjs'
 import { produce } from 'immer'
 import { atom } from 'jotai'
-import { cloneDeep, isString } from 'lodash-es'
+import { cloneDeep, isString, omit } from 'lodash-es'
 import { toast } from 'sonner'
 import { useEventCallback } from 'usehooks-ts'
 import type { Selection } from '@nextui-org/react'
 import type { RouterOutputs } from '~/lib/trpc'
 import type { FC } from 'react'
 
+import { ParseYAMLContentButton } from '~/components/biz/logic-button/ParseYAMLContentButton'
 import { BaseWritingProvider } from '~/components/biz/writing/provider'
 import { Writing } from '~/components/biz/writing/Writing'
 import { Loading } from '~/components/common/Loading'
@@ -21,13 +23,14 @@ type PostModel = Omit<
   RouterOutputs['post']['id'],
   | '_count'
   | 'category'
-  | 'created'
   | 'modified'
   | 'relatedBy'
   | 'meta'
   | 'count'
+  | 'created'
 > & {
   meta?: any
+  created?: string
 }
 
 const createInitialEditingData = (): PostModel => {
@@ -99,9 +102,7 @@ const EditPage: FC<{
           </p>
         </div>
 
-        <div>
-          <ActionButtonGroup />
-        </div>
+        <ActionButtonGroup />
       </div>
 
       <div className="flex-grow lg:grid lg:grid-cols-3 lg:gap-4">
@@ -167,9 +168,30 @@ const CategorySelector = () => {
 const ActionButtonGroup = () => {
   const t = useI18n()
   const getData = useGetModelData()
+  const setData = useSetModelData()
   const { mutateAsync: submit } = trpc.post.update.useMutation()
   return (
-    <>
+    <div className="space-x-2 lg:space-x-4">
+      <ParseYAMLContentButton
+        onParsedValue={(data) => {
+          setData((prev) => {
+            return produce(prev, (draft) => {
+              Object.assign(draft, omit(data, ['meta']))
+              const meta = data.meta
+              if (meta) {
+                const created = meta.created || meta.date
+                const parsedCreated = created ? dayjs(created) : null
+
+                if (parsedCreated) {
+                  draft.created = parsedCreated.toISOString()
+                }
+
+                draft.meta = meta
+              }
+            })
+          })
+        }}
+      />
       <Button
         color="primary"
         variant="flat"
@@ -197,6 +219,6 @@ const ActionButtonGroup = () => {
       >
         {t('common.submit')}
       </Button>
-    </>
+    </div>
   )
 }
