@@ -41,6 +41,33 @@ export class PostTrpcRouter implements OnModuleInit {
           return this.service.getPostById(opt.input.id)
         }),
 
+      createTag: procedureAuth
+        .input(
+          z.object({
+            name: z.string().max(20),
+          }),
+        )
+        .mutation(async (opt) => {
+          return this.databaseService.prisma.postTag.create({
+            data: {
+              name: opt.input.name,
+            },
+            select: {
+              id: true,
+            },
+          })
+        }),
+      tags: procedureAuth.query(async () => {
+        return (await this.databaseService.prisma.postTag.findMany()).map(
+          (data) => {
+            return {
+              id: data.id,
+              name: data.name,
+            }
+          },
+        )
+      }),
+
       update: procedureAuth
         .input(
           PostInputSchema.extend({

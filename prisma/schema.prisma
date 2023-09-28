@@ -93,10 +93,10 @@ model PostImage {
 }
 
 model PostTag {
-  id     String  @id @default("")
-  name   String  @unique
-  Post   Post?   @relation(fields: [postId], references: [id])
-  postId String?
+  id     String   @id @default("")
+  name   String   @unique
+  Post   Post[]
+  postId String[]
 }
 
 model Post {

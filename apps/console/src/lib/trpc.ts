@@ -1,14 +1,10 @@
-import {
-  createTRPCReact,
-  httpBatchLink,
-  inferReactQueryProcedureOptions,
-} from '@trpc/react-query'
-
-import {
+import { createTRPCReact, httpBatchLink } from '@trpc/react-query'
+import type {
   AppRouter,
   RouterInputs,
   RouterOutputs,
 } from '@core/processors/trpc/trpc.instance'
+import type { inferReactQueryProcedureOptions } from '@trpc/react-query'
 
 import { API_URL } from '~/constants/env'
 

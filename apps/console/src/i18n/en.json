@@ -17,7 +17,8 @@
     "cancal": "Cancal",
     "reset": "Reset",
     "confirm": "Confirm",
-    "ok": "OK"
+    "ok": "OK",
+    "new": "New"
   },
   "module": {
     "parse_md_yaml": {
