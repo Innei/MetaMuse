@@ -1,25 +1,27 @@
 import { Input, Skeleton } from '@nextui-org/react'
 import { useEffect, useRef } from 'react'
-import { useAtom } from 'jotai'
 import type { UrlDto } from '@core/modules/configs/configs.dto'
 
 import { trpc } from '~/lib/trpc'
 
-import { useBaseWritingContext } from '../provider'
+import { useBaseWritingAtom } from '../provider'
 
 export const SlugInput = () => {
   const { data: urlConfig } = trpc.aggregate.queryConfigByKey.useQuery<UrlDto>({
     key: 'url',
   })
 
-  const [categoryId, setCategoryId] = useAtom(
-    useBaseWritingContext().categoryId!,
-  )
+  const [categoryId, setCategoryId] = useBaseWritingAtom('categoryId')
 
-  const [slug, setSlug] = useAtom(useBaseWritingContext().slug!)
-  const { data: category } = trpc.category.getCategoryOrDefaultById.useQuery({
-    id: categoryId,
-  })
+  const [slug, setSlug] = useBaseWritingAtom('slug')
+  const { data: category } = trpc.category.getCategoryOrDefaultById.useQuery(
+    {
+      id: categoryId!,
+    },
+    {
+      enabled: !!categoryId,
+    },
+  )
 
   const triggerOnceRef = useRef(false)
   useEffect(() => {

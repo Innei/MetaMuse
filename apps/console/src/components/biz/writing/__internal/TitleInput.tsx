@@ -1,12 +1,11 @@
 import { Input } from '@nextui-org/react'
-import { useAtom } from 'jotai'
 
 import { useI18n } from '~/i18n/hooks'
 
-import { useBaseWritingContext } from '../provider'
+import { useBaseWritingAtom } from '../provider'
 
 export const TitleInput = () => {
-  const [title, setTitle] = useAtom(useBaseWritingContext().title)
+  const [title, setTitle] = useBaseWritingAtom('title')
   const t = useI18n()
   return (
     <Input

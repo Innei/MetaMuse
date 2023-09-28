@@ -14,7 +14,7 @@ import type { FC } from 'react'
 
 import { ParseYAMLContentButton } from '~/components/biz/logic-button/ParseYAMLContentButton'
 import { BaseWritingProvider } from '~/components/biz/writing/provider'
-import { Writing } from '~/components/biz/writing/Writing'
+import { useEditorRef, Writing } from '~/components/biz/writing/Writing'
 import { Loading } from '~/components/common/Loading'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
@@ -65,7 +65,6 @@ export default function EditPage_() {
   }
   return <EditPage />
 }
-
 const {
   useModelDataSelector,
   useSetModelData,
@@ -170,6 +169,8 @@ const ActionButtonGroup = () => {
   const getData = useGetModelData()
   const setData = useSetModelData()
   const { mutateAsync: submit } = trpc.post.update.useMutation()
+
+  const editorRef = useEditorRef()
   return (
     <div className="space-x-2 lg:space-x-4">
       <ParseYAMLContentButton
@@ -178,6 +179,11 @@ const ActionButtonGroup = () => {
             return produce(prev, (draft) => {
               Object.assign(draft, omit(data, ['meta']))
               const meta = data.meta
+
+              if (data.text) {
+                editorRef?.setMarkdown(data.text)
+              }
+
               if (meta) {
                 const created = meta.created || meta.date
                 const parsedCreated = created ? dayjs(created) : null

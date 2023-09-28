@@ -2,7 +2,6 @@ import { Milkdown, MilkdownProvider, useEditor } from '@milkdown/react'
 import {
   forwardRef,
   useCallback,
-  useEffect,
   useId,
   useImperativeHandle,
   useRef,
@@ -23,6 +22,7 @@ import { history } from '@milkdown/plugin-history'
 import { indent } from '@milkdown/plugin-indent'
 import { listener, listenerCtx } from '@milkdown/plugin-listener'
 import { commonmark } from '@milkdown/preset-commonmark'
+import { replaceAll } from '@milkdown/utils'
 
 import { useIsMountedRef } from '~/hooks/use-is-mounted'
 
@@ -69,18 +69,7 @@ const MilkdownEditorImpl = forwardRef<MilkdownRef, MilkdownProps>(
         }),
       [],
     )
-
-    const setMarkdown = useCallback((markdown: string) => {
-      editorCtxRef.current?.update(defaultValueCtx, () => markdown)
-    }, [])
-
-    useImperativeHandle(ref, () => ({
-      getMarkdown,
-      setMarkdown,
-    }))
-
-    const isMounted = useIsMountedRef()
-    useEditor((root) => {
+    const { get } = useEditor((root) => {
       const editor = Editor.make()
       editorRef.current = editor
 
@@ -119,12 +108,19 @@ const MilkdownEditorImpl = forwardRef<MilkdownRef, MilkdownProps>(
         })
     }, [])
 
-    useEffect(
-      () => () => {
-        editorRef.current?.destroy()
+    const setMarkdown = useCallback(
+      (markdown: string) => {
+        get()?.action(replaceAll(markdown))
       },
-      [],
+      [get],
     )
+
+    useImperativeHandle(ref, () => ({
+      getMarkdown,
+      setMarkdown,
+    }))
+
+    const isMounted = useIsMountedRef()
 
     const id = useId()
     return (
