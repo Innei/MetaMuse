@@ -78,7 +78,7 @@ export const ParseYAMLContentButton: FC<{
   usePreventComposition(textareaEl!)
   return (
     <>
-      <Button color="secondary" onClick={onOpen} variant="flat">
+      <Button onClick={onOpen} variant="ghost">
         {t('common.import')}
       </Button>
       <NextUIModal isOpen={isOpen} size="3xl" onOpenChange={onOpenChange}>

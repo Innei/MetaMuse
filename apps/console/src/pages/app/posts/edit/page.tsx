@@ -1,5 +1,4 @@
-import { Button, Select, SelectItem } from '@nextui-org/react'
-import { createModelDataProvider } from 'jojoo/react'
+import { Button } from '@nextui-org/react'
 import React, { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import dayjs from 'dayjs'
@@ -7,31 +6,21 @@ import { produce } from 'immer'
 import { atom } from 'jotai'
 import { cloneDeep, isString, omit } from 'lodash-es'
 import { toast } from 'sonner'
-import { useEventCallback } from 'usehooks-ts'
-import type { Selection } from '@nextui-org/react'
-import type { RouterOutputs } from '~/lib/trpc'
+import type { PostModel } from '~/components/modules/post-editing/data-provider'
 import type { FC } from 'react'
 
 import { ParseYAMLContentButton } from '~/components/biz/logic-button/ParseYAMLContentButton'
 import { BaseWritingProvider } from '~/components/biz/writing/provider'
 import { useEditorRef, Writing } from '~/components/biz/writing/Writing'
 import { Loading } from '~/components/common/Loading'
+import {
+  PostModelDataAtomProvider,
+  usePostModelGetModelData,
+  usePostModelSetModelData,
+} from '~/components/modules/post-editing/data-provider'
+import { PostEditorSidebar } from '~/components/modules/post-editing/sidebar'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
-
-type PostModel = Omit<
-  RouterOutputs['post']['id'],
-  | '_count'
-  | 'category'
-  | 'modified'
-  | 'relatedBy'
-  | 'meta'
-  | 'count'
-  | 'created'
-> & {
-  meta?: any
-  created?: string
-}
 
 const createInitialEditingData = (): PostModel => {
   return {
@@ -65,13 +54,6 @@ export default function EditPage_() {
   }
   return <EditPage />
 }
-const {
-  useModelDataSelector,
-  useSetModelData,
-  useGetModelData,
-
-  ModelDataAtomProvider,
-} = createModelDataProvider<PostModel>()
 
 const EditPage: FC<{
   initialData?: PostModel
@@ -87,87 +69,42 @@ const EditPage: FC<{
   const editingAtom = useMemo(() => atom(editingData), [editingData])
 
   return (
-    <ModelDataAtomProvider overrideAtom={editingAtom}>
-      <div className="flex justify-between">
-        <div>
-          <p className="mb-3 text-lg font-medium">
-            {props.initialData ? (
-              <>
-                {t('common.editing')} 「{editingData.title}」
-              </>
-            ) : (
-              t('common.new-post')
-            )}
-          </p>
+    <PostModelDataAtomProvider overrideAtom={editingAtom}>
+      <BaseWritingProvider atom={editingAtom}>
+        <div className="flex justify-between">
+          <div>
+            <p className="mb-3 text-lg font-medium">
+              {props.initialData ? (
+                <>
+                  {t('common.editing')} 「{editingData.title}」
+                </>
+              ) : (
+                t('common.new-post')
+              )}
+            </p>
+          </div>
+
+          <ActionButtonGroup />
         </div>
 
-        <ActionButtonGroup />
-      </div>
-
-      <div className="flex-grow lg:grid lg:grid-cols-3 lg:gap-4">
-        <BaseWritingProvider atom={editingAtom}>
+        <div className="flex-grow lg:grid lg:grid-cols-3 lg:gap-4">
           <div className="col-span-2 flex flex-grow flex-col overflow-auto">
             <Writing />
           </div>
-        </BaseWritingProvider>
 
-        <div className="hidden flex-col lg:col-span-1 lg:flex">
-          <Sidebar />
+          <div className="hidden flex-col lg:col-span-1 lg:flex">
+            <PostEditorSidebar />
+          </div>
         </div>
-      </div>
-    </ModelDataAtomProvider>
-  )
-}
-
-const Sidebar = () => {
-  return (
-    <div className="flex flex-col space-y-4">
-      <CategorySelector />
-    </div>
-  )
-}
-
-const CategorySelector = () => {
-  const t = useI18n()
-  const { data = [], isLoading } = trpc.category.getAllForSelector.useQuery()
-  const categoryId = useModelDataSelector((data) => data?.categoryId)
-  const setter = useSetModelData()
-  const handleSelectionChange = useEventCallback((value: Selection) => {
-    const newCategoryId = Array.from(new Set(value).values())[0] as string
-    if (newCategoryId === categoryId) return
-
-    setter((prev) => {
-      return produce(prev, (draft) => {
-        draft.categoryId = newCategoryId
-      })
-    })
-  })
-  return (
-    <div className="flex flex-col space-y-3">
-      <Select
-        className="mt-5"
-        label={t('common.category')}
-        labelPlacement="outside"
-        isLoading={isLoading}
-        selectedKeys={useMemo(() => new Set([categoryId]), [categoryId])}
-        onSelectionChange={handleSelectionChange}
-        variant="flat"
-        size="sm"
-      >
-        {data?.map((item) => (
-          <SelectItem key={item.id} value={item.value}>
-            {item.label}
-          </SelectItem>
-        ))}
-      </Select>
-    </div>
+      </BaseWritingProvider>
+    </PostModelDataAtomProvider>
   )
 }
 
 const ActionButtonGroup = () => {
   const t = useI18n()
-  const getData = useGetModelData()
-  const setData = useSetModelData()
+  const getData = usePostModelGetModelData()
+  const setData = usePostModelSetModelData()
   const { mutateAsync: submit } = trpc.post.update.useMutation()
 
   const editorRef = useEditorRef()
