@@ -5,8 +5,10 @@ import { Translation } from 'react-i18next'
 import { Provider } from 'jotai'
 
 import { ColorModeObserver } from './components/common/ColorModeObserver'
+import { FABContainer } from './components/ui/fab/FabContainer'
 import { jotaiStore } from './lib/store'
 import { trpc, tRpcClient } from './lib/trpc'
+import { EventProvider } from './providers/event-provider'
 import { InitialDataProvider } from './providers/initial'
 import { queryClient } from './providers/query-core'
 import { Router } from './router'
@@ -19,6 +21,9 @@ export function App() {
       <QueryClientProvider client={queryClient}>
         <Provider store={jotaiStore}>
           <Suspense>
+            <EventProvider />
+            <FABContainer />
+
             <NextUIProvider>
               <InitialDataProvider>
                 <Translation>{() => <Router />}</Translation>

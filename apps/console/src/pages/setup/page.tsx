@@ -4,10 +4,11 @@ import { useForceUpdate } from 'framer-motion'
 import { toast } from 'sonner'
 import type { UserRegisterDto } from '@core/modules/user/dtos/register.dto'
 
-import { Background } from '~/components/ui/Background'
 import { useUncontrolledInput } from '~/hooks/use-uncontrolled-input'
 import { $axios } from '~/lib/request'
 import { router } from '~/router'
+
+import { Background } from '../../components/ui/background'
 
 export default function SetupPage() {
   // TODO

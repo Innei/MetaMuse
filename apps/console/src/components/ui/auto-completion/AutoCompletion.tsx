@@ -4,7 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 import type { InputProps } from '@nextui-org/react'
 import type { KeyboardEvent } from 'react'
 
-import { MotionDivToBottom } from '../Motion'
+import { MotionDivToBottom } from '../motion'
 
 export type Suggestion = {
   name: string

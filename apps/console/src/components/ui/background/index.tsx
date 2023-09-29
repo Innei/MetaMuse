@@ -10,7 +10,7 @@ export const Background = () => {
           'absolute inset-[-100px] z-0 blur-md filter',
           styles.bg,
         )}
-      ></div>
+       />
     </div>
   )
 }

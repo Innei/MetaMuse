@@ -2,15 +2,16 @@ import { Avatar } from '@nextui-org/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { User } from '@model'
+import type { User } from '@model'
 import { toast } from 'sonner'
 
 import { ErrorComponent } from '~/components/common/Error'
-import { Background } from '~/components/ui/Background'
 import { BizError } from '~/lib/biz-error'
 import { clsxm } from '~/lib/helper'
 import { $axios } from '~/lib/request'
 import { userStore } from '~/store/user'
+
+import { Background } from '../../components/ui/background'
 
 export default function LoginPage() {
   const { data, error } = useQuery<User, Error>(['/user'], async () => {
@@ -78,7 +79,7 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
-          ></input>
+           />
           <div className="flex flex-shrink-0 items-center justify-center">
             <button
               onClick={(e) => {

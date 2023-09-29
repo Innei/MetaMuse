@@ -2,14 +2,14 @@ import { Chip } from '@nextui-org/react'
 import React, { useEffect, useMemo } from 'react'
 import { atom, useAtom, useSetAtom } from 'jotai'
 import type { PostTag } from '@model'
-import type { Suggestion } from '~/components/ui/AutoCompletion'
+import type { Suggestion } from '../../../ui/auto-completion'
 
 import { select } from '@nextui-org/theme'
 
-import { Autocomplete } from '~/components/ui/AutoCompletion'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
 
+import { Autocomplete } from '../../../ui/auto-completion'
 import {
   usePostModelDataSelector,
   usePostModelGetModelData,

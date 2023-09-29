@@ -27,6 +27,7 @@ const createInitialEditingData = (): PostModel => {
     title: '',
     allowComment: true,
     copyright: true,
+    tagIds: [],
     categoryId: '',
     id: '',
     images: [],
@@ -72,8 +73,8 @@ const EditPage: FC<{
     <PostModelDataAtomProvider overrideAtom={editingAtom}>
       <BaseWritingProvider atom={editingAtom}>
         <div className="flex justify-between">
-          <div>
-            <p className="mb-3 text-lg font-medium">
+          <div className="mb-3 flex items-center justify-between">
+            <p className="flex items-center text-lg font-medium">
               {props.initialData ? (
                 <>
                   {t('common.editing')} 「{editingData.title}」
@@ -87,14 +88,12 @@ const EditPage: FC<{
           <ActionButtonGroup />
         </div>
 
-        <div className="flex-grow lg:grid lg:grid-cols-3 lg:gap-4">
-          <div className="col-span-2 flex flex-grow flex-col overflow-auto">
+        <div className="flex flex-grow lg:grid lg:grid-cols-[auto_400px] lg:gap-4">
+          <div className="flex flex-grow flex-col overflow-auto">
             <Writing />
           </div>
 
-          <div className="hidden flex-col lg:col-span-1 lg:flex">
-            <PostEditorSidebar />
-          </div>
+          <PostEditorSidebar />
         </div>
       </BaseWritingProvider>
     </PostModelDataAtomProvider>

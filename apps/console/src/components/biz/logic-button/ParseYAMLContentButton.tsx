@@ -13,10 +13,11 @@ import type { FC } from 'react'
 
 import { input } from '@nextui-org/theme'
 
-import { NextUIModal } from '~/components/ui/Modal'
 import { usePreventComposition } from '~/hooks/use-prevent-composition'
 import { useUncontrolledInput } from '~/hooks/use-uncontrolled-input'
 import { useI18n } from '~/i18n/hooks'
+
+import { NextUIModal } from '../../ui/modal'
 
 type ParsedValue = {
   title?: string

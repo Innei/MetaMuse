@@ -22,12 +22,13 @@ import type { PostModel } from '~/models/post'
 import type { FC } from 'react'
 
 import { AddCircleLine, FilterLineIcon } from '~/components/icons'
-import { RelativeTime } from '~/components/ui/DateTime'
 import { useBeforeMounted } from '~/hooks/use-before-mounted'
 import { buildNSKey } from '~/lib/key'
 import { routeBuilder, Routes } from '~/lib/route-builder'
 import { trpc } from '~/lib/trpc'
 import { router } from '~/router'
+
+import { RelativeTime } from '../../../../components/ui/date-time'
 
 enum ViewStyle {
   Table,
