@@ -4,6 +4,7 @@ import { PresentDrawer } from '~/components/ui/drawer'
 import { FABPortable } from '~/components/ui/fab/FabContainer'
 
 import { CategorySelector } from './CategorySelector'
+import { RelatedPostSelector } from './RelatedPostSelector'
 import { TagsInput } from './TagsInput'
 
 const Sidebar = () => {
@@ -11,6 +12,7 @@ const Sidebar = () => {
     <div className="flex flex-col space-y-8">
       <CategorySelector />
       <TagsInput />
+      <RelatedPostSelector />
     </div>
   )
 }

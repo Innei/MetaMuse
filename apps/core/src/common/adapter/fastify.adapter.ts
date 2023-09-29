@@ -2,6 +2,7 @@ import { FastifyAdapter } from '@nestjs/platform-fastify'
 
 const app: FastifyAdapter = new FastifyAdapter({
   trustProxy: true,
+  maxParamLength: 200,
 })
 export { app as fastifyApp }
 

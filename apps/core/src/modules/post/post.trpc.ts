@@ -46,6 +46,37 @@ export class PostTrpcRouter implements OnModuleInit {
           })
         }),
 
+      relatedList: procedureAuth
+        .input(
+          z.object({
+            cursor: z.string().optional(),
+            size: z.number().optional().default(10),
+          }),
+        )
+        .query(async ({ input }) => {
+          const { size: limit, cursor } = input
+          const items = await this.databaseService.prisma.post.findMany({
+            take: limit + 1,
+            select: {
+              id: true,
+              title: true,
+            },
+            cursor: cursor ? { id: cursor } : undefined,
+            orderBy: {
+              created: 'asc',
+            },
+          })
+          let nextCursor: typeof cursor | undefined = undefined
+          if (items.length > limit) {
+            const nextItem = items.pop()
+            nextCursor = nextItem!.id
+          }
+          return {
+            items,
+            nextCursor,
+          }
+        }),
+
       paginate: procedureAuth
         .input(PostPagerDto.schema)
         .query(

@@ -14,14 +14,9 @@ export const SlugInput = () => {
   const [categoryId, setCategoryId] = useBaseWritingAtom('categoryId')
 
   const [slug, setSlug] = useBaseWritingAtom('slug')
-  const { data: category } = trpc.category.getCategoryOrDefaultById.useQuery(
-    {
-      id: categoryId!,
-    },
-    {
-      enabled: !!categoryId,
-    },
-  )
+  const { data: category } = trpc.category.getCategoryOrDefaultById.useQuery({
+    id: categoryId || '',
+  })
 
   const triggerOnceRef = useRef(false)
   useEffect(() => {
