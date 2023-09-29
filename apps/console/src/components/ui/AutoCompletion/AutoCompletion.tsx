@@ -6,11 +6,11 @@ import type { KeyboardEvent } from 'react'
 
 import { MotionDivToBottom } from '../Motion'
 
-type Suggestion = {
+export type Suggestion = {
   name: string
   value: string
 }
-interface AutocompleteProps {
+export interface AutocompleteProps {
   inputProps?: InputProps
   suggestions: Suggestion[]
   renderSuggestion?: (suggestion: Suggestion) => any
@@ -53,7 +53,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
           {...inputProps}
         />
         <AnimatePresence>
-          {isOpen && (
+          {isOpen && !!suggestions.length && (
             <Listbox
               as={MotionDivToBottom}
               ref={ref}

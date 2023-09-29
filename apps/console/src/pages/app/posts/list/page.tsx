@@ -14,20 +14,19 @@ import {
   TableHeader,
   TableRow,
 } from '@nextui-org/react'
-import { useQuery } from '@tanstack/react-query'
-import { FC, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
+import type { PostModel } from '~/models/post'
+import type { FC } from 'react'
 
 import { AddCircleLine, FilterLineIcon } from '~/components/icons'
 import { RelativeTime } from '~/components/ui/DateTime'
 import { useBeforeMounted } from '~/hooks/use-before-mounted'
 import { buildNSKey } from '~/lib/key'
-import { $axios } from '~/lib/request'
 import { routeBuilder, Routes } from '~/lib/route-builder'
-import { PaginationResult } from '~/models/paginator'
-import { PostModel } from '~/models/post'
+import { trpc } from '~/lib/trpc'
 import { router } from '~/router'
 
 enum ViewStyle {
@@ -47,8 +46,8 @@ const Filter = () => {
   // TODO
   return (
     <div className="w-full px-1 py-2">
-      <p className="text-small text-foreground font-bold"></p>
-      <div className="mt-2 flex w-full flex-col gap-2"></div>
+      <p className="text-small text-foreground font-bold" />
+      <div className="mt-2 flex w-full flex-col gap-2" />
     </div>
   )
 }
@@ -175,7 +174,7 @@ const Header = () => {
   )
 }
 
-export default () => {
+export default function Page() {
   const [page, setPage] = useState(1)
   const [size, setSize] = useState(10)
 
@@ -196,25 +195,23 @@ export default () => {
     } catch {}
   })
 
-  const { data, isLoading } = useQuery(
-    ['/posts', page, size],
-    async () => {
-      return $axios.get<PaginationResult<PostModel>>('/admin/posts', {
-        params: {
-          page,
-          size,
-        },
-      })
+  const { data, isLoading } = trpc.post.paginate.useQuery(
+    {
+      page,
+      size,
     },
-    { keepPreviousData: true },
+    {
+      keepPreviousData: true,
+      refetchOnMount: true,
+    },
   )
-
   const currentSelectionRef = useRef<Set<string>>()
 
   const currentPage = useMemo(
     () => parseInt(search.get('page')!) || 1,
     [search],
   )
+
   return (
     <>
       <Header />
@@ -227,24 +224,24 @@ export default () => {
         }}
       >
         <TableHeader>
-          <TableColumn key={'title'}>标题</TableColumn>
-          <TableColumn key={'category'}>分类</TableColumn>
-          <TableColumn key={'tags'}>标签</TableColumn>
-          <TableColumn key={'count.read'}>
+          <TableColumn key="title">标题</TableColumn>
+          <TableColumn key="category">分类</TableColumn>
+          <TableColumn key="tags">标签</TableColumn>
+          <TableColumn key="count.read">
             <i className="icon-[mingcute--book-6-line]" />
           </TableColumn>
-          <TableColumn key={'count.like'}>
+          <TableColumn key="count.like">
             <i className="icon-[mingcute--heart-line]" />
           </TableColumn>
-          <TableColumn key={'created'}>创建时间</TableColumn>
-          <TableColumn key={'modified'}>修改时间</TableColumn>
-          <TableColumn className="text-center" width={1} key={'action'}>
+          <TableColumn key="created">创建时间</TableColumn>
+          <TableColumn key="modified">修改时间</TableColumn>
+          <TableColumn className="text-center" width={1} key="action">
             操作
           </TableColumn>
         </TableHeader>
         <TableBody
           isLoading={isLoading}
-          emptyContent={'这里空空如也'}
+          emptyContent="这里空空如也"
           items={data?.data || []}
         >
           {(item) => (
@@ -262,7 +259,7 @@ export default () => {
           <Pagination
             total={data?.pagination.totalPage}
             initialPage={currentPage}
-            variant={'light'}
+            variant="light"
             onChange={(page) => {
               setPage(page)
               setSearch((p) => ({ ...p, page }))

@@ -1,3 +1,5 @@
+import { omit } from 'lodash'
+
 import { BizException } from '@core/common/exceptions/biz.exception'
 import { BusinessEvents } from '@core/constants/business-event.constant'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
@@ -5,7 +7,7 @@ import { DatabaseService } from '@core/processors/database/database.service'
 import { EventManagerService } from '@core/processors/helper/helper.event.service'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import { isDefined } from '@core/shared/utils/validator.util'
-import { Post, Prisma } from '@meta-muse/prisma'
+import { Prisma } from '@meta-muse/prisma'
 import { Injectable } from '@nestjs/common'
 
 import { PostDto, PostPagerDto, PostPatchDto } from './post.dto'
@@ -17,6 +19,49 @@ export class PostService {
     private readonly db: DatabaseService,
     private readonly eventService: EventManagerService,
   ) {}
+
+  private dtoToPost(dto: PostDto, type: 'create'): Prisma.PostCreateInput
+  private dtoToPost(dto: PostPatchDto, type: 'update'): Prisma.PostUpdateInput
+  private dtoToPost(
+    dto: PostDto | PostPatchDto,
+    type: 'create' | 'update',
+  ): Prisma.PostCreateInput | Prisma.PostUpdateInput {
+    const input = {
+      ...omit(
+        dto,
+        'related',
+        'tagIds',
+        'categoryId',
+        'category',
+        'tags',
+        'modified',
+      ),
+    } as Prisma.PostCreateInput | Prisma.PostUpdateInput
+
+    delete input.related
+    delete input.category
+    delete input.tags
+
+    const setOrConnect = type === 'create' ? 'connect' : 'set'
+    if (dto.tagIds) {
+      input.tags = {
+        [setOrConnect]: dto.tagIds.map((id) => ({ id })),
+      }
+    }
+    if (dto.categoryId) {
+      input.category = {
+        connect: {
+          id: dto.categoryId,
+        },
+      }
+    }
+    if (dto.related?.length) {
+      input.related = {
+        [setOrConnect]: dto.related.map((id) => ({ id })),
+      }
+    }
+    return input
+  }
 
   async create(dto: PostDto) {
     const { slug, categoryId } = dto
@@ -40,18 +85,14 @@ export class PostService {
           id: categoryId,
         },
       })
+
       if (!hasCategory) {
         throw new BizException(ErrorCodeEnum.CategoryNotFound)
       }
 
       const newPost = await prisma.post.create({
-        data: {
-          ...dto,
-          related: { connect: dto.related?.map((id) => ({ id })) } || [],
-        },
-        include: {
-          category: true,
-        },
+        data: this.dtoToPost(dto, 'create'),
+        include: PostIncluded,
       })
 
       return newPost
@@ -90,24 +131,14 @@ export class PostService {
     //   )
     // })
 
-    this.db.prisma.$transaction(async (prisma) => {
+    return this.db.prisma.$transaction(async (prisma) => {
       await prisma.post.update({
         where: {
           id: postId,
         },
         data: {
           related: {
-            set: [],
-          },
-        },
-      })
-      await prisma.post.update({
-        where: {
-          id: postId,
-        },
-        data: {
-          related: {
-            connect: [
+            set: [
               ...relatedIds.filter((i) => i !== postId).map((i) => ({ id: i })),
             ],
           },
@@ -272,12 +303,7 @@ export class PostService {
           )
       }
 
-      const updatedData: Partial<Post> = {
-        ...data,
-      }
-
-      // @ts-expect-error
-      delete updatedData.related
+      const updatedData = this.dtoToPost(data, 'update')
 
       if ([data.text, data.title, data.slug].some((i) => isDefined(i))) {
         const now = new Date()

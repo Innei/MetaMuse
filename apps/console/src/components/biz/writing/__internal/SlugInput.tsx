@@ -36,7 +36,7 @@ export const SlugInput = () => {
   return (
     <div className="my-3 flex items-center pl-2 text-sm text-gray-500">
       {isLoading ? (
-        <Skeleton className="h-4 w-[120px]" />
+        <Skeleton className="h-2 w-[120px]" />
       ) : (
         <label>{`${urlConfig?.webUrl}/${category?.slug}/`}</label>
       )}

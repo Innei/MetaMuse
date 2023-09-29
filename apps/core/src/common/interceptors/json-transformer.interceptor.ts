@@ -6,10 +6,14 @@ import { isObjectLike } from 'lodash'
 import { map, Observable } from 'rxjs'
 import snakecaseKeys from 'snakecase-keys'
 
-import { RESPONSE_PASSTHROUGH_METADATA } from '@core/constants/system.constant'
+import {
+  REFLECTOR,
+  RESPONSE_PASSTHROUGH_METADATA,
+} from '@core/constants/system.constant'
 import {
   CallHandler,
   ExecutionContext,
+  Inject,
   Injectable,
   NestInterceptor,
 } from '@nestjs/common'
@@ -17,7 +21,7 @@ import { Reflector } from '@nestjs/core'
 
 @Injectable()
 export class JSONTransformerInterceptor implements NestInterceptor {
-  constructor(private readonly reflector: Reflector) {}
+  constructor(@Inject(REFLECTOR) private readonly reflector: Reflector) {}
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const handler = context.getHandler()
     // 跳过 bypass 装饰的请求

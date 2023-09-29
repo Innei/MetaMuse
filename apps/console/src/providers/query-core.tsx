@@ -1,14 +1,14 @@
 'use client'
 
 import { QueryClient } from '@tanstack/react-query'
-import {
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
+import { del, get, set } from 'idb-keyval'
+import type {
   PersistedClient,
   Persister,
   PersistQueryClientOptions,
-  PersistQueryClientProvider,
 } from '@tanstack/react-query-persist-client'
-import { PropsWithChildren } from 'react'
-import { del, get, set } from 'idb-keyval'
+import type { PropsWithChildren } from 'react'
 
 declare module '@tanstack/query-core' {
   export interface QueryMeta {
@@ -33,9 +33,6 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
-
-      refetchOnWindowFocus: false,
-      refetchIntervalInBackground: false,
     },
   },
 })

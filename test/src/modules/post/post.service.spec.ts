@@ -364,4 +364,21 @@ describe('/modules/post/post.service', () => {
 
     expect(result)
   })
+
+  it('should create post with tag successful', async () => {
+    const cate = await createMockCategory()
+    const tag = await prisma.postTag.create({
+      data: {
+        name: 'test tag',
+      },
+    })
+
+    const result = await proxy.service.create({
+      ...mockPostInputData,
+      categoryId: cate.id,
+      tagIds: [tag.id],
+    })
+
+    expect(result.tags[0].id).toBe(tag.id)
+  })
 })

@@ -107,6 +107,8 @@ const ActionButtonGroup = () => {
   const setData = usePostModelSetModelData()
   const { mutateAsync: submit } = trpc.post.update.useMutation()
 
+  const trpcUtil = trpc.useContext()
+
   const editorRef = useEditorRef()
   return (
     <div className="space-x-2 lg:space-x-4">
@@ -155,6 +157,9 @@ const ActionButtonGroup = () => {
 
           submit(currentData).then(() => {
             toast.success(t('common.save-success'))
+
+            trpcUtil.post.id.invalidate({ id: currentData.id })
+            trpcUtil.post.paginate.invalidate()
 
             // TODO back to list or dialog
           })

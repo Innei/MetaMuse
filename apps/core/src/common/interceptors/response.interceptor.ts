@@ -10,6 +10,7 @@ import * as SYSTEM from '@core/constants/system.constant'
 import {
   CallHandler,
   ExecutionContext,
+  Inject,
   Injectable,
   NestInterceptor,
 } from '@nestjs/common'
@@ -21,7 +22,9 @@ export interface Response<T> {
 
 @Injectable()
 export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
-  constructor(private readonly reflector: Reflector) {}
+  constructor(
+    @Inject(SYSTEM.REFLECTOR) private readonly reflector: Reflector,
+  ) {}
   intercept(
     context: ExecutionContext,
     next: CallHandler,

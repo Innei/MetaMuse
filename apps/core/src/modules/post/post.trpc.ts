@@ -6,7 +6,7 @@ import { defineTrpcRouter } from '@core/processors/trpc/trpc.helper'
 import { tRPCService } from '@core/processors/trpc/trpc.service'
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
 
-import { PostInputSchema } from './post.dto'
+import { PostInputSchema, PostPagerDto } from './post.dto'
 import { PostService } from './post.service'
 
 @TRPCRouter()
@@ -38,8 +38,19 @@ export class PostTrpcRouter implements OnModuleInit {
           }),
         )
         .query(async (opt) => {
-          return this.service.getPostById(opt.input.id)
+          return this.service.getPostById(opt.input.id).then((data) => {
+            return {
+              ...data,
+              tagIds: data.tags.map((tag) => tag.id),
+            }
+          })
         }),
+
+      paginate: procedureAuth
+        .input(PostPagerDto.schema)
+        .query(
+          async ({ input: query }) => await this.service.paginatePosts(query),
+        ),
 
       createTag: procedureAuth
         .input(
@@ -48,13 +59,25 @@ export class PostTrpcRouter implements OnModuleInit {
           }),
         )
         .mutation(async (opt) => {
-          return this.databaseService.prisma.postTag.create({
-            data: {
-              name: opt.input.name,
-            },
-            select: {
-              id: true,
-            },
+          const { name } = opt.input
+          return this.databaseService.prisma.$transaction(async (prisma) => {
+            const tag = await prisma.postTag.findUnique({
+              where: {
+                name,
+              },
+            })
+            if (tag) {
+              return tag
+            }
+
+            return prisma.postTag.create({
+              data: {
+                name,
+              },
+              select: {
+                id: true,
+              },
+            })
           })
         }),
       tags: procedureAuth.query(async () => {
@@ -76,6 +99,7 @@ export class PostTrpcRouter implements OnModuleInit {
         )
         .mutation(async (opt) => {
           const { input } = opt
+
           const { id, ...data } = input
 
           await this.service.updateById(id, data)
