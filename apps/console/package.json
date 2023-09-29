@@ -64,7 +64,7 @@
     "@tailwindcss/typography": "0.5.10",
     "@types/js-yaml": "4.0.6",
     "@types/lodash-es": "4.17.9",
-    "@types/node": "20.7.1",
+    "@types/node": "20.7.2",
     "@types/react": "18.2.23",
     "@types/react-dom": "18.2.8",
     "@vitejs/plugin-react": "4.1.0",
