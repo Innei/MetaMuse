@@ -38,6 +38,7 @@ const createInitialEditingData = (): PostModel => {
     text: '',
     meta: {},
     related: [],
+    relatedIds: [],
   }
 }
 export default function EditPage_() {
@@ -159,6 +160,7 @@ const ActionButtonGroup = () => {
 
             trpcUtil.post.id.invalidate({ id: currentData.id })
             trpcUtil.post.paginate.invalidate()
+            trpcUtil.post.relatedList.invalidate()
 
             // TODO back to list or dialog
           })

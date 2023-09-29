@@ -9,11 +9,11 @@ import { PostOptionalDefaultsSchema, PostSchema } from '@meta-muse/prisma/zod'
 import { PostSchemaProjection } from './post.protect'
 
 export const PostInputSchema = PostOptionalDefaultsSchema.extend({
-  related: z.array(z.string()).optional(),
   slug: z
     .string()
     .transform((val) => slugify(val, { lower: true, trim: true })),
   tagIds: z.array(z.string()).optional(),
+  relatedIds: z.array(z.string()).optional(),
 }).omit(PostSchemaProjection)
 
 export class PostDto extends createZodDto(PostInputSchema) {}

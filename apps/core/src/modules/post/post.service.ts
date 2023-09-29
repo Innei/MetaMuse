@@ -35,6 +35,7 @@ export class PostService {
         'category',
         'tags',
         'modified',
+        'relatedIds',
       ),
     } as Prisma.PostCreateInput | Prisma.PostUpdateInput
 
@@ -55,9 +56,9 @@ export class PostService {
         },
       }
     }
-    if (dto.related?.length) {
+    if (dto.relatedIds?.length) {
       input.related = {
-        [setOrConnect]: dto.related.map((id) => ({ id })),
+        [setOrConnect]: dto.relatedIds.map((id) => ({ id })),
       }
     }
     return input
@@ -98,8 +99,8 @@ export class PostService {
       return newPost
     })
 
-    if (dto.related?.length) {
-      await this.relateEachOther(model.id, dto.related)
+    if (dto.relatedIds?.length) {
+      await this.relateEachOther(model.id, dto.relatedIds)
     }
 
     if (model.pin) {
@@ -111,39 +112,46 @@ export class PostService {
     return model
   }
 
-  private async relateEachOther(postId: string, relatedIds: string[]) {
-    // await this.db.prisma.$transaction(async (prisma) => {
-    //   await Promise.all(
-    //     relatedIds.map((id) =>
-    //       prisma.post.update({
-    //         where: {
-    //           id,
-    //         },
-    //         data: {
-    //           related: {
-    //             connect: {
-    //               id: postId,
-    //             },
-    //           },
-    //         },
-    //       }),
-    //     ),
-    //   )
-    // })
-
+  private async relateEachOther(
+    postId: string,
+    relatedIds: string[],
+    oldRelatedIds?: string[],
+  ) {
     return this.db.prisma.$transaction(async (prisma) => {
-      await prisma.post.update({
-        where: {
-          id: postId,
-        },
-        data: {
-          related: {
-            set: [
-              ...relatedIds.filter((i) => i !== postId).map((i) => ({ id: i })),
-            ],
-          },
-        },
-      })
+      if (oldRelatedIds?.length) {
+        await Promise.all(
+          oldRelatedIds.map((relatedId) =>
+            prisma.post.update({
+              where: {
+                id: relatedId,
+              },
+              data: {
+                related: {
+                  disconnect: {
+                    id: postId,
+                  },
+                },
+              },
+            }),
+          ),
+        )
+      }
+      await Promise.all(
+        relatedIds.map((relatedId) =>
+          prisma.post.update({
+            where: {
+              id: relatedId,
+            },
+            data: {
+              related: {
+                connect: {
+                  id: postId,
+                },
+              },
+            },
+          }),
+        ),
+      )
     })
   }
 
@@ -280,6 +288,11 @@ export class PostService {
         select: {
           categoryId: true,
           modified: true,
+          related: {
+            select: {
+              id: true,
+            },
+          },
         },
       })
 
@@ -317,12 +330,16 @@ export class PostService {
         },
         data: updatedData,
       })
-    })
 
-    // 有关联文章
-    const related = data.related?.filter((i) => i !== id) || []
-    if (related.length) {
-      await this.relateEachOther(id, related)
-    }
+      // 有关联文章
+      const related = data.relatedIds?.filter((i) => i !== id) || []
+      if (related.length) {
+        await this.relateEachOther(
+          id,
+          related,
+          originPost.related.map((i) => i.id),
+        )
+      }
+    })
   }
 }

@@ -9,7 +9,7 @@ import { TagsInput } from './TagsInput'
 
 const Sidebar = () => {
   return (
-    <div className="flex flex-col space-y-8">
+    <div className="flex flex-col gap-8">
       <CategorySelector />
       <TagsInput />
       <RelatedPostSelector />

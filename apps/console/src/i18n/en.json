@@ -21,6 +21,10 @@
     "new": "New"
   },
   "module": {
+    "posts": {
+      "related_posts": "Related posts",
+      "select_posts": "Select posts for related"
+    },
     "parse_md_yaml": {
       "title": "Import markdown with YAML front matter format"
     }

@@ -42,6 +42,7 @@ export class PostTrpcRouter implements OnModuleInit {
             return {
               ...data,
               tagIds: data.tags.map((tag) => tag.id),
+              relatedIds: data.related.map((post) => post.id),
             }
           })
         }),
