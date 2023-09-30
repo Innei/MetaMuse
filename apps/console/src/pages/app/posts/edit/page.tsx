@@ -6,13 +6,14 @@ import { produce } from 'immer'
 import { atom } from 'jotai'
 import { cloneDeep, omit } from 'lodash-es'
 import { toast } from 'sonner'
+import type { PostDto } from '@core/modules/post/post.dto'
 import type { PostModel } from '~/models/post'
 import type { FC } from 'react'
 
 import { ParseYAMLContentButton } from '~/components/biz/logic-button/ParseYAMLContentButton'
 import { BaseWritingProvider } from '~/components/biz/writing/provider'
 import { useEditorRef, Writing } from '~/components/biz/writing/Writing'
-import { Loading } from '~/components/common/Loading'
+import { PageLoading } from '~/components/common/PageLoading'
 import {
   PostModelDataAtomProvider,
   usePostModelGetModelData,
@@ -51,7 +52,7 @@ export default function EditPage_() {
   )
 
   if (id) {
-    if (isLoading) return <Loading />
+    if (isLoading) return <PageLoading />
 
     return <EditPage initialData={data} />
   }
@@ -87,7 +88,7 @@ const EditPage: FC<{
             </p>
           </div>
 
-          <ActionButtonGroup />
+          <ActionButtonGroup initialData={props.initialData} />
         </div>
 
         <div className="flex flex-grow lg:grid lg:grid-cols-[auto_400px] lg:gap-4">
@@ -102,7 +103,7 @@ const EditPage: FC<{
   )
 }
 
-const ActionButtonGroup = () => {
+const ActionButtonGroup = ({ initialData }: { initialData?: PostModel }) => {
   const t = useI18n()
   const getData = usePostModelGetModelData()
   const setData = usePostModelSetModelData()
@@ -147,14 +148,27 @@ const ActionButtonGroup = () => {
             ...getData(),
           }
 
+          const payload: PostDto & {
+            id: string
+          } = {
+            ...currentData,
+          }
+
+          if (
+            currentData.created === initialData?.created &&
+            currentData.created
+          ) {
+            payload.custom_created = new Date(currentData.created)
+          }
+
           Reflect.deleteProperty(currentData, 'category')
 
           const isCreate = !currentData.id
           const promise = isCreate
-            ? createPost(currentData).then(() => {
+            ? createPost(payload).then(() => {
                 toast.success(t('common.create-success'))
               })
-            : updatePost(currentData).then(() => {
+            : updatePost(payload).then(() => {
                 toast.success(t('common.save-success'))
               })
           promise

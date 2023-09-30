@@ -36,6 +36,7 @@ export class PostService {
         'tags',
         'modified',
         'relatedIds',
+        'custom_created',
       ),
     } as Prisma.PostCreateInput | Prisma.PostUpdateInput
 
@@ -44,6 +45,13 @@ export class PostService {
     delete input.tags
 
     const setOrConnect = type === 'create' ? 'connect' : 'set'
+
+    if (dto.summary === '') {
+      input.summary = null
+    }
+    if (dto.custom_created) {
+      input.created = dto.custom_created
+    }
     if (dto.tagIds) {
       input.tags = {
         [setOrConnect]: dto.tagIds.map((id) => ({ id })),

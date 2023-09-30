@@ -39,3 +39,7 @@ export const getDayOfYear = (date = new Date()) => {
 
   return day
 }
+
+export function isValidDate(d: any) {
+  return d instanceof Date && !Number.isNaN(+d)
+}

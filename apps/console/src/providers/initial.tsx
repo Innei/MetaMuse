@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { createContext, FC, PropsWithChildren, useContext } from 'react'
+import type { FC, PropsWithChildren} from 'react';
+import { createContext, useContext } from 'react'
 
 import { Error } from '~/components/common/Error'
-import { Loading } from '~/components/common/Loading'
+import { PageLoading } from '~/components/common/PageLoading'
 
 interface InitialData {
   seo: {
@@ -22,7 +23,7 @@ export const InitialDataProvider: FC<PropsWithChildren> = ({ children }) => {
 
   if (isLoading) {
     return (
-      <Loading
+      <PageLoading
         className="h-screen min-h-[300px]"
         loadingText="获取初始数据..."
       />
@@ -32,7 +33,7 @@ export const InitialDataProvider: FC<PropsWithChildren> = ({ children }) => {
   if (error) {
     return (
       <Error
-        errorText={'获取初始数据失败，请检查网络连接或刷新页面重试。'}
+        errorText="获取初始数据失败，请检查网络连接或刷新页面重试。"
         className="h-screen min-h-[300px]"
       />
     )

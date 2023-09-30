@@ -19,7 +19,13 @@
     "reset": "Reset",
     "confirm": "Confirm",
     "ok": "OK",
-    "new": "New"
+    "new": "New",
+    "published": "Published",
+    "should-published": "Should published?",
+    "pin": "Pin",
+    "allow-comment": "Allow comment",
+    "custom-created": "Custom created at",
+    "invalid-date": "Invalid date"
   },
   "module": {
     "posts": {

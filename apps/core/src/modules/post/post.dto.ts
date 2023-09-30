@@ -21,6 +21,9 @@ export const PostInputSchema = PostOptionalDefaultsSchema.extend({
     .transform((val) => slugify(val, { lower: true, trim: true })),
   tagIds: z.array(z.string()).optional(),
   relatedIds: z.array(z.string()).optional(),
+  custom_created: z.coerce.date().optional(),
+  meta: z.any().optional(),
+  summary: z.string().optional().nullable(),
 }).omit(PostSchemaProjection)
 
 export class PostDto extends createZodDto(PostInputSchema) {}

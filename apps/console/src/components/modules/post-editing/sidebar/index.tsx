@@ -4,17 +4,21 @@ import { PresentDrawer } from '~/components/ui/drawer'
 import { FABPortable } from '~/components/ui/fab/FabContainer'
 
 import { CategorySelector } from './CategorySelector'
+import { CustomCreatedInput } from './CustomCreatedInput'
+import { PostCombinedSwitch } from './PostCombinedSwitch'
 import { RelatedPostSelector } from './RelatedPostSelector'
 import { SummaryInput } from './SummaryInput'
 import { TagsInput } from './TagsInput'
 
 const Sidebar = () => {
   return (
-    <div className="flex flex-col gap-8">
+    <div className="text-tiny flex h-0 flex-grow flex-col gap-8 overflow-auto pb-4 font-medium">
       <CategorySelector />
       <TagsInput />
       <RelatedPostSelector />
       <SummaryInput />
+      <PostCombinedSwitch />
+      <CustomCreatedInput />
     </div>
   )
 }

@@ -439,4 +439,36 @@ describe('/modules/post/post.service', () => {
 
     expect(result.related.length).toBe(0)
   })
+
+  it('should custom created where create post', async () => {
+    const cate = await createMockCategory()
+    const post = generateMockPost()
+    const customCreated = new Date('2021-01-01')
+
+    const newPost = await proxy.service.create({
+      ...post,
+      slug: 'test-slug21',
+      categoryId: cate.id,
+      custom_created: customCreated,
+    })
+
+    expect(newPost.created.toISOString()).toBe(customCreated.toISOString())
+  })
+
+  it('should attach meta field when create post', async () => {
+    const cate = await createMockCategory()
+    const post = generateMockPost()
+    const meta = {
+      test: 'test',
+    }
+
+    const newPost = await proxy.service.create({
+      ...post,
+      slug: 'test-slug21',
+      categoryId: cate.id,
+      meta,
+    })
+
+    expect(newPost.meta).toMatchObject(meta)
+  })
 })
