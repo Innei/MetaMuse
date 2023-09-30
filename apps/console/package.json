@@ -71,7 +71,7 @@
     "@vitejs/plugin-react": "4.1.0",
     "autoprefixer": "10.4.16",
     "clsx": "^2.0.0",
-    "daisyui": "3.8.1",
+    "daisyui": "3.8.2",
     "postcss": "8.4.31",
     "postcss-import": "15.1.0",
     "prettier": "3.0.3",
