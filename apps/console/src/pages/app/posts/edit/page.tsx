@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { produce } from 'immer'
 import { atom } from 'jotai'
-import { cloneDeep, isString, omit } from 'lodash-es'
+import { cloneDeep, omit } from 'lodash-es'
 import { toast } from 'sonner'
 import type { PostModel } from '~/components/modules/post-editing/data-provider'
 import type { FC } from 'react'
@@ -143,17 +143,9 @@ const ActionButtonGroup = () => {
         onClick={() => {
           const currentData = {
             ...getData(),
-          } as Omit<PostModel, 'related'> & {
-            related: any
           }
 
           Reflect.deleteProperty(currentData, 'category')
-
-          if (currentData.related.length > 0) {
-            currentData.related = currentData.related.map((item: any) => {
-              return isString(item) ? item : item.id
-            })
-          }
 
           submit(currentData).then(() => {
             toast.success(t('common.save-success'))

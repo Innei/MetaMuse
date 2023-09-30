@@ -56,11 +56,11 @@ export class PostService {
         },
       }
     }
-    if (dto.relatedIds?.length) {
-      input.related = {
-        [setOrConnect]: dto.relatedIds.map((id) => ({ id })),
-      }
+
+    input.related = {
+      [setOrConnect]: dto.relatedIds?.map((id) => ({ id })) || [],
     }
+
     return input
   }
 
@@ -107,13 +107,36 @@ export class PostService {
       await this.togglePin(model.id, true)
     }
 
-    this.eventService.event(BusinessEvents.POST_CREATE, model)
+    await this.notifyPostUpdate(BusinessEvents.POST_CREATE, model.id)
 
     return model
   }
 
+  private async notifyPostUpdate(
+    type:
+      | BusinessEvents.POST_CREATE
+      | BusinessEvents.POST_UPDATE
+      | BusinessEvents.POST_DELETE,
+    id: string,
+  ) {
+    switch (type) {
+      case BusinessEvents.POST_CREATE:
+      case BusinessEvents.POST_UPDATE: {
+        const result = await this.getPostById(id).catch(() => null)
+        if (!result) return
+        await this.eventService.emit(type, result)
+        break
+      }
+
+      case BusinessEvents.POST_DELETE:
+        await this.eventService.emit(type, { id })
+        break
+    }
+  }
+
   private async relateEachOther(
     postId: string,
+
     relatedIds: string[],
     oldRelatedIds?: string[],
   ) {
@@ -282,7 +305,7 @@ export class PostService {
   }
 
   async updateById(id: string, data: PostPatchDto) {
-    await this.db.prisma.$transaction(async (prisma) => {
+    const [originPost] = await this.db.prisma.$transaction(async (prisma) => {
       const originPost = await prisma.post.findUnique({
         where: { id },
         select: {
@@ -331,15 +354,18 @@ export class PostService {
         data: updatedData,
       })
 
-      // 有关联文章
-      const related = data.relatedIds?.filter((i) => i !== id) || []
-      if (related.length) {
-        await this.relateEachOther(
-          id,
-          related,
-          originPost.related.map((i) => i.id),
-        )
-      }
+      return [originPost, updatedData]
     })
+
+    // 有关联文章
+    const related = data.relatedIds?.filter((i) => i !== id) || []
+
+    await this.relateEachOther(
+      id,
+      related,
+      originPost.related.map((i) => i.id),
+    )
+
+    this.notifyPostUpdate(BusinessEvents.POST_UPDATE, id)
   }
 }

@@ -37,10 +37,7 @@ describe('/modules/post/post.service', () => {
       categoryId: id,
       category,
     })
-    expect(mockedEventManagerService.event).toBeCalledWith(
-      'POST_CREATE',
-      result,
-    )
+    expect(mockedEventManagerService.emit).toBeCalledWith('POST_CREATE', result)
   })
 
   it('should throw when post exist', async () => {
@@ -161,7 +158,7 @@ describe('/modules/post/post.service', () => {
     const hasRelatedPost = await proxy.service.create({
       ...post,
       categoryId: cate.id,
-      related: relatedIds,
+      relatedIds,
     })
 
     expect(
@@ -379,6 +376,67 @@ describe('/modules/post/post.service', () => {
       tagIds: [tag.id],
     })
 
+    const result2 = await proxy.service.create({
+      ...mockPostInputData,
+      slug: 'test-slug2',
+      categoryId: cate.id,
+      tagIds: [tag.id],
+    })
+
     expect(result.tags[0].id).toBe(tag.id)
+    expect(result2.tags[0].id).toBe(tag.id)
+  })
+
+  it('should no deal tag when delete tags', async () => {
+    const cate = await createMockCategory()
+    const tag = await prisma.postTag.create({
+      data: {
+        name: 'test tag',
+      },
+    })
+
+    const newPost = await proxy.service.create({
+      ...mockPostInputData,
+      categoryId: cate.id,
+      tagIds: [tag.id],
+    })
+
+    await prisma.postTag.delete({
+      where: {
+        id: tag.id,
+      },
+    })
+
+    const result = await proxy.service.getPostById(newPost.id)
+
+    expect(result.tags.length).toBe(0)
+  })
+
+  it('should discard related if related post deleted', async () => {
+    const cate = await createMockCategory()
+    const post = generateMockPost()
+    const relatedPost = await prisma.post.create({
+      data: {
+        ...post,
+        categoryId: cate.id,
+      },
+    })
+
+    const newPost = await proxy.service.create({
+      ...post,
+      slug: 'test-slug21',
+      categoryId: cate.id,
+      relatedIds: [relatedPost.id],
+    })
+
+    await prisma.post.delete({
+      where: {
+        id: relatedPost.id,
+      },
+    })
+
+    const result = await proxy.service.getPostById(newPost.id)
+
+    expect(result.related.length).toBe(0)
   })
 })
