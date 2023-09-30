@@ -61,10 +61,11 @@ export class PostTrpcRouter implements OnModuleInit {
             select: {
               id: true,
               title: true,
+              created: true,
             },
             cursor: cursor ? { id: cursor } : undefined,
             orderBy: {
-              created: 'asc',
+              created: 'desc',
             },
           })
           let nextCursor: typeof cursor | undefined = undefined

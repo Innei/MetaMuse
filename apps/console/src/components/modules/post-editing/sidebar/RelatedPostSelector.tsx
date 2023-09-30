@@ -1,9 +1,9 @@
 import { Select, SelectItem } from '@nextui-org/react'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { produce } from 'immer'
 
-import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll'
-
+import { RelativeTime } from '~/components/ui/date-time'
+import { EllipsisHorizontalTextWithTooltip } from '~/components/ui/typography'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
 
@@ -13,7 +13,7 @@ import {
 } from '../data-provider'
 
 export const RelatedPostSelector = () => {
-  const { isLoading, data, fetchNextPage } =
+  const { isLoading, isFetching, data, fetchNextPage } =
     trpc.post.relatedList.useInfiniteQuery(
       {
         size: 10,
@@ -24,16 +24,27 @@ export const RelatedPostSelector = () => {
     )
   const t = useI18n()
   const relatedIds = usePostModelDataSelector((state) => state?.relatedIds)
+  const currentId = usePostModelDataSelector((state) => state?.id)
   const setter = usePostModelSetModelData()
   const selection = useMemo(() => {
     return new Set(relatedIds)
   }, [relatedIds])
-  const [, scrollerRef] = useInfiniteScroll({
-    hasMore: data?.pages[data.pages.length - 1].nextCursor != null,
-    isEnabled: !!data,
-    shouldUseLoader: false, // We don't want to show the loader at the bottom of the list
-    onLoadMore: fetchNextPage,
-  })
+
+  const scrollerRef = useRef<HTMLElement>(null)
+  const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    const $scroller = scrollerRef.current
+    if (!$scroller) return
+    $scroller.onscrollend = () => {
+      fetchNextPage()
+    }
+
+    return () => {
+      $scroller.onscrollend = null
+    }
+  }, [fetchNextPage, isOpen])
+
   return (
     <Select
       label={t('module.posts.related_posts')}
@@ -43,7 +54,8 @@ export const RelatedPostSelector = () => {
       size="sm"
       scrollRef={scrollerRef}
       className="max-w-xs"
-      isLoading={isLoading}
+      isLoading={isLoading || isFetching}
+      onOpenChange={setIsOpen}
       selectedKeys={selection}
       onSelectionChange={(keys) => {
         setter((state) => {
@@ -53,18 +65,25 @@ export const RelatedPostSelector = () => {
         })
       }}
     >
-      {
-        data?.pages.map((page) => {
-          return page.items.map((post) => {
-            return (
-              <SelectItem id={post.id} key={post.id}>
-                {post.title}
-              </SelectItem>
-            )
-          })
-          // FIXME: https://github.com/nextui-org/nextui/issues/1715
-        }) as any
-      }
+      {/* // FIXME: https://github.com/nextui-org/nextui/issues/1715 */}
+      {/* @ts-expect-error */}
+      {data?.pages.map((page) => {
+        return page.items.map((post) => {
+          if (post.id === currentId) return
+          return (
+            <SelectItem id={post.id} key={post.id}>
+              <div className="flex items-center">
+                <EllipsisHorizontalTextWithTooltip className="flex-grow">
+                  {post.title}
+                </EllipsisHorizontalTextWithTooltip>
+                <span className="flex-shrink-0 text-xs opacity-80">
+                  <RelativeTime time={post.created} />
+                </span>
+              </div>
+            </SelectItem>
+          )
+        })
+      })}
     </Select>
   )
 }

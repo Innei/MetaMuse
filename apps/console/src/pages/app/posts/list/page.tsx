@@ -18,7 +18,6 @@ import { useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import type { PostModel } from '~/models/post'
 import type { FC } from 'react'
 
 import { AddCircleLine, FilterLineIcon } from '~/components/icons'
@@ -217,7 +216,7 @@ export default function Page() {
     <>
       <Header />
       <Table
-        className="bg-transparent"
+        className="min-h-[32.8rem] overflow-auto bg-transparent [&_table]:min-w-[1000px]"
         removeWrapper
         selectionMode="multiple"
         onSelectionChange={(e) => {
@@ -246,9 +245,11 @@ export default function Page() {
           items={data?.data || []}
         >
           {(item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item!.id}>
               {(columnKey) => (
-                <TableCell>{renderPostKeyValue(item, columnKey)}</TableCell>
+                <TableCell>
+                  {renderPostKeyValue(item! as any, columnKey)}
+                </TableCell>
               )}
             </TableRow>
           )}
@@ -272,7 +273,10 @@ export default function Page() {
   )
 }
 
-function renderPostKeyValue(data: PostModel, key: any) {
+function renderPostKeyValue(
+  data: StringifyNestedDates<NormalizedPostModel>,
+  key: any,
+) {
   switch (key) {
     case 'category':
       return data.category?.name
@@ -294,7 +298,9 @@ function renderPostKeyValue(data: PostModel, key: any) {
   return getKeyValue(data, key)
 }
 
-const Actions: FC<{ data: PostModel }> = ({ data }) => {
+const Actions: FC<{ data: StringifyNestedDates<NormalizedPostModel> }> = ({
+  data,
+}) => {
   return (
     <div className="flex items-center space-x-2">
       <Button

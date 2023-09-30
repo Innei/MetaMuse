@@ -1,19 +1,5 @@
 import { createModelDataProvider } from 'jojoo/react'
-import type { RouterOutputs } from '~/lib/trpc'
-
-export type PostModel = Omit<
-  RouterOutputs['post']['id'],
-  | '_count'
-  | 'category'
-  | 'modified'
-  | 'relatedBy'
-  | 'meta'
-  | 'count'
-  | 'created'
-> & {
-  meta?: any
-  created?: string
-}
+import type { PostModel } from '~/models/post'
 
 export const {
   useModelDataSelector: usePostModelDataSelector,

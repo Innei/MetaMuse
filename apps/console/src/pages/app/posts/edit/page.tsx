@@ -6,7 +6,7 @@ import { produce } from 'immer'
 import { atom } from 'jotai'
 import { cloneDeep, omit } from 'lodash-es'
 import { toast } from 'sonner'
-import type { PostModel } from '~/components/modules/post-editing/data-provider'
+import type { PostModel } from '~/models/post'
 import type { FC } from 'react'
 
 import { ParseYAMLContentButton } from '~/components/biz/logic-button/ParseYAMLContentButton'
