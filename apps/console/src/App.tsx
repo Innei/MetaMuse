@@ -22,6 +22,7 @@ export function App() {
         <Provider store={jotaiStore}>
           <Suspense>
             <EventProvider />
+
             <FABContainer />
 
             <NextUIProvider>

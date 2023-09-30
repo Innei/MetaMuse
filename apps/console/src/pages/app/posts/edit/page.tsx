@@ -31,7 +31,7 @@ const createInitialEditingData = (): PostModel => {
     categoryId: '',
     id: '',
     images: [],
-    isPublished: false,
+    isPublished: true,
     pin: false,
     slug: '',
     tags: [],
@@ -39,6 +39,7 @@ const createInitialEditingData = (): PostModel => {
     meta: {},
     related: [],
     relatedIds: [],
+    summary: null,
   }
 }
 export default function EditPage_() {

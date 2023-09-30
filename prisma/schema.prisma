@@ -116,6 +116,8 @@ model Post {
   allowComment Boolean   @default(true) @map("allow_comment")
   tags         PostTag[]
 
+  summary String?
+
   /// [ArticleCount]
   count Json @default("{\"read\": 0, \"like\": 0}") /// @zod.custom.omit(["model", "input"])
 

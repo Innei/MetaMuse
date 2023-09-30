@@ -26,6 +26,10 @@
       "related_posts": "Related posts",
       "select_posts": "Select posts for related"
     },
+    "summary": {
+      "title": "Summary",
+      "placeholder": "Write a summary for your post."
+    },
     "parse_md_yaml": {
       "title": "Import markdown with YAML front matter format"
     }

@@ -5,6 +5,7 @@ import { FABPortable } from '~/components/ui/fab/FabContainer'
 
 import { CategorySelector } from './CategorySelector'
 import { RelatedPostSelector } from './RelatedPostSelector'
+import { SummaryInput } from './SummaryInput'
 import { TagsInput } from './TagsInput'
 
 const Sidebar = () => {
@@ -13,6 +14,7 @@ const Sidebar = () => {
       <CategorySelector />
       <TagsInput />
       <RelatedPostSelector />
+      <SummaryInput />
     </div>
   )
 }

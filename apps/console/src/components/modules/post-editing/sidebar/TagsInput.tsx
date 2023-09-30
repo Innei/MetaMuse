@@ -68,16 +68,14 @@ export const TagsInput = () => {
         ))}
 
         {!newTag ? (
-          <Chip
-            size="md"
-            variant="flat"
-            color="primary"
+          <div
+            className="border-foreground-400/80 rounded-full border border-dashed h-6 w-6 flex items-center justify-center"
             onClick={() => {
               setNewTag(true)
             }}
           >
-            {t('common.new')}
-          </Chip>
+            <i className="icon-[mingcute--add-line] h-3 w-3" />
+          </div>
         ) : (
           <TagCompletion />
         )}
