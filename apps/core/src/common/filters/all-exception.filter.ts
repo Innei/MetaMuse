@@ -7,6 +7,7 @@ import { HTTP_REQUEST_TIME } from '@core/constants/meta.constant'
 import { LOG_DIR } from '@core/constants/path.constant'
 import { REFLECTOR } from '@core/constants/system.constant'
 import { isDev, isTest } from '@core/global/env.global'
+import { errorMessageFor } from '@core/i18n/biz-code'
 import {
   ArgumentsHost,
   Catch,
@@ -98,14 +99,26 @@ export class AllExceptionsFilter implements ExceptionFilter {
       )
     }
     const res = (exception as any).response
+
+    let bizMessage = ''
+    if (exception instanceof BizException) {
+      const acceptLanguage = request.headers['accept-language'] || ''
+      const languages = acceptLanguage.split(',')
+      const preferredLanguage = languages[0]?.split(';')?.[0]
+
+      bizMessage =
+        errorMessageFor(exception.code, preferredLanguage as any) ||
+        exception.message
+    }
     response
       .status(status)
       .type('application/json')
       .send({
         ok: 0,
         code: res?.code || status,
-        chMessage: res?.chMessage,
+
         message:
+          bizMessage ||
           (exception as any)?.response?.message ||
           (exception as any)?.message ||
           'Unknown Error',

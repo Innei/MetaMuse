@@ -9,8 +9,15 @@ import { PostOptionalDefaultsSchema, PostSchema } from '@meta-muse/prisma/zod'
 import { PostSchemaProjection } from './post.protect'
 
 export const PostInputSchema = PostOptionalDefaultsSchema.extend({
+  title: z.string().transform((val) => {
+    if (val.trim().length === 0) {
+      return 'Untitled'
+    }
+    return val
+  }),
   slug: z
     .string()
+    .min(1)
     .transform((val) => slugify(val, { lower: true, trim: true })),
   tagIds: z.array(z.string()).optional(),
   relatedIds: z.array(z.string()).optional(),

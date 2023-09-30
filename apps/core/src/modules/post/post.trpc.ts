@@ -136,6 +136,12 @@ export class PostTrpcRouter implements OnModuleInit {
 
           await this.service.updateById(id, data)
         }),
+
+      create: procedureAuth.input(PostInputSchema).mutation(async (opt) => {
+        const { input } = opt
+
+        return await this.service.create(input)
+      }),
     })
   }
 }

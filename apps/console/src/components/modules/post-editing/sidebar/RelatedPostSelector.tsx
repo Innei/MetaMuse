@@ -2,6 +2,8 @@ import { Select, SelectItem } from '@nextui-org/react'
 import { useMemo } from 'react'
 import { produce } from 'immer'
 
+import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll'
+
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
 
@@ -11,27 +13,36 @@ import {
 } from '../data-provider'
 
 export const RelatedPostSelector = () => {
-  const { isLoading, data } = trpc.post.relatedList.useInfiniteQuery(
-    {
-      size: 10,
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    },
-  )
+  const { isLoading, data, fetchNextPage } =
+    trpc.post.relatedList.useInfiniteQuery(
+      {
+        size: 10,
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      },
+    )
   const t = useI18n()
   const relatedIds = usePostModelDataSelector((state) => state?.relatedIds)
   const setter = usePostModelSetModelData()
   const selection = useMemo(() => {
     return new Set(relatedIds)
   }, [relatedIds])
+  const [, scrollerRef] = useInfiniteScroll({
+    hasMore: data?.pages[data.pages.length - 1].nextCursor != null,
+    isEnabled: !!data,
+    shouldUseLoader: false, // We don't want to show the loader at the bottom of the list
+    onLoadMore: fetchNextPage,
+  })
   return (
     <Select
       label={t('module.posts.related_posts')}
       labelPlacement="outside"
       placeholder={t('module.posts.select_posts')}
       selectionMode="multiple"
-      className="mt-4 max-w-xs"
+      size="sm"
+      scrollRef={scrollerRef}
+      className="max-w-xs"
       isLoading={isLoading}
       selectedKeys={selection}
       onSelectionChange={(keys) => {

@@ -2,8 +2,8 @@ import { Avatar } from '@nextui-org/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import type { User } from '@model'
 import { toast } from 'sonner'
+import type { User } from '@model'
 
 import { ErrorComponent } from '~/components/common/Error'
 import { BizError } from '~/lib/biz-error'
@@ -29,7 +29,7 @@ export default function LoginPage() {
     if (password.length === 0) return
     await login().catch((err) => {
       if (err instanceof BizError) {
-        toast.error(err.chMessage || err.message)
+        toast.error(err.message)
       }
       throw err
     })
@@ -79,7 +79,7 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
-           />
+          />
           <div className="flex flex-shrink-0 items-center justify-center">
             <button
               onClick={(e) => {

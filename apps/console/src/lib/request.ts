@@ -1,7 +1,8 @@
 import { ErrorCodeEnum } from '@constants'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import camelcaseKeys from 'camelcase-keys'
 import { toast } from 'sonner'
+import type { AxiosError } from 'axios'
 
 import { API_URL } from '~/constants/env'
 import { router } from '~/router'
@@ -89,16 +90,10 @@ $axios.interceptors.response.use(
       }
 
       if (!error.config?.ignoreBizError) {
-        toast.error(data.chMessage || data.message)
+        toast.error(data.message)
       }
       return Promise.reject(
-        new BizError(
-          data.code,
-          data.message,
-          data.chMessage,
-          res.status,
-          error,
-        ),
+        new BizError(data.code, data.message, res.status, error),
       )
     }
 

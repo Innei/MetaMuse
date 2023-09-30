@@ -99,9 +99,9 @@ export class tRPCService implements OnModuleInit {
         req,
         res,
         path,
-        onError: (err: any) => {
-          this.logger.error(err)
-          return err
+        onError: (opts) => {
+          const { error, type, path, input, ctx, req } = opts
+          this.logger.error(error)
         },
       })
     })

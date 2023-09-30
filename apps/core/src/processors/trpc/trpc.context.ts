@@ -7,6 +7,8 @@ export async function createContext({
 }: trpcNext.CreateNextContextOptions) {
   return {
     authorization: req.headers.authorization as string | null,
+    lang: req.headers['accept-language'],
+    ua: req.headers['user-agent'],
   }
 }
 export type Context = inferAsyncReturnType<typeof createContext>

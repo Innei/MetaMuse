@@ -105,7 +105,8 @@ const ActionButtonGroup = () => {
   const t = useI18n()
   const getData = usePostModelGetModelData()
   const setData = usePostModelSetModelData()
-  const { mutateAsync: submit } = trpc.post.update.useMutation()
+  const { mutateAsync: updatePost } = trpc.post.update.useMutation()
+  const { mutateAsync: createPost } = trpc.post.create.useMutation()
 
   const trpcUtil = trpc.useContext()
 
@@ -147,15 +148,25 @@ const ActionButtonGroup = () => {
 
           Reflect.deleteProperty(currentData, 'category')
 
-          submit(currentData).then(() => {
-            toast.success(t('common.save-success'))
+          const isCreate = !currentData.id
+          const promise = isCreate
+            ? createPost(currentData).then(() => {
+                toast.success(t('common.create-success'))
+              })
+            : updatePost(currentData).then(() => {
+                toast.success(t('common.save-success'))
+              })
+          promise
+            .catch((err) => {
+              toast.error(err.message)
+            })
+            .then(() => {
+              trpcUtil.post.id.invalidate({ id: currentData.id })
+              trpcUtil.post.paginate.invalidate()
+              trpcUtil.post.relatedList.invalidate()
 
-            trpcUtil.post.id.invalidate({ id: currentData.id })
-            trpcUtil.post.paginate.invalidate()
-            trpcUtil.post.relatedList.invalidate()
-
-            // TODO back to list or dialog
-          })
+              // TODO back to list or dialog
+            })
         }}
       >
         {t('common.submit')}
