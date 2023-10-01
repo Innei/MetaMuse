@@ -142,7 +142,7 @@ const ActionButtonGroup = ({ initialData }: { initialData?: PostModel }) => {
       />
       <Button
         color="primary"
-        variant="flat"
+        variant="shadow"
         onClick={() => {
           const currentData = {
             ...getData(),

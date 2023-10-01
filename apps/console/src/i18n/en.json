@@ -31,7 +31,8 @@
     "title": "Title",
     "visit": "Visit",
     "width": "Width",
-    "type": "Type"
+    "type": "Type",
+    "action": "Action"
   },
   "module": {
     "writing": {

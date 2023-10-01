@@ -2,6 +2,7 @@ import {
   Accordion,
   AccordionItem,
   Button,
+  ButtonGroup,
   Input,
   Popover,
   PopoverContent,
@@ -9,7 +10,7 @@ import {
   tv,
 } from '@nextui-org/react'
 import { Colorful } from '@uiw/react-color'
-import { memo, useMemo, useRef, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import uniqBy from 'lodash-es/uniqBy'
 import { toast } from 'sonner'
 import { useEventCallback } from 'usehooks-ts'
@@ -147,6 +148,14 @@ export const ImageDetailSection: FC<ImageDetailSectionProps> = (props) => {
       key: T,
       value: ArticleImage[T],
     ) => {
+      if (key == 'src' && value === '') {
+        onChange(
+          nextImages.filter((item) => {
+            return item.src !== src
+          }),
+        )
+        return
+      }
       onChange(
         nextImages.map((item) => {
           if (item.src === src) {
@@ -206,7 +215,6 @@ const Item: FC<
   }
 > = memo(({ handleOnChange, ...image }) => {
   const t = useI18n()
-  const colorRef = useRef(image.accent || '#fff')
   return (
     <div className="my-6 flex flex-col space-y-3">
       <Input
@@ -273,6 +281,30 @@ const Item: FC<
             />
           </PopoverContent>
         </Popover>
+      </div>
+
+      <div className="flex items-center gap-1">
+        <label className={styles.slots.label}>{t('common.action')}</label>
+        <ButtonGroup size="sm">
+          <Button
+            onClick={() => {
+              window.open(image.src)
+            }}
+            variant="flat"
+            color="primary"
+          >
+            {t('common.visit')}
+          </Button>
+          <Button
+            onClick={() => {
+              handleOnChange(image.src, 'src', '')
+            }}
+            variant="bordered"
+            color="danger"
+          >
+            {t('common.delete')}
+          </Button>
+        </ButtonGroup>
       </div>
     </div>
   )
