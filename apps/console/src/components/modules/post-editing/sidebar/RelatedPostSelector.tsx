@@ -1,8 +1,9 @@
-import { Select, SelectItem } from '@nextui-org/react'
+import { Chip, Select, SelectItem } from '@nextui-org/react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { produce } from 'immer'
 
 import { RelativeTime } from '~/components/ui/date-time'
+import { FloatPopover } from '~/components/ui/float-popover'
 import { EllipsisHorizontalTextWithTooltip } from '~/components/ui/typography'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
@@ -45,6 +46,20 @@ export const RelatedPostSelector = () => {
     }
   }, [fetchNextPage, isOpen])
 
+  const postMap = useMemo(() => {
+    const map = new Map<string, { title: string }>()
+
+    if (!data) return map
+
+    data.pages.forEach((page) => {
+      page.items.forEach((post) => {
+        map.set(post.id, { title: post.title })
+      })
+    })
+
+    return map
+  }, [data])
+
   return (
     <Select
       label={t('module.posts.related_posts')}
@@ -53,10 +68,33 @@ export const RelatedPostSelector = () => {
       selectionMode="multiple"
       size="sm"
       scrollRef={scrollerRef}
-      className="max-w-xs"
       isLoading={isLoading || isFetching}
       onOpenChange={setIsOpen}
       selectedKeys={selection}
+      renderValue={(items) => {
+        const el = (
+          <>
+            {items.map((i) => {
+              return (
+                <Chip size="sm" className="max-w-full truncate" key={i.key}>
+                  {postMap?.get(i.key as string)?.title}
+                </Chip>
+              )
+            })}
+          </>
+        )
+
+        return (
+          <FloatPopover
+            placement="top"
+            TriggerComponent={() => <div className="flex gap-4">{el}</div>}
+            type="tooltip"
+            trigger="hover"
+          >
+            <div className="flex-grow">{el}</div>
+          </FloatPopover>
+        )
+      }}
       onSelectionChange={(keys) => {
         setter((state) => {
           return produce(state, (draft) => {

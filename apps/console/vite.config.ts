@@ -1,12 +1,20 @@
 import { resolve } from 'path'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
+// eslint-disable-next-line import/default
+import Checker from 'vite-plugin-checker'
 import tsconfigPath from 'vite-tsconfig-paths'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: process.env.BUILD_MODE === 'BUILT_IN' ? '/console' : '/',
-  plugins: [react(), tsconfigPath()],
+  plugins: [
+    react(),
+    tsconfigPath(),
+    Checker({
+      enableBuild: true,
+    }),
+  ],
   // alias
   resolve: {
     alias: [

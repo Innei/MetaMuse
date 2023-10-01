@@ -6,12 +6,13 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite --port 9988",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.tsx\"",
     "lint": "eslint --ext .ts,.tsx --ignore-path .gitignore . --fix"
   },
   "dependencies": {
+    "@floating-ui/react-dom": "2.0.2",
     "@milkdown/core": "7.3.0",
     "@milkdown/plugin-clipboard": "7.3.0",
     "@milkdown/plugin-history": "7.3.0",
@@ -82,6 +83,7 @@
     "tailwindcss-variable-colors": "0.0.1",
     "typescript": "5.2.2",
     "vite": "4.4.9",
+    "vite-plugin-checker": "0.6.2",
     "vite-tsconfig-paths": "4.2.1"
   }
 }

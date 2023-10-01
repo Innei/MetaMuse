@@ -1,3 +1,4 @@
+import { HttpService } from '@core/processors/helper/helper.http.service'
 import { JWTService } from '@core/processors/helper/helper.jwt.service'
 import { tRPCService } from '@core/processors/trpc/trpc.service'
 import { Global, Module } from '@nestjs/common'
@@ -9,6 +10,7 @@ import { tRPCService as mockTrpcSerivce } from './helper.trpc'
   providers: [
     mockedEventManagerServiceProvider,
     JWTService,
+    HttpService,
     {
       provide: tRPCService,
       useClass: mockTrpcSerivce,
@@ -17,6 +19,8 @@ import { tRPCService as mockTrpcSerivce } from './helper.trpc'
   exports: [
     mockedEventManagerServiceProvider,
     JWTService,
+    HttpService,
+
     {
       provide: tRPCService,
       useClass: mockTrpcSerivce,

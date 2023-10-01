@@ -2,6 +2,7 @@ import { createZodDto } from 'nestjs-zod/dto'
 import slugify from 'slugify'
 import { z } from 'zod'
 
+import { ArticleImagesSchema } from '@core/shared/dto/image.dto'
 import { basePagerSchema } from '@core/shared/dto/pager.dto'
 import { makeOptionalPropsNullable } from '@core/shared/utils/zod.util'
 import { PostOptionalDefaultsSchema, PostSchema } from '@meta-muse/prisma/zod'
@@ -23,6 +24,7 @@ export const PostInputSchema = PostOptionalDefaultsSchema.extend({
   relatedIds: z.array(z.string()).optional(),
   custom_created: z.coerce.date().optional(),
   meta: z.any().optional(),
+  images: ArticleImagesSchema.default([]).optional(),
   summary: z.string().optional().nullable(),
 }).omit(PostSchemaProjection)
 

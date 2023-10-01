@@ -40,7 +40,7 @@ const twConfig: Config = {
   },
 
   daisyui: {
-    themes: ['cupcake', 'night', 'valentine'],
+    themes: ['cmyk', 'night'],
     darkTheme: 'night',
   },
 

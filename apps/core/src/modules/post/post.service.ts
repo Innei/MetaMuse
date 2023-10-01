@@ -5,20 +5,25 @@ import { BusinessEvents } from '@core/constants/business-event.constant'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { EventManagerService } from '@core/processors/helper/helper.event.service'
+import { ImageService } from '@core/processors/helper/helper.image.service'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import { isDefined } from '@core/shared/utils/validator.util'
 import { Prisma } from '@meta-muse/prisma'
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 
 import { PostDto, PostPagerDto, PostPatchDto } from './post.dto'
 import { PostIncluded } from './post.protect'
 
 @Injectable()
 export class PostService {
+  private readonly logger: Logger
   constructor(
     private readonly db: DatabaseService,
     private readonly eventService: EventManagerService,
-  ) {}
+    private readonly imageService: ImageService,
+  ) {
+    this.logger = new Logger(PostService.name)
+  }
 
   private dtoToPost(dto: PostDto, type: 'create'): Prisma.PostCreateInput
   private dtoToPost(dto: PostPatchDto, type: 'update'): Prisma.PostUpdateInput
@@ -116,6 +121,20 @@ export class PostService {
     }
 
     await this.notifyPostUpdate(BusinessEvents.POST_CREATE, model.id)
+
+    this.imageService
+      .saveImageDimensionsFromMarkdownText(
+        model.text,
+        model.images,
+        (newImages) => {
+          return this.updateById(model.id, {
+            images: newImages,
+          })
+        },
+      )
+      .catch((err) => {
+        this.logger.warn(`Save image dimensions failed, ${err?.message}`)
+      })
 
     return model
   }

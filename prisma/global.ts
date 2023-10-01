@@ -5,6 +5,16 @@ declare global {
       read: number
       like: number
     }
+
+    type ArticleImage = {
+      src: string
+      width: number | undefined
+      height: number | undefined
+      accent: string | undefined
+      type: string
+    }
+
+    type ArticleImages = ArticleImage[]
   }
 }
 

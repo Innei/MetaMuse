@@ -8,7 +8,6 @@ export default async () => {
       c.post.deleteMany(),
       c.postTag.deleteMany(),
       c.oAuth.deleteMany(),
-      c.postImage.deleteMany(),
     ])
 
     await c.category.deleteMany()

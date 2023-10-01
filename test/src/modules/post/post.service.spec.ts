@@ -7,9 +7,12 @@ import resetDb from '@test/lib/reset-db'
 import { generateMockCategory } from '@test/mock/data/category.data'
 import { generateMockPost, mockPostInputData } from '@test/mock/data/post.data'
 import { mockedEventManagerService } from '@test/mock/helper/helper.event'
+import { mockedImageServiceProvider } from '@test/mock/helper/helper.image'
 
 describe('/modules/post/post.service', () => {
-  const proxy = createServiceUnitTestApp(PostService)
+  const proxy = createServiceUnitTestApp(PostService, {
+    providers: [mockedImageServiceProvider],
+  })
 
   const createMockCategory = async () => {
     return await prisma.category.create({
@@ -470,5 +473,63 @@ describe('/modules/post/post.service', () => {
     })
 
     expect(newPost.meta).toMatchObject(meta)
+  })
+
+  it('should create post with images successful', async () => {
+    const images = [
+      {
+        accent: '#333',
+        height: 100,
+        src: 'https://user-images.githubusercontent.com/12001979/120887724-5b0b6b00-c61a-11eb-8b9a-8b8b8b8b8b8b.png',
+        type: '',
+        width: 100,
+      },
+    ]
+
+    const cate = await createMockCategory()
+    const post = generateMockPost()
+    const newPost = await proxy.service.create({
+      ...post,
+      slug: 'test-slug21',
+      categoryId: cate.id,
+      images,
+    })
+
+    expect(newPost.images).toMatchObject(images)
+  })
+
+  it('should update post with images successful', async () => {
+    const images = [
+      {
+        accent: '#333',
+        height: 100,
+        src: 'https://user-images.githubusercontent.com/12001979/120887724-5b0b6b00-c61a-11eb-8b9a-8b8b8b8b8b8b.png',
+        type: '',
+        width: 100,
+      },
+    ]
+
+    const cate = await createMockCategory()
+    const post = generateMockPost()
+    const newPost = await proxy.service.create({
+      ...post,
+      slug: 'test-slug21',
+      categoryId: cate.id,
+    })
+
+    await proxy.service.updateById(newPost.id, {
+      images,
+    })
+
+    const { images: dbImages } = await prisma.post.findUniqueOrThrow({
+      where: {
+        id: newPost.id,
+      },
+      select: {
+        images: true,
+      },
+    })
+
+    expect(dbImages).toMatchObject(images)
   })
 })

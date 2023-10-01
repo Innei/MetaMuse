@@ -80,18 +80,6 @@ model OAuth {
   user     User   @relation(fields: [userId], references: [id])
 }
 
-model PostImage {
-  id     String @id @default("")
-  src    String
-  width  Float
-  height Float
-  accent String
-
-  type   String  @map("mine_type")
-  Post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId String?
-}
-
 model PostTag {
   id     String   @id @default("")
   name   String   @unique
@@ -100,18 +88,17 @@ model PostTag {
 }
 
 model Post {
-  id         String      @id @default("")
+  id         String    @id @default("")
   /// @zod.string.max(255)
-  slug       String      @db.VarChar(255)
+  slug       String    @db.VarChar(255)
   text       String
   /// @zod.string.max(80)
-  title      String      @db.VarChar(255)
-  created    DateTime    @default(now()) @map("created_at")
-  modified   DateTime?   @map("updated_at")
+  title      String    @db.VarChar(255)
+  created    DateTime  @default(now()) @map("created_at")
+  modified   DateTime? @map("updated_at")
   categoryId String
-  category   Category    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  images     PostImage[]
-  copyright  Boolean     @default(true)
+  category   Category  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  copyright  Boolean   @default(true)
 
   allowComment Boolean   @default(true) @map("allow_comment")
   tags         PostTag[]
@@ -119,7 +106,9 @@ model Post {
   summary String?
 
   /// [ArticleCount]
-  count Json @default("{\"read\": 0, \"like\": 0}") /// @zod.custom.omit(["model", "input"])
+  count  Json @default("{\"read\": 0, \"like\": 0}") /// @zod.custom.omit(["model", "input"])
+  /// [ArticleImages]
+  images Json @default("[]")
 
   pin Boolean @default(false)
 

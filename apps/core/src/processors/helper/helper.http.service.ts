@@ -5,11 +5,8 @@ import chalk from 'chalk'
 
 import { version } from '@core/../package.json'
 import { AXIOS_CONFIG } from '@core/app.config'
-import { RedisKeys } from '@core/constants/cache.constant'
-import { getRedisKey } from '@core/shared/utils/redis.util'
-import { Injectable, Logger } from '@nestjs/common'
-
-import { CacheService } from '../cache/cache.service'
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common'
+import { QueryClient } from '@tanstack/query-core'
 
 declare module 'axios' {
   interface AxiosRequestConfig {
@@ -22,18 +19,17 @@ declare module 'axios' {
 }
 
 @Injectable()
-export class HttpService {
+export class HttpService implements OnModuleInit {
   private http: AxiosInstance
   private logger: Logger
-  constructor(private readonly cacheService: CacheService) {
+
+  onModuleInit() {
     this.logger = new Logger(HttpService.name)
 
+    this.initQueryClient()
     this.http = this.bindInterceptors(
       axios.create({
-        ...AXIOS_CONFIG,
-        headers: {
-          'user-agent': `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36 MX-Space/${version}`,
-        },
+        ...this.axiosDefaultConfig,
       }),
     )
   }
@@ -51,29 +47,24 @@ export class HttpService {
     )
   }
 
-  /**
-   * 缓存请求数据，现支持文本
-   * @param url
-   */
-  public async getAndCacheRequest(url: string) {
-    this.logger.debug(`--> GET: ${url}`)
-    const client = this.cacheService.getClient()
-    const has = await client.hget(getRedisKey(RedisKeys.HTTPCache), url)
-    if (has) {
-      this.logger.debug(`--> GET: ${url} from redis`)
-      return has
-    }
-    const { data } = await this.http.get(url, {
-      responseType: 'text',
-    })
-    this.logger.debug(`--> GET: ${url} from remote`)
-
-    await client.hset(getRedisKey(RedisKeys.HTTPCache), url, data)
-    return data
-  }
-
   public get axiosRef() {
     return this.http
+  }
+
+  private _queryClient: QueryClient
+
+  private initQueryClient() {
+    this._queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 1000 * 10,
+        },
+      },
+    })
+  }
+
+  public get queryClient() {
+    return this._queryClient
   }
 
   private bindDebugVerboseInterceptor($http: AxiosInstance) {

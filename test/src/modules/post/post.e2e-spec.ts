@@ -3,14 +3,16 @@ import snakecaseKeys from 'snakecase-keys'
 import { PostModule } from '@core/modules/post/post.module'
 import { snowflake } from '@core/processors/database/snowflake.util'
 import { createE2EApp } from '@test/helper/create-e2e-app'
+import { createMockGlobalModule } from '@test/helper/create-mock-global-module'
 import { reDeserializeData } from '@test/helper/serialize-data'
 import { prisma } from '@test/lib/prisma'
 import { generateMockCategory } from '@test/mock/data/category.data'
 import { generateMockPost } from '@test/mock/data/post.data'
+import { mockedImageServiceProvider } from '@test/mock/helper/helper.image'
 
 describe('ROUTE /posts', () => {
   const proxy = createE2EApp({
-    imports: [PostModule],
+    imports: [PostModule, createMockGlobalModule([mockedImageServiceProvider])],
   })
 
   const createMockCategory = async () => {

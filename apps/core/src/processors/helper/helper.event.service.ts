@@ -7,7 +7,7 @@ import {
 import { EventBusEvents } from '@core/constants/event-bus.constant'
 import { EventScope } from '@core/constants/event-scope.constant'
 import { scheduleManager } from '@core/shared/utils/schedule.util'
-import { Injectable, Logger } from '@nestjs/common'
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 
 import { AdminEventsGateway } from '../gateway/admin/event.gateway'
@@ -24,7 +24,7 @@ export type EventManagerOptions = {
 export type IEventManagerHandlerDisposer = () => void
 
 @Injectable()
-export class EventManagerService {
+export class EventManagerService implements OnModuleInit {
   private readonly logger: Logger
   private readonly defaultOptions: Required<EventManagerOptions> = {
     scope: EventScope.TO_SYSTEM,
@@ -40,10 +40,10 @@ export class EventManagerService {
     private readonly emitter2: EventEmitter2,
   ) {
     this.logger = new Logger(EventManagerService.name)
+  }
 
+  onModuleInit() {
     this.listenSystemEvents()
-
-    this.logger.debug('EventManagerService is ready')
   }
 
   private mapScopeToInstance: Record<
