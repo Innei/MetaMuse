@@ -31,6 +31,7 @@
     "@tanstack/react-query-persist-client": "4.35.5",
     "@trpc/client": "10.38.5",
     "@trpc/react-query": "10.38.5",
+    "@uiw/react-color": "1.4.2",
     "axios": "1.5.1",
     "camelcase-keys": "9.1.0",
     "dayjs": "1.11.10",

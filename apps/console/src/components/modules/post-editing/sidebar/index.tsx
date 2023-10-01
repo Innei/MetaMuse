@@ -1,9 +1,12 @@
+import { Divider } from '@nextui-org/react'
 import { useState } from 'react'
 
 import { PresentDrawer } from '~/components/ui/drawer'
 import { FABPortable } from '~/components/ui/fab/FabContainer'
 
-import { SidebarWrapper } from '../../writing/sidebar'
+import { ImageDetailSection } from '../../writing/ImageDetailSection'
+import { SidebarWrapper } from '../../writing/SidebarBase'
+import { usePostModelSingleFieldAtom } from '../data-provider'
 import { CategorySelector } from './CategorySelector'
 import { CustomCreatedInput } from './CustomCreatedInput'
 import { PostCombinedSwitch } from './PostCombinedSwitch'
@@ -20,8 +23,17 @@ const Sidebar = () => {
       <SummaryInput />
       <PostCombinedSwitch />
       <CustomCreatedInput />
+
+      <Divider />
+      <PostImageSection />
     </SidebarWrapper>
   )
+}
+
+const PostImageSection = () => {
+  const [images, setImages] = usePostModelSingleFieldAtom('images')
+  const text = usePostModelSingleFieldAtom('text')[0]
+  return <ImageDetailSection images={images} onChange={setImages} text={text} />
 }
 
 export const PostEditorSidebar = () => {

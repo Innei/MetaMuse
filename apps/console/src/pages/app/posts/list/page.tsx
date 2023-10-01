@@ -289,6 +289,7 @@ function renderPostKeyValue(
 
     case 'created':
     case 'modified':
+      if (!data[key]) return '-'
       return <RelativeTime time={data[key]} />
 
     case 'action': {

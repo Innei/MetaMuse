@@ -8,6 +8,7 @@ import { EventManagerService } from '@core/processors/helper/helper.event.servic
 import { ImageService } from '@core/processors/helper/helper.image.service'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import { isDefined } from '@core/shared/utils/validator.util'
+import { deepEqual } from '@core/utils/tool.util'
 import { Prisma } from '@meta-muse/prisma'
 import { Injectable, Logger } from '@nestjs/common'
 
@@ -338,6 +339,7 @@ export class PostService {
         select: {
           categoryId: true,
           modified: true,
+          images: true,
           related: {
             select: {
               id: true,
@@ -386,6 +388,22 @@ export class PostService {
 
     // 有关联文章
     const related = data.relatedIds?.filter((i) => i !== id) || []
+
+    if (data.text)
+      this.imageService
+        .saveImageDimensionsFromMarkdownText(
+          data.text,
+          originPost.images,
+          async (newImages) => {
+            if (deepEqual(newImages, originPost.images)) return
+            return this.updateById(id, {
+              images: newImages,
+            })
+          },
+        )
+        .catch((err) => {
+          this.logger.warn(`Save image dimensions failed, ${err?.message}`)
+        })
 
     await this.relateEachOther(
       id,

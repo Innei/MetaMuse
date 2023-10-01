@@ -1,11 +1,9 @@
-import { isDev } from '@core/global/env.global'
 import { PaginationResult } from '@core/shared/interface/paginator.interface'
 import { Prisma, PrismaClient } from '@meta-muse/prisma'
-import { Logger } from '@nestjs/common'
 
 import { snowflakeGeneratorMiddleware } from './middlewares/snowflake.middleware'
 
-const logger = new Logger('PrismaClient')
+// const logger = new Logger('PrismaClient')
 export const createExtendedPrismaClient = ({ url }: { url?: string } = {}) => {
   const prismaClient = new PrismaClient({
     datasources: {
@@ -22,13 +20,13 @@ export const createExtendedPrismaClient = ({ url }: { url?: string } = {}) => {
   })
   prismaClient.$use(snowflakeGeneratorMiddleware)
 
-  if (isDev) {
-    prismaClient.$on('query', async (e) => {
-      logger.debug(`Query: ${e.query}`)
+  // if (isDev) {
+  //   prismaClient.$on('query', async (e) => {
+  //     logger.debug(`Query: ${e.query}`)
 
-      logger.debug(`Duration: ${e.duration}ms`)
-    })
-  }
+  //     logger.debug(`Duration: ${e.duration}ms`)
+  //   })
+  // }
   const extendedPrismaClient = prismaClient.$extends({
     result: {
       // post: {

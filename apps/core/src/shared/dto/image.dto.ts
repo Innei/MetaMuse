@@ -12,3 +12,5 @@ export const ArticleImageSchema = z.object({
 export const ArticleImagesSchema = z.array(ArticleImageSchema)
 
 export class ArticleImagesDto extends createZodDto(ArticleImagesSchema) {}
+
+export type ArticleImage = z.infer<typeof ArticleImageSchema>
