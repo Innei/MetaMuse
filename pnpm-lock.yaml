@@ -262,8 +262,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       daisyui:
-        specifier: 3.8.2
-        version: 3.8.2
+        specifier: 3.8.3
+        version: 3.8.3
       postcss:
         specifier: 8.4.31
         version: 8.4.31
@@ -577,7 +577,7 @@ importers:
         version: 1.4.2(@swc/core@1.3.91)
       vite:
         specifier: 4.4.9
-        version: 4.4.9(@types/node@20.6.2)
+        version: 4.4.9(@types/node@20.7.2)
       vite-tsconfig-paths:
         specifier: 4.2.1
         version: 4.2.1(typescript@5.2.2)(vite@4.4.9)
@@ -7108,8 +7108,8 @@ packages:
       uniq: 1.0.1
     dev: false
 
-  /daisyui@3.8.2:
-    resolution: {integrity: sha512-Dxq4AzYPfUOhrqqs1wdKLE4GUVGc3mJf8asdY7AHoI5QVBgqItU3fsd1idpHDnOJNdaTHmZGo0jvQtXr5IOejw==}
+  /daisyui@3.8.3:
+    resolution: {integrity: sha512-64QuR6niTv58E5YyAVBkoXQGngp04jt6XOcKGxnq1C/7r5ZE3bDuOSc4ktT7CPacTRjl5cCeNYY13VxLpZP+7A==}
     engines: {node: '>=16.9.0'}
     dependencies:
       colord: 2.9.3
