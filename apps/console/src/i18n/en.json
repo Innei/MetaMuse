@@ -32,7 +32,8 @@
     "visit": "Visit",
     "width": "Width",
     "type": "Type",
-    "action": "Action"
+    "action": "Action",
+    "invalidJSON": "Invalid JSON"
   },
   "module": {
     "writing": {

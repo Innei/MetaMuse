@@ -7,7 +7,6 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-  tv,
 } from '@nextui-org/react'
 import { Colorful } from '@uiw/react-color'
 import { memo, useEffect, useMemo, useState } from 'react'
@@ -18,12 +17,12 @@ import type { ArticleImage, ArticleImagesDto } from '@core/shared/dto/image.dto'
 import type { FC } from 'react'
 
 import { pickImagesFromMarkdown } from '@core/utils/pic.util'
-import { input } from '@nextui-org/theme'
 
 import { MotionButtonBase } from '~/components/ui/button'
 import { useI18n } from '~/i18n/hooks'
 import { getDominantColor } from '~/lib/color'
-import { clsxm } from '~/lib/helper'
+
+import { styles } from './styles'
 
 export interface ImageDetailSectionProps {
   images: ArticleImagesDto
@@ -31,13 +30,6 @@ export interface ImageDetailSectionProps {
   text: string
   extraImages?: string[]
 }
-
-const inputStyles = input()
-const styles = tv({
-  slots: {
-    label: clsxm(inputStyles.label, 'w-[80px]'),
-  },
-})
 
 export const ImageDetailSection: FC<ImageDetailSectionProps> = (props) => {
   const { images, text, onChange, extraImages } = props
