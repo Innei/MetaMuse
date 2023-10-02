@@ -40,7 +40,7 @@
     "i18next": "23.5.1",
     "i18next-browser-languagedetector": "7.1.0",
     "idb-keyval": "6.2.1",
-    "immer": "10.0.2",
+    "immer": "10.0.3",
     "jojoo": "0.1.1",
     "jotai": "2.4.3",
     "js-cookie": "3.0.5",
