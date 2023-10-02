@@ -159,11 +159,11 @@ importers:
         specifier: 6.2.1
         version: 6.2.1
       immer:
-        specifier: 10.0.2
-        version: 10.0.2
+        specifier: 10.0.3
+        version: 10.0.3
       jojoo:
         specifier: 0.1.1
-        version: 0.1.1(immer@10.0.2)(jotai@2.4.3)(react@18.2.0)
+        version: 0.1.1(immer@10.0.3)(jotai@2.4.3)(react@18.2.0)
       jotai:
         specifier: 2.4.3
         version: 2.4.3(@types/react@18.2.24)(react@18.2.0)
@@ -211,7 +211,7 @@ importers:
         version: 1.0.7(tailwindcss@3.3.3)
       use-immer:
         specifier: 0.9.0
-        version: 0.9.0(immer@10.0.2)(react@18.2.0)
+        version: 0.9.0(immer@10.0.3)(react@18.2.0)
       usehooks-ts:
         specifier: 2.9.1
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
@@ -8934,8 +8934,8 @@ packages:
       queue: 6.0.2
     dev: false
 
-  /immer@10.0.2:
-    resolution: {integrity: sha512-Rx3CqeqQ19sxUtYV9CU911Vhy8/721wRFnJv3REVGWUmoAcIwzifTsdmJte/MV+0/XpM35LZdQMBGkRIoLPwQA==}
+  /immer@10.0.3:
+    resolution: {integrity: sha512-pwupu3eWfouuaowscykeckFmVTpqbzW+rXFCX8rQLkZzM9ftBmU/++Ra+o+L27mz03zJTlyV4UUr+fdKNffo4A==}
     dev: false
 
   /import-fresh@3.3.0:
@@ -9389,14 +9389,14 @@ packages:
     resolution: {integrity: sha512-3TV69ZbrvV6U5DfQimop50jE9Dl6J8O1ja1dvBbMba/sZ3YBEQqJ2VZRoQPVnhlzjNtU1vaXRZVrVjU4qtm8yA==}
     hasBin: true
 
-  /jojoo@0.1.1(immer@10.0.2)(jotai@2.4.3)(react@18.2.0):
+  /jojoo@0.1.1(immer@10.0.3)(jotai@2.4.3)(react@18.2.0):
     resolution: {integrity: sha512-tN+32dy/qezPSu1GPCKRmdMUJdrMZm9Bw+b1nmiRvMw5KW/giz+7aiF4vxicTT44AkLcFAdod1XgIZsQDlb8Tg==}
     peerDependencies:
       immer: ^10.0.0
       jotai: ^2.0.0
       react: ^18.0.0
     dependencies:
-      immer: 10.0.2
+      immer: 10.0.3
       jotai: 2.4.3(@types/react@18.2.24)(react@18.2.0)
       react: 18.2.0
     dev: false
@@ -13242,13 +13242,13 @@ packages:
       react: 18.2.0
     dev: false
 
-  /use-immer@0.9.0(immer@10.0.2)(react@18.2.0):
+  /use-immer@0.9.0(immer@10.0.3)(react@18.2.0):
     resolution: {integrity: sha512-/L+enLi0nvuZ6j4WlyK0US9/ECUtV5v9RUbtxnn5+WbtaXYUaOBoKHDNL9I5AETdurQ4rIFIj/s+Z5X80ATyKw==}
     peerDependencies:
       immer: '>=2.0.0'
       react: ^16.8.0 || ^17.0.1 || ^18.0.0
     dependencies:
-      immer: 10.0.2
+      immer: 10.0.3
       react: 18.2.0
     dev: false
 
