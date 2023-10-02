@@ -10,7 +10,7 @@ import {
   tv,
 } from '@nextui-org/react'
 import { Colorful } from '@uiw/react-color'
-import { memo, useMemo, useState } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 import uniqBy from 'lodash-es/uniqBy'
 import { toast } from 'sonner'
 import { useEventCallback } from 'usehooks-ts'
@@ -262,25 +262,12 @@ const Item: FC<
         <label className={styles.slots.label} htmlFor="color-picker">
           {t('common.accent')}
         </label>
-        <Popover>
-          <PopoverTrigger>
-            <MotionButtonBase
-              id="color-picker"
-              className="ring-default-200 h-6 w-6 rounded-full bg-current ring"
-              style={{
-                backgroundColor: image.accent || '',
-              }}
-            />
-          </PopoverTrigger>
-          <PopoverContent>
-            <Colorful
-              color={image.accent || '#fff'}
-              onChange={({ hex }) => {
-                handleOnChange(image.src, 'accent', hex)
-              }}
-            />
-          </PopoverContent>
-        </Popover>
+        <ColorPicker
+          accent={image.accent || '#fff'}
+          onChange={(hex) => {
+            handleOnChange(image.src, 'accent', hex)
+          }}
+        />
       </div>
 
       <div className="flex items-center gap-1">
@@ -311,3 +298,59 @@ const Item: FC<
 })
 
 Item.displayName = 'AccordionItem'
+
+const ColorPicker: FC<{
+  accent: string
+  onChange: (hex: string) => void
+}> = ({ accent, onChange }) => {
+  const [currentColor, setCurrentColor] = useState(accent)
+  useEffect(() => {
+    setCurrentColor(accent)
+  }, [accent])
+
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <MotionButtonBase
+          id="color-picker"
+          className="ring-default-200 h-6 w-6 rounded-full bg-current ring"
+          style={{
+            backgroundColor: currentColor || '',
+          }}
+        />
+      </PopoverTrigger>
+      <PopoverContent>
+        <ColorPickerContent
+          accent={currentColor || '#fff'}
+          onChange={useEventCallback((hex) => {
+            setCurrentColor(hex)
+          })}
+          onDestroy={useEventCallback(() => {
+            onChange(currentColor)
+          })}
+        />
+      </PopoverContent>
+    </Popover>
+  )
+}
+
+const ColorPickerContent: FC<{
+  accent: string
+  onDestroy: () => void
+  onChange: (hex: string) => void
+}> = ({ accent, onChange, onDestroy }) => {
+  useEffect(() => {
+    return () => {
+      onDestroy()
+    }
+  }, [onDestroy])
+
+  return (
+    <Colorful
+      color={accent}
+      onChange={({ hex }) => {
+        onChange(hex)
+      }}
+    />
+  )
+}
