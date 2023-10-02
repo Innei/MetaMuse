@@ -1,4 +1,4 @@
-import { Button } from '@nextui-org/react'
+import { Button, ButtonGroup } from '@nextui-org/react'
 import React, { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import dayjs from 'dayjs'
@@ -6,11 +6,15 @@ import { produce } from 'immer'
 import { atom } from 'jotai'
 import { cloneDeep, omit } from 'lodash-es'
 import { toast } from 'sonner'
+import { useEventCallback } from 'usehooks-ts'
 import type { PostDto } from '@core/modules/post/post.dto'
 import type { PostModel } from '~/models/post'
 import type { FC } from 'react'
 
-import { ParseYAMLContentButton } from '~/components/biz/logic-button/ParseYAMLContentButton'
+import {
+  ImportMarkdownButton,
+  PreviewButton,
+} from '~/components/biz/logic-button'
 import { BaseWritingProvider } from '~/components/biz/writing/provider'
 import { useEditorRef, Writing } from '~/components/biz/writing/Writing'
 import { PageLoading } from '~/components/common/PageLoading'
@@ -113,33 +117,41 @@ const ActionButtonGroup = ({ initialData }: { initialData?: PostModel }) => {
   const trpcUtil = trpc.useContext()
 
   const editorRef = useEditorRef()
+  const handleParsed = useEventCallback(
+    (data: {
+      title?: string | undefined
+      text: string
+      meta?: Record<string, any> | undefined
+    }): void => {
+      setData((prev) => {
+        return produce(prev, (draft) => {
+          Object.assign(draft, omit(data, ['meta']))
+          const meta = data.meta
+
+          if (data.text) {
+            editorRef?.setMarkdown(data.text)
+          }
+
+          if (meta) {
+            const created = meta.created || meta.date
+            const parsedCreated = created ? dayjs(created) : null
+
+            if (parsedCreated) {
+              draft.created = parsedCreated.toISOString()
+            }
+
+            draft.meta = meta
+          }
+        })
+      })
+    },
+  )
   return (
     <div className="space-x-2 lg:space-x-4">
-      <ParseYAMLContentButton
-        onParsedValue={(data) => {
-          setData((prev) => {
-            return produce(prev, (draft) => {
-              Object.assign(draft, omit(data, ['meta']))
-              const meta = data.meta
-
-              if (data.text) {
-                editorRef?.setMarkdown(data.text)
-              }
-
-              if (meta) {
-                const created = meta.created || meta.date
-                const parsedCreated = created ? dayjs(created) : null
-
-                if (parsedCreated) {
-                  draft.created = parsedCreated.toISOString()
-                }
-
-                draft.meta = meta
-              }
-            })
-          })
-        }}
-      />
+      <ButtonGroup variant="ghost">
+        <PreviewButton getData={getData} />
+        <ImportMarkdownButton onParsedValue={handleParsed} />
+      </ButtonGroup>
       <Button
         color="primary"
         variant="shadow"

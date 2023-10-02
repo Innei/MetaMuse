@@ -24,7 +24,7 @@ type ParsedValue = {
   text: string
   meta?: Record<string, any>
 }
-export const ParseYAMLContentButton: FC<{
+export const ImportMarkdownButton: FC<{
   onParsedValue: (parsedValue: ParsedValue) => void
 }> = ({ onParsedValue }) => {
   const [, getValue, ref] = useUncontrolledInput<HTMLTextAreaElement>()
@@ -79,9 +79,7 @@ export const ParseYAMLContentButton: FC<{
   usePreventComposition(textareaEl!)
   return (
     <>
-      <Button onClick={onOpen} variant="ghost">
-        {t('common.import')}
-      </Button>
+      <Button onClick={onOpen}>{t('common.import')}</Button>
       <NextUIModal isOpen={isOpen} size="3xl" onOpenChange={onOpenChange}>
         <ModalContent>
           <ModalHeader>{t('common.import')}</ModalHeader>

@@ -21,6 +21,7 @@ export const CustomCreatedInput = () => {
 
   const [hasError, setHasError] = useState(false)
   useEffect(() => {
+    if (!editingCreated) return
     if (isValidDate(new Date(editingCreated))) {
       setHasError(false)
     } else setHasError(true)
