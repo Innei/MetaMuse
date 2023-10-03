@@ -1,33 +1,29 @@
 import { Avatar } from '@nextui-org/react'
-import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import type { User } from '@model'
 
-import { ErrorComponent } from '~/components/common/Error'
 import { BizError } from '~/lib/biz-error'
 import { clsxm } from '~/lib/helper'
-import { $axios } from '~/lib/request'
-import { userStore } from '~/store/user'
+import { useLogin, useUser } from '~/store/user'
 
 import { Background } from '../../components/ui/background'
 
 export default function LoginPage() {
-  const { data, error } = useQuery<User, Error>(['/user'], async () => {
-    return $axios.get('/user')
-  })
+  const user = useUser()
 
-  const { mutateAsync: login } = useMutation(async () => {
-    return userStore.login(data!.username, password)
-  })
+  const { mutateAsync: login } = useLogin()
 
   const nav = useNavigate()
   const [password, setPassword] = useState('')
 
   const handleLogin = async () => {
+    if (!user) return
     if (password.length === 0) return
-    await login().catch((err) => {
+    await login({
+      password,
+      username: user.username,
+    }).catch((err) => {
       if (err instanceof BizError) {
         toast.error(err.message)
       }
@@ -52,10 +48,6 @@ export default function LoginPage() {
 
   const ref = useRef<HTMLInputElement>(null)
 
-  if (error) {
-    return <ErrorComponent errorText={error.message} />
-  }
-
   return (
     <div className="relative flex h-screen min-h-[500px] w-full min-w-[600px] items-center justify-center">
       <Background />
@@ -68,11 +60,11 @@ export default function LoginPage() {
         <Avatar
           className="ring-primary"
           isBordered
-          src={data?.avatar || ''}
+          src={user?.avatar || ''}
           size="lg"
         />
 
-        <div className="relative flex h-[35px] space-x-2 rounded-full bg-slate-50/30 px-3 py-2 backdrop-blur-sm dark:bg-slate-900/30">
+        <div className="relative flex h-[35px] space-x-2 rounded-full bg-slate-50/50 px-3 py-2 backdrop-blur-sm dark:bg-slate-900/40">
           <input
             ref={ref}
             className="h-full flex-grow appearance-none border-0 bg-transparent outline-none ring-0"

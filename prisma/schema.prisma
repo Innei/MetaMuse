@@ -135,3 +135,12 @@ model Category {
 
   @@index([slug], name: "slugIndex")
 }
+
+model ConfigKV {
+  id    String @id @default("")
+  key   String @unique
+  value String
+  scope String
+
+  @@unique([key, scope])
+}

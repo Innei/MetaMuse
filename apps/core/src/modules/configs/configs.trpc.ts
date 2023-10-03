@@ -4,14 +4,21 @@ import { TRPCRouter } from '@core/common/decorators/trpc.decorator'
 import { CacheService } from '@core/processors/cache/cache.service'
 import { TRPCRouterBase } from '@core/processors/trpc/trpc.class'
 import { defineTrpcRouter } from '@core/processors/trpc/trpc.helper'
+import { tRpc } from '@core/processors/trpc/trpc.instance'
 import { tRPCService } from '@core/processors/trpc/trpc.service'
 import { Inject, Injectable } from '@nestjs/common'
+
+import { ConfigsService } from './configs.service'
 
 @TRPCRouter()
 @Injectable()
 export class ConfigsTRPCRouter extends TRPCRouterBase {
   @Inject()
   private readonly trpcService: tRPCService
+
+  @Inject()
+  private readonly service: ConfigsService
+
   onModuleInit(): void {
     this.router = this.createRouter()
   }
@@ -30,9 +37,16 @@ export class ConfigsTRPCRouter extends TRPCRouterBase {
   private kv() {
     const t = this.trpcService.procedureAuth
 
-    const combinedKey = (scope: string, key: string) => `${scope}#${key}`
-
     return defineTrpcRouter('kv', {
+      getPublic: tRpc.procedure
+        .input(
+          z.object({
+            key: z.string(),
+          }),
+        )
+        .query(async ({ input }) => {
+          return this.service.getKV('public', input.key)
+        }),
       get: t
         .input(
           z.object({
@@ -41,9 +55,19 @@ export class ConfigsTRPCRouter extends TRPCRouterBase {
           }),
         )
         .query(async ({ input }) => {
-          return this.cacheService.get<string>(
-            combinedKey(input.scope, input.key),
-          )
+          return this.service.getKV(input.scope, input.key)
+        }),
+
+      setPublic: t
+        .input(
+          z.object({
+            key: z.string(),
+            value: z.any(),
+          }),
+        )
+        .mutation(async ({ input }) => {
+          const { key, value } = input
+          return this.service.setKV('public', key, value)
         }),
 
       set: t
@@ -55,10 +79,8 @@ export class ConfigsTRPCRouter extends TRPCRouterBase {
           }),
         )
         .mutation(async ({ input }) => {
-          return this.cacheService.set(
-            combinedKey(input.scope, input.key),
-            JSON.stringify(input.value),
-          )
+          const { key, scope, value } = input
+          return this.service.setKV(scope, key, value)
         }),
     })
   }

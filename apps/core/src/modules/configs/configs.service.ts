@@ -1,5 +1,6 @@
 import { RedisKeys } from '@core/constants/cache.constant'
 import { CacheService } from '@core/processors/cache/cache.service'
+import { DatabaseService } from '@core/processors/database/database.service'
 import { EventManagerService } from '@core/processors/helper/helper.event.service'
 import { getRedisKey } from '@core/shared/utils/redis.util'
 import { sleep } from '@core/shared/utils/tool.utils'
@@ -16,6 +17,7 @@ export class ConfigsService {
   constructor(
     private readonly userService: UserService,
     private readonly redis: CacheService,
+    private readonly db: DatabaseService,
 
     private readonly eventManager: EventManagerService,
   ) {
@@ -80,4 +82,51 @@ export class ConfigsService {
       }[key],
     )
   }
+
+  /// get kv
+
+  async getKV(scope: string, key: string) {
+    const nextKey = combinedKey(scope, key)
+
+    const value = await this.redis.get(nextKey)
+    if (value) {
+      return value as any
+    }
+    const dbValue = await this.db.prisma.configKV.findFirst({
+      where: {
+        scope,
+        key,
+      },
+    })
+
+    if (dbValue) {
+      await this.redis.set(nextKey, dbValue.value)
+      return dbValue.value
+    }
+  }
+
+  /// set kv
+  //
+  async setKV(scope: string, key: string, value: any) {
+    const nextKey = combinedKey(scope, key)
+
+    value = JSON.stringify(value)
+    await this.redis.set(nextKey, value)
+    await this.db.prisma.configKV.upsert({
+      where: {
+        scope,
+        key,
+      },
+      create: {
+        scope,
+        key,
+        value,
+      },
+      update: {
+        value,
+      },
+    })
+  }
 }
+
+const combinedKey = (scope: string, key: string) => `${scope}#${key}`

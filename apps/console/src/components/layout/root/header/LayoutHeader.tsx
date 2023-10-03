@@ -11,7 +11,7 @@ import { trpc } from '~/lib/trpc'
 import { router } from '~/router'
 import { appRoutes } from '~/router/builder'
 import { useCurrentRouteObject } from '~/router/hooks'
-import { userStore } from '~/store/user'
+import { useUser } from '~/store/user'
 
 import { ThemeToggle } from './ThemeToggle'
 
@@ -41,15 +41,16 @@ export const LayoutHeader = () => {
 }
 
 const RightBar = () => {
+  const user = useUser()
   return (
     <div className="relative flex items-center space-x-2">
       <ThemeToggle />
       <Avatar
         size="sm"
-        src={userStore.user?.avatar || ''}
+        src={user?.avatar || ''}
         isBordered
         showFallback
-        name={userStore.user?.name}
+        name={user?.name}
       />
     </div>
   )

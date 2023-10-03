@@ -12,9 +12,11 @@ import { EventProvider } from './providers/event-provider'
 import { InitialDataProvider } from './providers/initial'
 import { queryClient } from './providers/query-core'
 import { Router } from './router'
-import { userStore } from './store/user'
+import { loginByToken, syncUser } from './store/user'
 
-userStore.loginByToken()
+loginByToken()
+syncUser()
+
 export function App() {
   return (
     <trpc.Provider client={tRpcClient} queryClient={queryClient}>
