@@ -23,6 +23,7 @@ const twConfig: Config = {
 
         'w-screen': '100vw',
         'h-screen': '100vh',
+        '4k': '2100px',
       },
       maxWidth: {
         screen: '100vw',

@@ -16,7 +16,8 @@ import {
 } from '@nextui-org/react'
 import { useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { atom, useAtom } from 'jotai'
+import { produce } from 'immer'
+import { atom, useAtom, useAtomValue } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import type { FC } from 'react'
 
@@ -81,10 +82,12 @@ const Sorting = () => {
         selectedKeys={sortingKey}
         onSelectionChange={(value) => {
           if (typeof value === 'string') return
-          setSorting((prev) => ({
-            ...prev,
-            key: value.keys()[0],
-          }))
+          setSorting((prev) => {
+            return produce(prev, (draft) => {
+              // @ts-expect-error
+              draft.key = value.currentKey
+            })
+          })
         }}
       >
         {Object.entries(sortingKeyMap).map(([key, value]) => (
@@ -99,10 +102,12 @@ const Sorting = () => {
         label="排序方式"
         onSelectionChange={(value) => {
           if (typeof value === 'string') return
-          setSorting((prev) => ({
-            ...prev,
-            order: value.keys()[0],
-          }))
+          setSorting((prev) => {
+            return produce(prev, (draft) => {
+              // @ts-expect-error
+              draft.order = value.currentKey
+            })
+          })
         }}
         selectedKeys={sortingOrder}
         className="w-full"
@@ -119,6 +124,16 @@ const Sorting = () => {
 
 const Header = () => {
   const [viewStyle, setViewStyle] = useAtom(viewStyleAtom)
+
+  const sorting = useAtomValue(sortingAtom)
+  const isHasSorting = useMemo(() => {
+    return (
+      sorting.key &&
+      sorting.order &&
+      !(sorting.key === 'created' && sorting.order === 'desc')
+    )
+  }, [sorting])
+
   return (
     <div className="mb-6 flex h-12 justify-between space-x-2">
       <Button
@@ -147,7 +162,11 @@ const Header = () => {
           }}
         >
           <PopoverTrigger>
-            <Button isIconOnly variant="flat">
+            <Button
+              isIconOnly
+              variant={isHasSorting ? 'solid' : 'flat'}
+              color={isHasSorting ? 'primary' : 'default'}
+            >
               <FilterLineIcon />
             </Button>
           </PopoverTrigger>
@@ -180,6 +199,8 @@ export default function Page() {
 
   const [search, setSearch] = useSearchParams()
 
+  const sorting = useAtomValue(sortingAtom)
+
   useBeforeMounted(() => {
     if (!search.get('page')) setSearch((p) => ({ ...p, page: 1 }))
     if (!search.get('size')) setSearch((p) => ({ ...p, size: 10 }))
@@ -199,6 +220,8 @@ export default function Page() {
     {
       page,
       size,
+      sortBy: sorting.key as any,
+      sortOrder: sorting.order,
     },
     {
       keepPreviousData: true,
