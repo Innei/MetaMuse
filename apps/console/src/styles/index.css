@@ -22,3 +22,19 @@
     }
   }
 }
+
+html {
+  font-size: 14px;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+@screen md {
+  input,
+  textarea {
+    font-size: 16px;
+  }
+}
