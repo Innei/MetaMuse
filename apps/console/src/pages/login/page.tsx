@@ -64,7 +64,7 @@ export default function LoginPage() {
           size="lg"
         />
 
-        <div className="relative flex h-[35px] space-x-2 rounded-full bg-slate-50/50 px-3 py-2 backdrop-blur-sm dark:bg-slate-900/40">
+        <div className="relative flex h-[35px] space-x-2 rounded-full bg-slate-50/40 px-3 py-2 backdrop-blur-xl dark:bg-slate-900/40">
           <input
             ref={ref}
             className="h-full flex-grow appearance-none border-0 bg-transparent outline-none ring-0"
