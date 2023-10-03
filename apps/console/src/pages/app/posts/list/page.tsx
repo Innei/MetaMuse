@@ -19,10 +19,12 @@ import { useSearchParams } from 'react-router-dom'
 import { produce } from 'immer'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
+import { toast } from 'sonner'
 import type { FC } from 'react'
 
 import { AddCircleLine, FilterLineIcon } from '~/components/icons'
 import { useBeforeMounted } from '~/hooks/use-before-mounted'
+import { useI18n } from '~/i18n/hooks'
 import { buildNSKey } from '~/lib/key'
 import { routeBuilder, Routes } from '~/lib/route-builder'
 import { trpc } from '~/lib/trpc'
@@ -325,6 +327,9 @@ function renderPostKeyValue(
 const Actions: FC<{ data: StringifyNestedDates<NormalizedPostModel> }> = ({
   data,
 }) => {
+  const { mutateAsync: deleteById } = trpc.post.delete.useMutation()
+  const utils = trpc.useContext()
+  const t = useI18n()
   return (
     <div className="flex items-center space-x-2">
       <Button
@@ -341,9 +346,38 @@ const Actions: FC<{ data: StringifyNestedDates<NormalizedPostModel> }> = ({
       >
         编辑
       </Button>
-      <Button size="sm" variant="light" className="hover:text-red-500">
-        删除
-      </Button>
+      <Popover>
+        <PopoverTrigger>
+          <Button size="sm" variant="light" className="hover:text-red-500">
+            删除
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent>
+          <div className="p-4">
+            <p className="text-center text-red-500 text-base font-bold">
+              {t('common.confirm-delete')}
+            </p>
+          </div>
+          <div>
+            <Button
+              size="sm"
+              variant="light"
+              color="danger"
+              onClick={() => {
+                deleteById({
+                  id: data.id,
+                }).then(() => {
+                  utils.post.invalidate()
+
+                  toast.success(t('common.delete-success'))
+                })
+              }}
+            >
+              {t('common.sure')}
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
     </div>
   )
 }

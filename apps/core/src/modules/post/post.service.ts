@@ -413,4 +413,24 @@ export class PostService {
 
     this.notifyPostUpdate(BusinessEvents.POST_UPDATE, id)
   }
+
+  async deleteById(id: string) {
+    const post = await this.getPostById(id)
+
+    await this.db.prisma.$transaction(async (prisma) => {
+      const exist = await prisma.post.exists({
+        where: { id },
+      })
+      if (!exist) throw new BizException(ErrorCodeEnum.PostNotFound)
+      await prisma.post.delete({
+        where: {
+          id,
+        },
+      })
+    })
+
+    await this.notifyPostUpdate(BusinessEvents.POST_DELETE, id)
+
+    return post
+  }
 }
