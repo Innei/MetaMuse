@@ -24,9 +24,11 @@ class Reporter extends FancyReporter {
   protected formatLogObj(): string {
     return this.isInVirtualTerminal
       ? `${chalk.gray(getShortTime(new Date()))} ${super.formatLogObj
+          // @ts-ignore
           .apply(this, arguments)
           .replace(/^\n/, '')}`.trimEnd()
-      : super.formatLogObj.apply(this, arguments)
+      : // @ts-ignore
+        super.formatLogObj.apply(this, arguments)
   }
 }
 export const consola = consola_.create({
@@ -69,11 +71,13 @@ export function registerStdLogger() {
   process.stdout.write = function () {
     log(arguments[0])
 
+    // @ts-ignore
     return stdout.apply(this, arguments)
   }
 
   process.stderr.write = function () {
     log(arguments[0])
+    // @ts-ignore
     return stderr.apply(this, arguments)
   }
 
