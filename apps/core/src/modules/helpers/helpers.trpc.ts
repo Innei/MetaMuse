@@ -15,6 +15,7 @@ export class HelpersTrpcRouter extends TRPCRouterBase {
   private readonly service: HelpersService
   @Inject()
   private readonly trpcService: tRPCService
+  protected router: ReturnType<typeof this.createRouter>
 
   createRouter() {
     const tAuth = this.trpcService.procedureAuth

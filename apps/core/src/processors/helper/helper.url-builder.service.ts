@@ -11,7 +11,7 @@ export class UrlBuilderService {
     return (
       isDefined(model.title) &&
       isDefined(model.slug) &&
-      !isDefined(model.categoryId)
+      isDefined(model.categoryId)
     )
   }
 
