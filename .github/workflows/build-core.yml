@@ -8,12 +8,12 @@ on:
     branches:
       - main
     paths:
-      - 'apps/core'
+      - 'apps/core/**'
       - '.github/workflows/build-core.yml'
   pull_request:
     branches: [main]
     paths:
-      - 'apps/core'
+      - 'apps/core/**'
       - '.github/workflows/build-core.yml'
 
 jobs:

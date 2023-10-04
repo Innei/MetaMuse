@@ -8,12 +8,12 @@ on:
     branches:
       - main
     paths:
-      - 'apps/console'
+      - 'apps/console/**'
       - '.github/workflows/build-console.yml'
   pull_request:
     branches: [main]
     paths:
-      - 'apps/console'
+      - 'apps/console/**'
       - '.github/workflows/build-console.yml'
 
 jobs:
