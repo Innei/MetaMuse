@@ -132,6 +132,7 @@ model Category {
   slug    String   @unique
   created DateTime @default(now()) @map("created_at")
   Post    Post[]
+  Page    Page[]
 
   @@index([slug], name: "slugIndex")
 }
@@ -143,4 +144,76 @@ model ConfigKV {
   scope String
 
   @@unique([key, scope])
+}
+
+model Note {
+  id  String @id @default("")
+  nid Int    @unique @default(autoincrement())
+
+  text     String
+  /// @zod.string.max(80)
+  title    String    @db.VarChar(255)
+  created  DateTime  @default(now()) @map("created_at")
+  modified DateTime? @map("updated_at")
+
+  allowComment Boolean @default(true) @map("allow_comment")
+
+  password    String     @default("")
+  publicAt    DateTime?  @map("public_at")
+  mood        String?
+  weather     String?
+  /// [NoteCoordinates]
+  coordinates Json?
+  location    String?
+  topic       NoteTopic? @relation(fields: [topicId], references: [name])
+
+  /// [ArticleCount]
+  count  Json  @default("{\"read\": 0, \"like\": 0}") /// @zod.custom.omit(["model", "input"])
+  /// [ArticleImages]
+  images Json  @default("[]")
+  meta   Json? @default("{}") /// @zod.custom.omit(["model", "input"])
+
+  isPublished Boolean @default(true) @map("is_published")
+  topicId     String?
+
+  @@index([created])
+  @@index([nid])
+}
+
+model NoteTopic {
+  description String  @default("")
+  introduce   String  @default("")
+  name        String  @unique
+  slug        String  @unique
+  icon        String?
+  Note        Note[]
+}
+
+model Page {
+  id       String    @id @default("")
+  /// @zod.string.max(255)
+  slug     String    @db.VarChar(255)
+  /// @zod.string.max(80)
+  subtitle String    @default("") @db.VarChar(80)
+  text     String
+  /// @zod.string.max(80)
+  title    String    @db.VarChar(255)
+  created  DateTime  @default(now()) @map("created_at")
+  modified DateTime? @map("updated_at")
+
+  order Int @default(0)
+
+  allowComment Boolean @default(true) @map("allow_comment")
+
+  /// [ArticleCount]
+  count  Json @default("{\"read\": 0, \"like\": 0}") /// @zod.custom.omit(["model", "input"])
+  /// [ArticleImages]
+  images Json @default("[]")
+
+  meta       Json?     @default("{}") /// @zod.custom.omit(["model", "input"])
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+
+  @@index([slug])
+  @@index([created])
 }

@@ -23,6 +23,7 @@ import { toast } from 'sonner'
 import type { FC } from 'react'
 
 import { AddCircleLine, FilterLineIcon } from '~/components/icons'
+import { TitleExtra } from '~/components/modules/writing/TitleExtra'
 import { useBeforeMounted } from '~/hooks/use-before-mounted'
 import { useI18n } from '~/i18n/hooks'
 import { buildNSKey } from '~/lib/key'
@@ -320,6 +321,9 @@ function renderPostKeyValue(
     case 'action': {
       return <Actions data={data} />
     }
+
+    case 'title':
+      return <TitleExtra data={data} />
   }
   return getKeyValue(data, key)
 }

@@ -14,6 +14,11 @@ declare global {
       type: string
     }
 
+    type NoteCoordinate = {
+      latitude: number
+      longitude: number
+    }
+
     type ArticleImages = ArticleImage[]
   }
 }

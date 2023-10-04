@@ -1,12 +1,30 @@
 import { homedir } from 'os'
 import { join } from 'path'
 
-import { isDev } from '../global/env.global'
+import { cwd, isDev } from '@core/global/env.global'
 
-const appName = 'nest-app-template'
 export const HOME = homedir()
-export const DATA_DIR = isDev
-  ? join(process.cwd(), './tmp')
-  : join(HOME, `.${appName}`)
 
+export const TEMP_DIR = isDev ? join(cwd, './tmp') : '/tmp/mx-space'
+
+export const DATA_DIR = isDev ? join(cwd, './tmp') : join(HOME, '.mx-space')
+
+export const THEME_DIR = isDev
+  ? join(cwd, './tmp/theme')
+  : join(DATA_DIR, 'theme')
+
+export const USER_ASSET_DIR = join(DATA_DIR, 'assets')
 export const LOG_DIR = join(DATA_DIR, 'log')
+
+export const STATIC_FILE_DIR = join(DATA_DIR, 'static')
+
+export const BACKUP_DIR = !isDev
+  ? join(DATA_DIR, 'backup')
+  : join(TEMP_DIR, 'backup')
+
+// 生产环境直接打包到 目录的 admin 下
+export const LOCAL_ADMIN_ASSET_PATH = isDev
+  ? join(DATA_DIR, 'admin')
+  : join(cwd, './admin')
+
+export const NODE_REQUIRE_PATH = join(DATA_DIR, 'node_modules')
