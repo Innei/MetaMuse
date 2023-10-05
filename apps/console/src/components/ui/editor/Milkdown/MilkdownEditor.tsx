@@ -24,7 +24,7 @@ import { listener, listenerCtx } from '@milkdown/plugin-listener'
 import { commonmark } from '@milkdown/preset-commonmark'
 import { replaceAll } from '@milkdown/utils'
 
-import { useIsMountedRef } from '~/hooks/use-is-mounted'
+import { useIsMountedRef } from '~/hooks/common/use-is-mounted'
 
 import styles from './index.module.css'
 

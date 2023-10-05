@@ -13,7 +13,6 @@ import {
   TableRow,
 } from '@nextui-org/react'
 import { useMemo, useRef } from 'react'
-import { useSearchParams } from 'react-router-dom'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { toast } from 'sonner'
@@ -85,7 +84,6 @@ const Header = () => {
 
 export default function Page() {
   const [page, size, setPage] = useQueryPager()
-  const [search, setSearch] = useSearchParams()
   const sortingAtom = useMemo(
     () =>
       atom({ key: 'created', order: 'desc' } as {
@@ -111,11 +109,6 @@ export default function Page() {
     },
   )
   const currentSelectionRef = useRef<Set<string>>()
-
-  const currentPage = useMemo(
-    () => parseInt(search.get('page')!) || 1,
-    [search],
-  )
 
   return (
     <ListSortAndFilterProvider
@@ -168,12 +161,9 @@ export default function Page() {
         <div className="mt-8 flex w-full items-center justify-end gap-4">
           <Pagination
             total={data?.pagination.totalPage}
-            initialPage={currentPage}
+            initialPage={page}
             variant="light"
-            onChange={(page) => {
-              setPage(page)
-              setSearch((p) => ({ ...p, page }))
-            }}
+            onChange={setPage}
           />
         </div>
       )}

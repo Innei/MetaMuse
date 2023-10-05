@@ -4,7 +4,7 @@ import { useForceUpdate } from 'framer-motion'
 import { toast } from 'sonner'
 import type { UserRegisterDto } from '@core/modules/user/dtos/register.dto'
 
-import { useUncontrolledInput } from '~/hooks/use-uncontrolled-input'
+import { useUncontrolledInput } from '~/hooks/common/use-uncontrolled-input'
 import { $axios } from '~/lib/request'
 import { router } from '~/router'
 

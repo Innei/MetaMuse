@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { useBeforeMounted } from '../common/use-before-mounted'
@@ -23,6 +23,10 @@ export const useQueryPager = () => {
       })
     } catch {}
   })
+
+  useEffect(() => {
+    setSearch((p) => ({ ...p, page, size }))
+  }, [page, setSearch, size])
 
   return [page, size, setPage, setSize] as const
 }

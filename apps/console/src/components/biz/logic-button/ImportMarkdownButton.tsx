@@ -13,8 +13,8 @@ import type { FC } from 'react'
 
 import { input } from '@nextui-org/theme'
 
-import { usePreventComposition } from '~/hooks/use-prevent-composition'
-import { useUncontrolledInput } from '~/hooks/use-uncontrolled-input'
+import { usePreventComposition } from '~/hooks/common/use-prevent-composition'
+import { useUncontrolledInput } from '~/hooks/common/use-uncontrolled-input'
 import { useI18n } from '~/i18n/hooks'
 
 import { NextUIModal } from '../../ui/modal'

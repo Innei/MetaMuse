@@ -11,7 +11,7 @@ import type { editor, IKeyboardEvent } from 'monaco-editor'
 import Dark from '~/assets/monaco/theme/dark.json'
 import Light from '~/assets/monaco/theme/light.json'
 
-import { useTheme } from './use-theme'
+import { useTheme } from '../common/use-theme'
 
 self.MonacoEnvironment = {
   getWorker(_, label) {

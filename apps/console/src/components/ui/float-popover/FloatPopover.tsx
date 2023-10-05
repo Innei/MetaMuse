@@ -6,7 +6,7 @@ import type { OffsetOptions, UseFloatingOptions } from '@floating-ui/react-dom'
 import type { FC, PropsWithChildren } from 'react'
 
 import { microReboundPreset } from '~/constants/spring'
-import useClickAway from '~/hooks/use-click-away'
+import useClickAway from '~/hooks/common/use-click-away'
 import { clsxm } from '~/lib/helper'
 
 import { RootPortal } from '../portal'

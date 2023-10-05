@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from 'react'
 import clsx from 'clsx'
 
-import { useUncontrolledInput } from '~/hooks/use-uncontrolled-input'
+import { useUncontrolledInput } from '~/hooks/common/use-uncontrolled-input'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
 import { isLogged, useIsLogged } from '~/store/user'
