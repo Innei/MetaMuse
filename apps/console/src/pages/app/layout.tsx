@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 
 import { SeoObserver } from '~/components/common/SeoObserver'
 import { LayoutHeader } from '~/components/layout/root/header'
-import { useBeforeMounted } from '~/hooks/use-before-mounted'
+import { useBeforeMounted } from '~/hooks/common/use-before-mounted'
 import { ModalStackProvider } from '~/providers/modal-stack-provider'
 
 export default function Layout() {

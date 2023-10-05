@@ -16,6 +16,7 @@ export const TitleExtra = <T extends RequiredField & OptionalField>(props: {
       <span>{title}</span>
       {!isPublished && <PhEyeSlash />}
       <MotionButtonBase
+        className="inline-flex items-center"
         onClick={async () => {
           const url = await utils.helpers.urlBuilder.fetch({
             id,

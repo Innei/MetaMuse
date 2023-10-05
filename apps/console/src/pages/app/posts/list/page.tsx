@@ -5,8 +5,6 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-  Select,
-  SelectItem,
   Table,
   TableBody,
   TableCell,
@@ -14,17 +12,20 @@ import {
   TableHeader,
   TableRow,
 } from '@nextui-org/react'
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { produce } from 'immer'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { toast } from 'sonner'
 import type { FC } from 'react'
 
-import { AddCircleLine, FilterLineIcon } from '~/components/icons'
+import { AddCircleLine } from '~/components/icons'
+import {
+  ListSortAndFilterProvider,
+  SortAndFilterButton,
+} from '~/components/modules/writing/ListSortAndFilter'
 import { TitleExtra } from '~/components/modules/writing/TitleExtra'
-import { useBeforeMounted } from '~/hooks/use-before-mounted'
+import { useQueryPager } from '~/hooks/biz/use-query-pager'
 import { useI18n } from '~/i18n/hooks'
 import { buildNSKey } from '~/lib/key'
 import { routeBuilder, Routes } from '~/lib/route-builder'
@@ -39,103 +40,9 @@ enum ViewStyle {
 }
 
 const viewStyleAtom = atomWithStorage(buildNSKey('view-style'), ViewStyle.Table)
-const filterAtom = atom([] as string[])
-const sortingAtom = atom({ key: 'created', order: 'desc' } as {
-  key: string
-  order: 'asc' | 'desc'
-})
-
-const Filter = () => {
-  return null
-  // TODO
-  return (
-    <div className="w-full px-1 py-2">
-      <p className="text-small text-foreground font-bold" />
-      <div className="mt-2 flex w-full flex-col gap-2" />
-    </div>
-  )
-}
-
-const sortingKeyMap = {
-  created: '创建时间',
-  modified: '修改时间',
-}
-
-const sortingOrderList = [
-  {
-    key: 'asc',
-    label: '升序',
-  },
-  {
-    key: 'desc',
-    label: '降序',
-  },
-]
-
-const Sorting = () => {
-  const [sorting, setSorting] = useAtom(sortingAtom)
-  const sortingKey = useMemo(() => new Set([sorting.key]), [sorting.key])
-  const sortingOrder = useMemo(() => new Set([sorting.order]), [sorting.order])
-  // TODO
-  return (
-    <div className="w-full space-y-2 px-2 py-3">
-      <Select
-        size="sm"
-        label="按照以下字段排序"
-        selectedKeys={sortingKey}
-        onSelectionChange={(value) => {
-          if (typeof value === 'string') return
-          setSorting((prev) => {
-            return produce(prev, (draft) => {
-              // @ts-expect-error
-              draft.key = value.currentKey
-            })
-          })
-        }}
-      >
-        {Object.entries(sortingKeyMap).map(([key, value]) => (
-          <SelectItem key={key} value={key}>
-            {value}
-          </SelectItem>
-        ))}
-      </Select>
-
-      <Select
-        size="sm"
-        label="排序方式"
-        onSelectionChange={(value) => {
-          if (typeof value === 'string') return
-          setSorting((prev) => {
-            return produce(prev, (draft) => {
-              // @ts-expect-error
-              draft.order = value.currentKey
-            })
-          })
-        }}
-        selectedKeys={sortingOrder}
-        className="w-full"
-      >
-        {sortingOrderList.map(({ key, label }) => (
-          <SelectItem key={key} value={key}>
-            {label}
-          </SelectItem>
-        ))}
-      </Select>
-    </div>
-  )
-}
 
 const Header = () => {
   const [viewStyle, setViewStyle] = useAtom(viewStyleAtom)
-
-  const sorting = useAtomValue(sortingAtom)
-  const isHasSorting = useMemo(() => {
-    return (
-      sorting.key &&
-      sorting.order &&
-      !(sorting.key === 'created' && sorting.order === 'desc')
-    )
-  }, [sorting])
 
   return (
     <div className="mb-6 flex h-12 justify-between space-x-2">
@@ -159,27 +66,7 @@ const Header = () => {
       </Button>
 
       <div className="space-x-2">
-        <Popover
-          classNames={{
-            base: 'p-0',
-          }}
-        >
-          <PopoverTrigger>
-            <Button
-              isIconOnly
-              variant={isHasSorting ? 'solid' : 'flat'}
-              color={isHasSorting ? 'primary' : 'default'}
-            >
-              <FilterLineIcon />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <div className="w-52">
-              <Filter />
-              <Sorting />
-            </div>
-          </PopoverContent>
-        </Popover>
+        <SortAndFilterButton />
 
         <Button
           onClick={() => {
@@ -197,27 +84,19 @@ const Header = () => {
 }
 
 export default function Page() {
-  const [page, setPage] = useState(1)
-  const [size, setSize] = useState(10)
-
+  const [page, size, setPage] = useQueryPager()
   const [search, setSearch] = useSearchParams()
+  const sortingAtom = useMemo(
+    () =>
+      atom({ key: 'created', order: 'desc' } as {
+        key: string
+        order: 'asc' | 'desc'
+      }),
+    [],
+  )
 
   const sorting = useAtomValue(sortingAtom)
-
-  useBeforeMounted(() => {
-    if (!search.get('page')) setSearch((p) => ({ ...p, page: 1 }))
-    if (!search.get('size')) setSearch((p) => ({ ...p, size: 10 }))
-    try {
-      search.forEach((value, key) => {
-        if (key === 'page') {
-          setPage(Number(value))
-        }
-        if (key === 'size') {
-          setSize(Number(value))
-        }
-      })
-    } catch {}
-  })
+  const filterAtom = useMemo(() => atom([] as string[]), [])
 
   const { data, isLoading } = trpc.post.paginate.useQuery(
     {
@@ -239,7 +118,10 @@ export default function Page() {
   )
 
   return (
-    <>
+    <ListSortAndFilterProvider
+      sortingAtom={sortingAtom}
+      filterAtom={filterAtom}
+    >
       <Header />
       <Table
         className="min-h-[32.8rem] overflow-auto bg-transparent [&_table]:min-w-[1000px]"
@@ -295,7 +177,7 @@ export default function Page() {
           />
         </div>
       )}
-    </>
+    </ListSortAndFilterProvider>
   )
 }
 

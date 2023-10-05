@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { Toaster } from 'sonner'
 
-import { useBeforeMounted } from '~/hooks/use-before-mounted'
-import { useTheme } from '~/hooks/use-theme'
+import { useBeforeMounted } from '~/hooks/common/use-before-mounted'
+import { useTheme } from '~/hooks/common/use-theme'
 
 export const ColorModeObserver = () => {
   const { actualTheme: theme } = useTheme()

@@ -1,7 +1,7 @@
 import { Button } from '@nextui-org/react'
 import { useMemo } from 'react'
 
-import { useTheme } from '~/hooks/use-theme'
+import { useTheme } from '~/hooks/common/use-theme'
 
 export const ThemeToggle = () => {
   const { theme, setTheme } = useTheme()
