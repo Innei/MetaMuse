@@ -1,5 +1,11 @@
 import {
   Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Checkbox,
+  Divider,
   getKeyValue,
   Pagination,
   Popover,
@@ -13,6 +19,7 @@ import {
   TableRow,
 } from '@nextui-org/react'
 import { useMemo, useRef } from 'react'
+import { motion } from 'framer-motion'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { toast } from 'sonner'
@@ -24,6 +31,7 @@ import {
   SortAndFilterButton,
 } from '~/components/modules/writing/ListSortAndFilter'
 import { TitleExtra } from '~/components/modules/writing/TitleExtra'
+import { MotionDivToBottom } from '~/components/ui/motion'
 import { useQueryPager } from '~/hooks/biz/use-query-pager'
 import { useI18n } from '~/i18n/hooks'
 import { buildNSKey } from '~/lib/key'
@@ -109,6 +117,7 @@ export default function Page() {
     },
   )
   const currentSelectionRef = useRef<Set<string>>()
+  const viewStyle = useAtomValue(viewStyleAtom)
 
   return (
     <ListSortAndFilterProvider
@@ -116,56 +125,121 @@ export default function Page() {
       filterAtom={filterAtom}
     >
       <Header />
-      <Table
-        className="min-h-[32.8rem] overflow-auto bg-transparent [&_table]:min-w-[1000px]"
-        removeWrapper
-        selectionMode="multiple"
-        onSelectionChange={(e) => {
-          currentSelectionRef.current = new Set(e as Set<string>)
-        }}
-      >
-        <TableHeader>
-          <TableColumn key="title">标题</TableColumn>
-          <TableColumn key="category">分类</TableColumn>
-          <TableColumn key="tags">标签</TableColumn>
-          <TableColumn key="count.read">
-            <i className="icon-[mingcute--book-6-line]" />
-          </TableColumn>
-          <TableColumn key="count.like">
-            <i className="icon-[mingcute--heart-line]" />
-          </TableColumn>
-          <TableColumn key="created">创建时间</TableColumn>
-          <TableColumn key="modified">修改时间</TableColumn>
-          <TableColumn className="text-center" width={1} key="action">
-            操作
-          </TableColumn>
-        </TableHeader>
-        <TableBody
-          isLoading={isLoading}
-          emptyContent="这里空空如也"
-          items={data?.data || []}
-        >
-          {(item) => (
-            <TableRow key={item!.id}>
-              {(columnKey) => (
-                <TableCell>
-                  {renderPostKeyValue(item! as any, columnKey)}
-                </TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
 
+      {ViewStyle.Table === viewStyle ? (
+        <Table
+          className="min-h-[32.8rem] overflow-auto bg-transparent [&_table]:min-w-[1000px]"
+          removeWrapper
+          selectionMode="multiple"
+          onSelectionChange={(e) => {
+            currentSelectionRef.current = new Set(e as Set<string>)
+          }}
+          defaultSelectedKeys={currentSelectionRef.current}
+        >
+          <TableHeader>
+            <TableColumn key="title">标题</TableColumn>
+            <TableColumn key="category">分类</TableColumn>
+            <TableColumn key="tags">标签</TableColumn>
+            <TableColumn key="count.read">
+              <i className="icon-[mingcute--book-6-line]" />
+            </TableColumn>
+            <TableColumn key="count.like">
+              <i className="icon-[mingcute--heart-line]" />
+            </TableColumn>
+            <TableColumn key="created">创建时间</TableColumn>
+            <TableColumn key="modified">修改时间</TableColumn>
+            <TableColumn className="text-center" width={1} key="action">
+              操作
+            </TableColumn>
+          </TableHeader>
+          <TableBody
+            isLoading={isLoading}
+            emptyContent="这里空空如也"
+            items={data?.data || []}
+          >
+            {(item) => (
+              <TableRow key={item!.id}>
+                {(columnKey) => (
+                  <TableCell>
+                    {renderPostKeyValue(item! as any, columnKey)}
+                  </TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      ) : (
+        <div className="min-h-[32.8rem] grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6 4k:grid-cols-8 gap-4 mb-8">
+          {data?.data.map((item) => {
+            if (!item) return null
+            return (
+              <Card
+                as={MotionDivToBottom}
+                shadow="sm"
+                className="ring-1 ring-zinc-200/60 dark:ring-neutral-800/70"
+                key={item.id}
+              >
+                <CardHeader className="flex gap-2">
+                  <Checkbox
+                    size="sm"
+                    defaultSelected={
+                      currentSelectionRef.current?.has(item.id) ?? false
+                    }
+                    onValueChange={(value) => {
+                      if (currentSelectionRef.current) {
+                        if (value) {
+                          currentSelectionRef.current.add(item.id)
+                        } else {
+                          currentSelectionRef.current.delete(item.id)
+                        }
+                      }
+                    }}
+                  />
+                  <TitleExtra data={item} />
+                </CardHeader>
+                <Divider />
+                <CardBody className="text-small flex flex-col gap-2">
+                  <p>
+                    <span>
+                      位于分类：
+                      {item.category.name}
+                    </span>
+                  </p>
+                  <p>
+                    <span>标签：</span>
+                    {item.tags.map((tag) => tag.name).join(',')}
+                  </p>
+                  <p className="flex items-center text-foreground/80">
+                    <i className="icon-[mingcute--book-6-line]" />
+                    <span className="ml-1">{item.count.read}</span>
+                    <span className="w-5" />
+                    <i className="icon-[mingcute--heart-line] ml-2" />
+                    <span className="ml-1">{item.count.like}</span>
+                  </p>
+                  <p className="text-foreground/60">
+                    <RelativeTime time={item.created} />
+                  </p>
+                </CardBody>
+                <CardFooter className="flex justify-end">
+                  <Actions data={item as any} />
+                </CardFooter>
+              </Card>
+            )
+          })}
+        </div>
+      )}
       {!!data && data.pagination.totalPage > 1 && (
-        <div className="mt-8 flex w-full items-center justify-end gap-4">
+        <motion.div
+          layout="position"
+          className="mt-8 flex w-full items-center justify-end gap-4"
+        >
           <Pagination
             total={data?.pagination.totalPage}
             initialPage={page}
             variant="light"
             onChange={setPage}
           />
-        </div>
+        </motion.div>
       )}
     </ListSortAndFilterProvider>
   )
