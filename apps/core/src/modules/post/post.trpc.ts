@@ -4,7 +4,7 @@ import { TRPCRouter } from '@core/common/decorators/trpc.decorator'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { defineTrpcRouter } from '@core/processors/trpc/trpc.helper'
 import { tRPCService } from '@core/processors/trpc/trpc.service'
-import { SnowflakeIdDto } from '@core/shared/dto/id.dto'
+import { SnowflakeIdDto, SnowflakeIdSchema } from '@core/shared/dto/id.dto'
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
 
 import { PostInputSchema, PostPagerDto } from './post.dto'
@@ -150,6 +150,18 @@ export class PostTrpcRouter implements OnModuleInit {
           const { input } = opt
 
           await this.service.deleteById(input.id)
+        }),
+
+      batchDelete: procedureAuth
+        .input(
+          z.object({
+            ids: z.array(SnowflakeIdSchema),
+          }),
+        )
+        .mutation(async (opt) => {
+          const { input } = opt
+
+          await Promise.all(input.ids.map((id) => this.service.deleteById(id)))
         }),
     })
   }

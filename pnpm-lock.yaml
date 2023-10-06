@@ -285,6 +285,9 @@ importers:
       tailwindcss-variable-colors:
         specifier: 0.0.1
         version: 0.0.1(tailwindcss@3.3.3)
+      ts-toolbelt:
+        specifier: 9.6.0
+        version: 9.6.0
       typescript:
         specifier: 5.2.2
         version: 5.2.2

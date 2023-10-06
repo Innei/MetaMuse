@@ -95,7 +95,7 @@ const HeaderMenu = () => {
               to={`/${menu.path}`}
               onClick={handleNav}
               className={clsx(
-                'flex items-center space-x-1 rounded-md p-2 duration-200 hover:bg-slate-100 hover:dark:bg-neutral-700',
+                'flex items-center space-x-1 rounded-xl p-2 duration-200 hover:bg-slate-100 hover:dark:bg-neutral-700',
                 isActive ? 'bg-slate-200 dark:bg-zinc-800' : '',
               )}
             >
@@ -140,7 +140,7 @@ const SecondaryLevelMenu = () => {
             <Link
               to={`/${fullPath}`}
               className={clsx(
-                'flex items-center space-x-1 rounded-md px-2 py-1 duration-200 hover:bg-slate-100 hover:dark:bg-neutral-700',
+                'flex items-center space-x-1 rounded-lg px-2 py-1 duration-200 hover:bg-slate-100 hover:dark:bg-neutral-700',
 
                 isActive ? 'bg-slate-200 dark:bg-zinc-800' : '',
               )}
