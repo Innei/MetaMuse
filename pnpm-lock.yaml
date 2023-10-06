@@ -367,8 +367,8 @@ importers:
         specifier: '*'
         version: 2.15.3
       cron:
-        specifier: ^2.4.4
-        version: 2.4.4
+        specifier: ^3.0.0
+        version: 3.0.0
       cross-env:
         specifier: 7.0.3
         version: 7.0.3
@@ -7037,8 +7037,8 @@ packages:
       luxon: 3.3.0
     dev: false
 
-  /cron@2.4.4:
-    resolution: {integrity: sha512-MHlPImXJj3K7x7lyUHjtKEOl69CSlTOWxS89jiFgNkzXfvhVjhMz/nc7/EIfN9vgooZp8XTtXJ1FREdmbyXOiQ==}
+  /cron@3.0.0:
+    resolution: {integrity: sha512-2aFNFH+kwHUlqJlc1M4sP6/l+gZjBYaoHrhPRkTkg80DlA68ueyhRDfWnMAMulg/+mE9F8cGtfwL8wedr4jfqQ==}
     dependencies:
       '@types/luxon': 3.3.2
       luxon: 3.3.0
