@@ -13,6 +13,10 @@ export enum ErrorCodeEnum {
   PostNotPublished = 10005,
   PostSlugExists = 10006,
 
+  NoteNotFound = 10007,
+  NoteExist = 10008,
+  NoteNotPublished = 10009,
+
   AuthFailUserNotExist = 20000,
   AuthFail = 20001,
   JWTExpired = 20002,
@@ -40,12 +44,13 @@ export const ErrorCode = Object.freeze<Record<ErrorCodeEnum, [string, number]>>(
     [ErrorCodeEnum.CategoryNotFound]: ['category not found', 404],
     [ErrorCodeEnum.CategoryCannotDeleted]: [
       'there are other posts in this category, cannot be deleted',
-
       400,
     ],
     [ErrorCodeEnum.CategoryAlreadyExists]: ['category already exists', 400],
-
     [ErrorCodeEnum.PostSlugExists]: ['slug already exists', 400],
+    [ErrorCodeEnum.NoteNotFound]: ['note not found', 404],
+    [ErrorCodeEnum.NoteNotPublished]: ['note not found', 404],
+    [ErrorCodeEnum.NoteExist]: ['note already exist', 400],
 
     [ErrorCodeEnum.AuthFailUserNotExist]: ['auth failed, user not exist', 400],
     [ErrorCodeEnum.AuthFail]: [

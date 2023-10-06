@@ -7,8 +7,8 @@ import { atom } from 'jotai'
 import { cloneDeep, omit } from 'lodash-es'
 import { toast } from 'sonner'
 import { useEventCallback } from 'usehooks-ts'
-import type { PostDto } from '@core/modules/post/post.dto'
-import type { PostModel } from '~/models/post'
+import type { NoteDto } from '@core/modules/note/note.dto'
+import type { NoteModel } from '~/models/note'
 import type { FC } from 'react'
 
 import {
@@ -18,42 +18,44 @@ import {
 import { BaseWritingProvider } from '~/components/biz/writing/provider'
 import { useEditorRef, Writing } from '~/components/biz/writing/Writing'
 import { PageLoading } from '~/components/common/PageLoading'
-import { SlugInput } from '~/components/modules/post-editing'
 import {
-  PostModelDataAtomProvider,
-  usePostModelGetModelData,
-  usePostModelSetModelData,
-} from '~/components/modules/post-editing/data-provider'
-import { PostEditorSidebar } from '~/components/modules/post-editing/sidebar'
+  NoteEditorSidebar,
+  NoteEditorUrlPlaceholder,
+} from '~/components/modules/note-editing'
+import {
+  NoteModelDataAtomProvider,
+  useNoteModelGetModelData,
+  useNoteModelSetModelData,
+} from '~/components/modules/note-editing/data-provider'
 import { useI18n } from '~/i18n/hooks'
 import { routeBuilder, Routes } from '~/lib/route-builder'
 import { trpc } from '~/lib/trpc'
 import { router } from '~/router'
 
-const createInitialEditingData = (): PostModel => {
+const createInitialEditingData = (): NoteModel => {
   return {
     title: '',
     allowComment: true,
-    copyright: true,
-    tagIds: [],
-    categoryId: '',
+    location: null,
+
     id: '',
     images: [],
     isPublished: true,
-    pin: false,
-    slug: '',
-    tags: [],
+    mood: null,
+    nid: 0,
+    password: '',
+    publicAt: null,
+    topicId: null,
+    weather: null,
+
     text: '',
     meta: {},
-    related: [],
-    relatedIds: [],
-    summary: null,
   }
 }
 export default function EditPage_() {
   const [search] = useSearchParams()
   const id = search.get('id')
-  const { data, isLoading } = trpc.post.id.useQuery(
+  const { data, isLoading } = trpc.note.id.useQuery(
     { id: id! },
     { enabled: !!id },
   )
@@ -67,9 +69,9 @@ export default function EditPage_() {
 }
 
 const EditPage: FC<{
-  initialData?: PostModel
+  initialData?: NoteModel
 }> = (props) => {
-  const [editingData] = useState<PostModel>(() =>
+  const [editingData] = useState<NoteModel>(() =>
     props.initialData
       ? cloneDeep(props.initialData)
       : createInitialEditingData(),
@@ -80,7 +82,7 @@ const EditPage: FC<{
   const editingAtom = useMemo(() => atom(editingData), [editingData])
 
   return (
-    <PostModelDataAtomProvider overrideAtom={editingAtom}>
+    <NoteModelDataAtomProvider overrideAtom={editingAtom}>
       <BaseWritingProvider atom={editingAtom}>
         <div className="flex justify-between">
           <div className="mb-3 flex items-center justify-between">
@@ -90,7 +92,7 @@ const EditPage: FC<{
                   {t('common.editing')} 「{editingData.title}」
                 </>
               ) : (
-                t('common.new-post')
+                t('common.new-note')
               )}
             </p>
           </div>
@@ -100,22 +102,22 @@ const EditPage: FC<{
 
         <div className="flex flex-grow lg:grid lg:grid-cols-[auto_400px] lg:gap-4">
           <div className="flex flex-grow flex-col overflow-auto">
-            <Writing middleSlot={SlugInput} />
+            <Writing middleSlot={NoteEditorUrlPlaceholder} />
           </div>
 
-          <PostEditorSidebar />
+          <NoteEditorSidebar />
         </div>
       </BaseWritingProvider>
-    </PostModelDataAtomProvider>
+    </NoteModelDataAtomProvider>
   )
 }
 
-const ActionButtonGroup = ({ initialData }: { initialData?: PostModel }) => {
+const ActionButtonGroup = ({ initialData }: { initialData?: NoteModel }) => {
   const t = useI18n()
-  const getData = usePostModelGetModelData()
-  const setData = usePostModelSetModelData()
-  const { mutateAsync: updatePost } = trpc.post.update.useMutation()
-  const { mutateAsync: createPost } = trpc.post.create.useMutation()
+  const getData = useNoteModelGetModelData()
+  const setData = useNoteModelSetModelData()
+  const { mutateAsync: updateNote } = trpc.note.update.useMutation()
+  const { mutateAsync: createNote } = trpc.note.create.useMutation()
 
   const trpcUtil = trpc.useContext()
 
@@ -163,10 +165,13 @@ const ActionButtonGroup = ({ initialData }: { initialData?: PostModel }) => {
             ...getData(),
           }
 
-          const payload: PostDto & {
+          const payload: NoteDto & {
             id: string
           } = {
             ...currentData,
+            publicAt: currentData.publicAt
+              ? new Date(currentData.publicAt)
+              : undefined,
           }
 
           if (
@@ -176,19 +181,19 @@ const ActionButtonGroup = ({ initialData }: { initialData?: PostModel }) => {
             payload.custom_created = new Date(currentData.created)
           }
 
-          Reflect.deleteProperty(currentData, 'category')
+          Reflect.deleteProperty(currentData, 'nid')
 
           const isCreate = !currentData.id
           const promise = isCreate
-            ? createPost(payload).then((res) => {
+            ? createNote(payload).then((res) => {
                 toast.success(t('common.create-success'))
                 router.navigate(
-                  routeBuilder(Routes.PostEditOrNew, {
+                  routeBuilder(Routes.NoteEditOrNew, {
                     id: res.id,
                   }),
                 )
               })
-            : updatePost(payload).then(() => {
+            : updateNote(payload).then(() => {
                 toast.success(t('common.save-success'))
               })
           promise
@@ -196,9 +201,8 @@ const ActionButtonGroup = ({ initialData }: { initialData?: PostModel }) => {
               toast.error(err.message)
             })
             .then(() => {
-              trpcUtil.post.id.invalidate({ id: currentData.id })
-              trpcUtil.post.paginate.invalidate()
-              trpcUtil.post.relatedList.invalidate()
+              trpcUtil.note.id.invalidate({ id: currentData.id })
+              trpcUtil.note.paginate.invalidate()
 
               // TODO back to list or dialog
             })

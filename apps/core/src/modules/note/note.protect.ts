@@ -8,7 +8,7 @@ export const NoteIncluded: Prisma.NoteInclude = {
 
 export const NoteSchemaProjection = createProjectionOmit(
   NoteSchema.shape,
-  [],
+  ['nid'],
   true,
 )
 export const NoteSchemaSerializeProjection = createProjectionOmit(

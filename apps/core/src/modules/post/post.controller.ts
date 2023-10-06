@@ -56,7 +56,7 @@ export class PostController {
   guardPostCanVisit(data?: Post | null) {
     if (!data) return data
     if (!data.isPublished) {
-      throw new BizException(ErrorCodeEnum.PostNotFound)
+      throw new BizException(ErrorCodeEnum.PostNotPublished)
     }
 
     return data

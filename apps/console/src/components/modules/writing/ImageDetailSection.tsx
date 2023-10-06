@@ -3,6 +3,7 @@ import {
   AccordionItem,
   Button,
   ButtonGroup,
+  Divider,
   Input,
   Popover,
   PopoverContent,
@@ -29,10 +30,12 @@ export interface ImageDetailSectionProps {
   onChange: (images: ArticleImagesDto) => void
   text: string
   extraImages?: string[]
+
+  withDivider?: 'top' | 'bottom' | 'both'
 }
 
 export const ImageDetailSection: FC<ImageDetailSectionProps> = (props) => {
-  const { images, text, onChange, extraImages } = props
+  const { images, text, onChange, extraImages, withDivider } = props
 
   const originImageMap = useMemo(() => {
     const map = new Map<string, ArticleImage>()
@@ -45,6 +48,9 @@ export const ImageDetailSection: FC<ImageDetailSectionProps> = (props) => {
   const fromText = useMemo(() => {
     return pickImagesFromMarkdown(text)
   }, [text])
+
+  const hasTopDivider = withDivider === 'top' || withDivider === 'both'
+  const hasBottomDivider = withDivider === 'bottom' || withDivider === 'both'
 
   const nextImages = useMemo<ArticleImage[]>(() => {
     const basedImages: ArticleImage[] = text
@@ -162,38 +168,44 @@ export const ImageDetailSection: FC<ImageDetailSectionProps> = (props) => {
     },
   )
 
-  return (
-    <div className="relative flex w-full flex-grow flex-col">
-      <div className="flex items-center justify-between space-x-2">
-        <div className="inline-block flex-shrink flex-grow">
-          {t('module.writing.image-adjust.title')}
-        </div>
-        <Button
-          isLoading={loading}
-          className="self-end"
-          size="sm"
-          onClick={handleCorrectImageDimensions}
-        >
-          {t('module.writing.image-adjust.button')}
-        </Button>
-      </div>
+  if (!nextImages.length) return null
 
-      <Accordion className="mt-4" isCompact>
-        {nextImages.map((image) => {
-          return (
-            <AccordionItem
-              classNames={{
-                title: 'text-xs font-normal',
-              }}
-              key={image.src}
-              title={<div className="break-all">{image.src}</div>}
-            >
-              <Item {...image} handleOnChange={handleOnChange} />
-            </AccordionItem>
-          )
-        })}
-      </Accordion>
-    </div>
+  return (
+    <>
+      {hasTopDivider && <Divider />}
+      <div className="relative flex w-full flex-col">
+        <div className="flex items-center justify-between space-x-2">
+          <div className="inline-block flex-shrink flex-grow">
+            {t('module.writing.image-adjust.title')}
+          </div>
+          <Button
+            isLoading={loading}
+            className="self-end"
+            size="sm"
+            onClick={handleCorrectImageDimensions}
+          >
+            {t('module.writing.image-adjust.button')}
+          </Button>
+        </div>
+
+        <Accordion className="mt-4" isCompact>
+          {nextImages.map((image) => {
+            return (
+              <AccordionItem
+                classNames={{
+                  title: 'text-xs font-normal',
+                }}
+                key={image.src}
+                title={<div className="break-all">{image.src}</div>}
+              >
+                <Item {...image} handleOnChange={handleOnChange} />
+              </AccordionItem>
+            )
+          })}
+        </Accordion>
+      </div>
+      {hasBottomDivider && <Divider />}
+    </>
   )
 }
 

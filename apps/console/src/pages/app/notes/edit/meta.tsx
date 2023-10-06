@@ -1,8 +1,7 @@
 import { defineRouteMeta } from '~/router/define'
 
 export default defineRouteMeta({
-  title: '博文',
-  icon: <i className="icon-[mingcute--code-line]" />,
-  redirect: '/posts/list',
+  title: '撰写',
+  icon: <i className="icon-[mingcute--pen-line]" />,
   priority: 2,
 })

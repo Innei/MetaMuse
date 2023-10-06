@@ -1,21 +1,32 @@
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { produce } from 'immer'
 import { atom, useAtomValue, useSetAtom, useStore } from 'jotai'
 import { useEventCallback } from 'usehooks-ts'
+import type { FC } from 'react'
 import type { MilkdownRef } from '../../ui/editor'
 
 import { jotaiStore } from '~/lib/store'
 
 import { MilkdownEditor } from '../../ui/editor'
-import { SlugInput } from './__internal/SlugInput'
 import { TitleInput } from './__internal/TitleInput'
 import { useBaseWritingContext } from './provider'
 
-export const Writing = () => {
+export const Writing: FC<{
+  middleSlot?: React.ReactNode | React.FunctionComponent<any>
+}> = ({ middleSlot }) => {
+  const middleSlotElement =
+    typeof middleSlot === 'function'
+      ? React.createElement(middleSlot)
+      : middleSlot
   return (
     <>
       <TitleInput />
-      <SlugInput />
+
+      {middleSlotElement && (
+        <div className="my-3 flex items-center pl-2 text-sm text-gray-500">
+          {middleSlotElement}
+        </div>
+      )}
 
       <Editor />
     </>

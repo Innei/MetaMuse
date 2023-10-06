@@ -6,33 +6,26 @@ import { FABPortable } from '~/components/ui/fab/FabContainer'
 import { ImageDetailSection } from '../../writing/ImageDetailSection'
 import { MetaKeyValueEditSection } from '../../writing/MetaKeyValueEditSection'
 import { SidebarWrapper } from '../../writing/SidebarBase'
-import { usePostModelSingleFieldAtom } from '../data-provider'
-import { CategorySelector } from './CategorySelector'
+import { useNoteModelSingleFieldAtom } from '../data-provider'
 import { CustomCreatedInput } from './CustomCreatedInput'
-import { PostCombinedSwitch } from './PostCombinedSwitch'
-import { RelatedPostSelector } from './RelatedPostSelector'
-import { SummaryInput } from './SummaryInput'
-import { TagsInput } from './TagsInput'
+import { NoteCombinedSwitch } from './NoteCombinedSwitch'
 
 const Sidebar = () => {
   return (
     <SidebarWrapper>
-      <CategorySelector />
-      <TagsInput />
-      <RelatedPostSelector />
-      <SummaryInput />
-      <PostCombinedSwitch />
+      <NoteCombinedSwitch />
       <CustomCreatedInput />
 
-      <PostImageSection />
-      <PostMetaSection />
+      <ImageSection />
+
+      <MetaSection />
     </SidebarWrapper>
   )
 }
 
-const PostImageSection = () => {
-  const [images, setImages] = usePostModelSingleFieldAtom('images')
-  const text = usePostModelSingleFieldAtom('text')[0]
+const ImageSection = () => {
+  const [images, setImages] = useNoteModelSingleFieldAtom('images')
+  const text = useNoteModelSingleFieldAtom('text')[0]
   return (
     <ImageDetailSection
       images={images}
@@ -43,14 +36,14 @@ const PostImageSection = () => {
   )
 }
 
-const PostMetaSection = () => {
-  const [meta, setMeta] = usePostModelSingleFieldAtom('meta')
+const MetaSection = () => {
+  const [meta, setMeta] = useNoteModelSingleFieldAtom('meta')
   return <MetaKeyValueEditSection keyValue={meta} onChange={setMeta} />
 }
 
-export const PostEditorSidebar = () => {
+export const NoteEditorSidebar = () => {
   return (
-    <div className="hidden flex-col lg:flex">
+    <div className="hidden flex-col lg:flex mt-6">
       <Sidebar />
 
       <Fab />

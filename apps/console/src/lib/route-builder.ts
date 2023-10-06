@@ -4,6 +4,9 @@ export const enum Routes {
 
   PostList = '/posts/list',
   PostEditOrNew = '/posts/edit',
+
+  NoteList = '/notes/list',
+  NoteEditOrNew = '/notes/edit',
 }
 
 type Noop = never
@@ -38,6 +41,7 @@ export function routeBuilder<T extends Routes>(
       href = '/'
       break
     }
+    case Routes.NoteEditOrNew:
     case Routes.PostEditOrNew: {
       const p = params as Partial<OnlyId>
 

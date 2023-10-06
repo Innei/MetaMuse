@@ -121,8 +121,6 @@ export class PostService {
       await this.togglePin(model.id, true)
     }
 
-    await this.notifyPostUpdate(BusinessEvents.POST_CREATE, model.id)
-
     this.imageService
       .saveImageDimensionsFromMarkdownText(
         model.text,
@@ -152,6 +150,7 @@ export class PostService {
       case BusinessEvents.POST_UPDATE: {
         const result = await this.getPostById(id).catch(() => null)
         if (!result) return
+        if (!result.isPublished) return
         await this.eventService.emit(type, result)
         break
       }

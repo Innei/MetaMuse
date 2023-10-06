@@ -4,7 +4,7 @@ import type { UrlDto } from '@core/modules/configs/configs.dto'
 
 import { trpc } from '~/lib/trpc'
 
-import { useBaseWritingAtom } from '../provider'
+import { useBaseWritingAtom } from '../../biz/writing/provider'
 
 export const SlugInput = () => {
   const { data: urlConfig } = trpc.aggregate.queryConfigByKey.useQuery<UrlDto>({
@@ -29,11 +29,11 @@ export const SlugInput = () => {
 
   const isLoading = !urlConfig || !category
   return (
-    <div className="my-3 flex items-center pl-2 text-sm text-gray-500">
+    <>
       {isLoading ? (
         <Skeleton className="h-2 w-[120px]" />
       ) : (
-        <label>{`${urlConfig?.webUrl}/${category?.slug}/`}</label>
+        <label>{`${urlConfig?.webUrl}/posts/${category?.slug}/`}</label>
       )}
 
       <div className="relative ml-1 inline-flex min-w-[2rem] items-center [&_*]:leading-4">
@@ -54,6 +54,6 @@ export const SlugInput = () => {
           {slug}&nbsp;&nbsp;&nbsp;
         </span>
       </div>
-    </div>
+    </>
   )
 }

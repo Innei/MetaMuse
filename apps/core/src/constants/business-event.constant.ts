@@ -10,6 +10,11 @@ export const enum BusinessEvents {
   POST_CREATE = 'POST_CREATE',
   POST_UPDATE = 'POST_UPDATE',
   POST_DELETE = 'POST_DELETE',
+
+  /// NOTE
+  NOTE_CREATE = 'NOTE_CREATE',
+  NOTE_UPDATE = 'NOTE_UPDATE',
+  NOTE_DELETE = 'NOTE_DELETE',
 }
 
 /// ============= types =========

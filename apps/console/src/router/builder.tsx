@@ -5,9 +5,9 @@ import React, {
   useLayoutEffect,
 } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { Outlet, RouteObject, useLocation, useNavigate } from 'react-router-dom'
-
-import { RouteExtendObject, RouteMeta } from './interface'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import type { RouteObject } from 'react-router-dom'
+import type { RouteExtendObject, RouteMeta } from './interface'
 
 const appPages = import.meta.glob('../pages/app/**/*.tsx') as any as Record<
   string,
@@ -167,7 +167,7 @@ async function builder() {
 
       // NOTE 只做一级路由的重定向
 
-      route.Component = () => {
+      route.Component = function Component() {
         const navigate = useNavigate()
 
         const location = useLocation()
@@ -193,6 +193,10 @@ async function builder() {
       })
     }
   }
+
+  appRoutes.sort((bRouter, aRoute) => {
+    return (bRouter.meta?.priority || 0) - (aRoute.meta?.priority || 0)
+  })
 
   return {
     appRoutes,

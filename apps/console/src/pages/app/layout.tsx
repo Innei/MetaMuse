@@ -1,3 +1,4 @@
+import { ErrorBoundary } from 'react-error-boundary'
 import { Outlet } from 'react-router-dom'
 
 import { SeoObserver } from '~/components/common/SeoObserver'
@@ -16,7 +17,9 @@ export default function Layout() {
     <>
       <LayoutHeader />
       <main className="mt-28 flex min-h-0 flex-grow flex-col p-4">
-        <Outlet />
+        <ErrorBoundary fallback={null}>
+          <Outlet />
+        </ErrorBoundary>
       </main>
 
       <ModalStackProvider />
