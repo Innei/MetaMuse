@@ -2,6 +2,7 @@ import { Avatar } from '@nextui-org/react'
 import { useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
+import { motion } from 'framer-motion'
 import type { SeoDto } from '@core/modules/configs/configs.dto'
 import type { RouteExtendObject } from '~/router/interface'
 import type { MouseEventHandler, ReactNode } from 'react'
@@ -95,10 +96,15 @@ const HeaderMenu = () => {
               to={`/${menu.path}`}
               onClick={handleNav}
               className={clsx(
-                'flex items-center space-x-1 rounded-xl p-2 duration-200 hover:bg-slate-100 hover:dark:bg-neutral-700',
-                isActive ? 'bg-slate-200 dark:bg-zinc-800' : '',
+                'flex items-center relative space-x-1 rounded-xl p-2 duration-200 hover:bg-default-200',
               )}
             >
+              {isActive && (
+                <motion.span
+                  layoutId="header"
+                  className="absolute z-[-1] inset-0 bg-default/40 rounded-xl"
+                />
+              )}
               {menu.icon}
               <span>{menu.title}</span>
             </Link>
@@ -140,11 +146,15 @@ const SecondaryLevelMenu = () => {
             <Link
               to={`/${fullPath}`}
               className={clsx(
-                'flex items-center space-x-1 rounded-lg px-2 py-1 duration-200 hover:bg-slate-100 hover:dark:bg-neutral-700',
-
-                isActive ? 'bg-slate-200 dark:bg-zinc-800' : '',
+                'flex items-center relative space-x-1 rounded-lg px-2 py-1 duration-200 hover:bg-default-200',
               )}
             >
+              {isActive && (
+                <motion.span
+                  layoutId="sub"
+                  className="absolute z-[-1] inset-0 bg-default/40 rounded-xl"
+                />
+              )}
               {route.meta?.icon}
               <span>{route.meta?.title}</span>
             </Link>

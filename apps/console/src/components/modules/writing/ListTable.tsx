@@ -15,10 +15,17 @@ import {
   TableHeader,
   TableRow,
 } from '@nextui-org/react'
-import { createContext, useContext, useMemo } from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react'
 import { motion } from 'framer-motion'
 import { atom, useAtom, useAtomValue, useStore } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
+import { get } from 'lodash-es'
 import { useEventCallback } from 'usehooks-ts'
 import type { TableColumnProps } from '@nextui-org/react'
 import type { PaginationResult } from '~/models/paginator'
@@ -26,6 +33,7 @@ import type { FC, PropsWithChildren, ReactNode } from 'react'
 
 import { useIsMobile } from '~/atoms'
 import { AddCircleLine } from '~/components/icons'
+import { RelativeTime } from '~/components/ui/date-time'
 import { MotionDivToBottom } from '~/components/ui/motion'
 import { useQueryPager } from '~/hooks/biz/use-query-pager'
 import { useI18n } from '~/i18n/hooks'
@@ -125,7 +133,7 @@ const Header: FC<HeaderProps> = ({ onNewClick, onBatchDeleteClick }) => {
 
         <Button
           onClick={actionButtonClick}
-          variant="flat"
+          variant="shadow"
           color={hasSelection ? 'danger' : 'primary'}
         >
           {hasSelection ? (
@@ -147,14 +155,13 @@ type DataBaseType = {
 }
 
 type ListTableWrapperProps<
-  T extends PaginationResult<Data>,
   Data extends DataBaseType,
   Col extends ListColumn<Data> = ListColumn<Data>,
   Cols extends Col[] = Col[],
 > = PropsWithChildren<{
-  data?: T | null
+  data?: PaginationResult<Data> | null
   isLoading?: boolean
-  renderTableRowKeyValue: (
+  renderTableRowKeyValue?: (
     data: Data,
     key: Cols[number]['key'],
   ) => React.ReactNode
@@ -163,11 +170,7 @@ type ListTableWrapperProps<
   Pick<CardsRenderProps<Data>, 'renderCardBody' | 'renderCardFooter'> &
   HeaderProps
 
-export const ListTable = <
-  Data extends DataBaseType,
-  T extends PaginationResult<Data>,
->({
-  children,
+export const ListTable = <Data extends DataBaseType>({
   onNewClick,
   onBatchDeleteClick,
   data,
@@ -176,7 +179,7 @@ export const ListTable = <
   columns,
   renderCardBody,
   renderCardFooter,
-}: ListTableWrapperProps<T, Data>) => {
+}: ListTableWrapperProps<Data>) => {
   const ctxValue = useMemo(createDefaultCtxValue, [])
   const [page, , setPage] = useQueryPager()
   const isMobile = useIsMobile()
@@ -191,8 +194,6 @@ export const ListTable = <
   return (
     <ListTableContext.Provider value={ctxValue}>
       <Header onNewClick={onNewClick} onBatchDeleteClick={onBatchDeleteClick} />
-
-      {children}
 
       {viewStyle == ViewStyle.Table && !isMobile ? (
         <TableRender
@@ -233,6 +234,9 @@ export type ListColumn<T, Key extends string = string> = Omit<
 > & {
   label: ReactNode
   key: Key
+  render?: (data: T) => ReactNode
+
+  type?: 'text' | 'datetime'
 }
 
 interface TableRenderProps<
@@ -242,7 +246,7 @@ interface TableRenderProps<
 > {
   isLoading?: boolean
   columns: Cols
-  renderPostKeyValue: (data: T, key: Cols[number]['key']) => React.ReactNode
+  renderPostKeyValue?: (data: T, key: Cols[number]['key']) => React.ReactNode
   data?: T[]
 }
 
@@ -254,6 +258,38 @@ const TableRender = <T extends DataBaseType>({
 }: TableRenderProps<T>) => {
   const { selectionAtom } = useContext(ListTableContext)
   const [selection, setSelection] = useAtom(selectionAtom)
+
+  const [memoColumns] = useState(columns)
+  const colKeyMap = useMemo(() => {
+    return memoColumns.reduce(
+      (prev, curr) => {
+        prev[curr.key] = curr
+        return prev
+      },
+      {} as Record<string, ListColumn<T>>,
+    )
+  }, [memoColumns])
+
+  const renderValue = useCallback(
+    (payload: {
+      item: T
+      key: string
+      col: ListColumn<T>
+      type?: 'text' | 'datetime'
+    }) => {
+      const { item, key } = payload
+      switch (payload.type) {
+        case 'datetime': {
+          if (!item[key]) return '-'
+          return <RelativeTime time={item[key]} />
+        }
+        case 'text':
+        default:
+          return get(item, key) ?? '-'
+      }
+    },
+    [],
+  )
   return (
     <Table
       className="min-h-[32.8rem] overflow-auto bg-transparent [&_table]:min-w-[1000px]"
@@ -265,7 +301,7 @@ const TableRender = <T extends DataBaseType>({
       selectedKeys={selection}
     >
       <TableHeader>
-        {columns.map((column) => (
+        {memoColumns.map((column) => (
           // @ts-expect-error
           <TableColumn key={column.key} {...column}>
             {column.label}
@@ -281,7 +317,14 @@ const TableRender = <T extends DataBaseType>({
           <TableRow key={item!.id}>
             {(columnKey) => (
               <TableCell>
-                {renderPostKeyValue(item! as any, columnKey as any)}
+                {colKeyMap[columnKey as string].render?.(item) ??
+                  renderPostKeyValue?.(item! as any, columnKey as any) ??
+                  renderValue({
+                    item,
+                    key: columnKey as any,
+                    col: colKeyMap[columnKey as string],
+                    type: colKeyMap[columnKey as string].type,
+                  })}
               </TableCell>
             )}
           </TableRow>
@@ -336,26 +379,6 @@ const CardsRender = <T extends DataBaseType>({
             </CardHeader>
             <Divider />
             <CardBody className="text-small flex flex-col gap-2">
-              {/* <p>
-                <span>
-                  位于分类：
-                  {item.category.name}
-                </span>
-              </p>
-              <p>
-                <span>标签：</span>
-                {item.tags.map((tag) => tag.name).join(',')}
-              </p>
-              <p className="flex items-center text-foreground/80">
-                <i className="icon-[mingcute--book-6-line]" />
-                <span className="ml-1">{item.count.read}</span>
-                <span className="w-5" />
-                <i className="icon-[mingcute--heart-line] ml-2" />
-                <span className="ml-1">{item.count.like}</span>
-              </p>
-              <p className="text-foreground/60">
-                <RelativeTime time={item.created} />
-              </p> */}
               {renderCardBody(item)}
             </CardBody>
             <CardFooter className="flex justify-end">

@@ -1,5 +1,6 @@
 import {
   Button,
+  Chip,
   getKeyValue,
   Popover,
   PopoverContent,
@@ -10,7 +11,6 @@ import { useNavigate } from 'react-router-dom'
 import { atom, useAtomValue } from 'jotai'
 import { toast } from 'sonner'
 import { useEventCallback } from 'usehooks-ts'
-import type { ListColumn } from '~/components/modules/writing/ListTable'
 import type { PaginationResult } from '~/models/paginator'
 import type { FC } from 'react'
 
@@ -68,44 +68,63 @@ export default withQueryPager(function Page() {
             toast.success(t('common.delete-success'))
           })
         })}
-        columns={useMemo<ListColumn<any>[]>(
-          () => [
-            {
-              key: 'title',
-              label: '标题',
+        columns={[
+          {
+            key: 'title',
+            label: '标题',
+          },
+          {
+            key: 'category',
+            label: '分类',
+            render(data) {
+              return data.category?.name
             },
-            {
-              key: 'category',
-              label: '分类',
+          },
+          {
+            key: 'tags',
+            label: '标签',
+            render(data) {
+              return data.tags.map((tag) => (
+                <Chip
+                  className="mr-1 text-xs"
+                  size="sm"
+                  color="primary"
+                  variant="flat"
+                  key={tag.id}
+                >
+                  {tag.name}
+                </Chip>
+              ))
             },
-            {
-              key: 'tags',
-              label: '标签',
+          },
+
+          {
+            key: 'count.read',
+            label: <i className="icon-[mingcute--book-6-line]" />,
+          },
+          {
+            key: 'count.like',
+            label: <i className="icon-[mingcute--heart-line]" />,
+          },
+          {
+            key: 'created',
+            label: '创建时间',
+            type: 'datetime',
+          },
+          {
+            key: 'modified',
+            label: '修改时间',
+            type: 'datetime',
+          },
+          {
+            key: 'action',
+            label: '操作',
+            className: 'w-1 text-center',
+            render(data) {
+              return <Actions data={data} />
             },
-            {
-              key: 'count.read',
-              label: <i className="icon-[mingcute--book-6-line]" />,
-            },
-            {
-              key: 'count.like',
-              label: <i className="icon-[mingcute--heart-line]" />,
-            },
-            {
-              key: 'created',
-              label: '创建时间',
-            },
-            {
-              key: 'modified',
-              label: '修改时间',
-            },
-            {
-              key: 'action',
-              label: '操作',
-              className: 'w-1 text-center',
-            },
-          ],
-          [],
-        )}
+          },
+        ]}
         onNewClick={useEventCallback(() => {
           nav(routeBuilder(Routes.PostEditOrNew, {}))
         })}
@@ -136,7 +155,6 @@ export default withQueryPager(function Page() {
         renderCardFooter={useEventCallback((item) => (
           <Actions data={item as any} />
         ))}
-        renderTableRowKeyValue={renderPostKeyValue}
         data={
           data as PaginationResult<StringifyNestedDates<NormalizedPostModel>>
         }
@@ -191,7 +209,7 @@ const Actions: FC<{ data: StringifyNestedDates<NormalizedPostModel> }> = ({
             }),
           )
         }}
-        color="secondary"
+        color="primary"
         size="sm"
         variant="light"
       >
