@@ -1,7 +1,6 @@
 import {
   Button,
   Chip,
-  getKeyValue,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -16,7 +15,6 @@ import type { FC } from 'react'
 
 import { ListSortAndFilterProvider } from '~/components/modules/writing/ListSortAndFilter'
 import { ListTable } from '~/components/modules/writing/ListTable'
-import { TitleExtra } from '~/components/modules/writing/TitleExtra'
 import { useQueryPager, withQueryPager } from '~/hooks/biz/use-query-pager'
 import { useI18n } from '~/i18n/hooks'
 import { routeBuilder, Routes } from '~/lib/route-builder'
@@ -163,35 +161,6 @@ export default withQueryPager(function Page() {
     </ListSortAndFilterProvider>
   )
 })
-
-function renderPostKeyValue(
-  data: StringifyNestedDates<NormalizedPostModel>,
-  key: any,
-) {
-  switch (key) {
-    case 'category':
-      return data.category?.name
-    case 'count.read':
-      return data.count?.read
-    case 'count.like':
-      return data.count?.like
-    case 'tags':
-      return data.tags.map((tag) => tag.name).join(',')
-
-    case 'created':
-    case 'modified':
-      if (!data[key]) return '-'
-      return <RelativeTime time={data[key]} />
-
-    case 'action': {
-      return <Actions data={data} />
-    }
-
-    case 'title':
-      return <TitleExtra data={data} />
-  }
-  return getKeyValue(data, key)
-}
 
 const Actions: FC<{ data: StringifyNestedDates<NormalizedPostModel> }> = ({
   data,

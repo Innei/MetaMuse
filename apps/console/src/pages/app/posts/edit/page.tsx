@@ -25,7 +25,9 @@ import {
 } from '~/components/modules/post-editing/data-provider'
 import { PostEditorSidebar } from '~/components/modules/post-editing/sidebar'
 import { useI18n } from '~/i18n/hooks'
+import { routeBuilder, Routes } from '~/lib/route-builder'
 import { trpc } from '~/lib/trpc'
+import { router } from '~/router'
 
 const createInitialEditingData = (): PostModel => {
   return {
@@ -177,8 +179,13 @@ const ActionButtonGroup = ({ initialData }: { initialData?: PostModel }) => {
 
           const isCreate = !currentData.id
           const promise = isCreate
-            ? createPost(payload).then(() => {
+            ? createPost(payload).then((res) => {
                 toast.success(t('common.create-success'))
+                router.navigate(
+                  routeBuilder(Routes.PostEditOrNew, {
+                    id: res.id,
+                  }),
+                )
               })
             : updatePost(payload).then(() => {
                 toast.success(t('common.save-success'))
@@ -196,7 +203,7 @@ const ActionButtonGroup = ({ initialData }: { initialData?: PostModel }) => {
             })
         }}
       >
-        {t('common.submit')}
+        {initialData ? t('common.save') : t('common.submit')}
       </Button>
     </div>
   )
