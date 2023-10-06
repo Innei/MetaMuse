@@ -50,7 +50,7 @@ export const EllipsisTextWithTooltip = (props: EllipsisProps) => {
       isDisabled={!isOverflowed || disabled}
       content={
         <span
-          className="tippy-block max-w-[30vw] hover:!bg-transparent"
+          className="tippy-block max-w-[30vw] hover:!bg-transparent break-all"
           onClick={(e) => e.stopPropagation()}
         >
           {children}
