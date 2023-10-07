@@ -38,6 +38,7 @@ const createInitialEditingData = (): NoteModel => {
     title: '',
     allowComment: true,
     location: null,
+    hasMemory: false,
 
     id: '',
     images: [],

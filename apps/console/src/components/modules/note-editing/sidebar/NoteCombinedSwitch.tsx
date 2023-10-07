@@ -11,6 +11,8 @@ export const NoteCombinedSwitch = () => {
   const [allowComment, setAllowComment] =
     useNoteModelSingleFieldAtom('allowComment')
 
+  const [hasMemory, setHasMemory] = useNoteModelSingleFieldAtom('hasMemory')
+
   const t = useI18n()
   return (
     <>
@@ -31,6 +33,16 @@ export const NoteCombinedSwitch = () => {
           size="sm"
           isSelected={allowComment}
           onValueChange={setAllowComment}
+        />
+      </div>
+
+      <div className="flex items-center justify-between">
+        <span>{t('module.notes.mark_as_memory')}</span>
+        <Switch
+          className="flex-shrink-0"
+          size="sm"
+          isSelected={hasMemory}
+          onValueChange={setHasMemory}
         />
       </div>
     </>

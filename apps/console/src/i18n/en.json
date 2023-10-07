@@ -38,7 +38,8 @@
     "width": "Width",
     "type": "Type",
     "action": "Action",
-    "invalidJSON": "Invalid JSON"
+    "invalidJSON": "Invalid JSON",
+    "password": "Password"
   },
   "module": {
     "writing": {
@@ -50,6 +51,9 @@
     "posts": {
       "related_posts": "Related posts",
       "select_posts": "Select posts for related"
+    },
+    "notes": {
+      "mark_as_memory": "Mark as memory"
     },
     "summary": {
       "title": "Summary",

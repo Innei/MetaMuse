@@ -5,11 +5,13 @@ import { SidebarWrapper } from '../../writing/SidebarBase'
 import { useNoteModelSingleFieldAtom } from '../data-provider'
 import { CustomCreatedInput } from './CustomCreatedInput'
 import { NoteCombinedSwitch } from './NoteCombinedSwitch'
+import { PasswordInput } from './PasswordInput'
 
 const Sidebar = () => {
   return (
     <SidebarWrapper>
       <NoteCombinedSwitch />
+      <PasswordInput />
       <CustomCreatedInput />
 
       <ImageSection />

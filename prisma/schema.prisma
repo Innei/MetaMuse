@@ -166,6 +166,7 @@ model Note {
   coordinates Json?
   location    String?
   topic       NoteTopic? @relation(fields: [topicId], references: [name])
+  hasMemory   Boolean    @default(false) @map("has_memory")
 
   /// [ArticleCount]
   count  Json  @default("{\"read\": 0, \"like\": 0}") /// @zod.custom.omit(["model", "input"])

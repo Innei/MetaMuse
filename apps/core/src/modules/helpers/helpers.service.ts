@@ -40,6 +40,7 @@ export class HelpersService {
     ] as const
 
     for (const dbModel of models) {
+      // @ts-expect-error
       const has = await dbModel.model.count({ where: { id } })
       if (has === 1) {
         return populateQuery(dbModel)
