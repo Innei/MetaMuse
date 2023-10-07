@@ -142,7 +142,7 @@ const ActionButtonGroup = ({ initialData }: { initialData?: PostModel }) => {
     },
   )
   return (
-    <div className="space-x-2 lg:space-x-4">
+    <>
       <ButtonGroup variant="ghost">
         <PreviewButton getData={getData} />
         <ImportMarkdownButton onParsedValue={handleParsed} />
@@ -198,6 +198,6 @@ const ActionButtonGroup = ({ initialData }: { initialData?: PostModel }) => {
       >
         {initialData ? t('common.save') : t('common.submit')}
       </Button>
-    </div>
+    </>
   )
 }

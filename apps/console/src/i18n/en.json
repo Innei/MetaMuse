@@ -39,7 +39,10 @@
     "type": "Type",
     "action": "Action",
     "invalidJSON": "Invalid JSON",
-    "password": "Password"
+    "password": "Password",
+    "custom": "Custom",
+    "timeout": "Timeout",
+    "clear": "Clear"
   },
   "module": {
     "writing": {
@@ -53,7 +56,15 @@
       "select_posts": "Select posts for related"
     },
     "notes": {
-      "mark_as_memory": "Mark as memory"
+      "mark_as_memory": "Mark as memory",
+      "mood": "Mood",
+      "weather": "Weather",
+      "get_current_location": "Get current location",
+      "location": "Location",
+      "not_support_location": "The browser does not support location",
+      "location_permission_denied": "Location permission denied",
+      "search_location": "Search location",
+      "search_by_keyword": "Search by keyword"
     },
     "summary": {
       "title": "Summary",

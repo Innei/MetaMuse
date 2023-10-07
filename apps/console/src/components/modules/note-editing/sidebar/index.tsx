@@ -4,14 +4,18 @@ import { PresentComponentFab } from '../../writing/PresentComponentFab'
 import { SidebarWrapper } from '../../writing/SidebarBase'
 import { useNoteModelSingleFieldAtom } from '../data-provider'
 import { CustomCreatedInput } from './CustomCreatedInput'
+import { GetLocation } from './GetLocation'
 import { NoteCombinedSwitch } from './NoteCombinedSwitch'
+import { NoteWeatherAndMood } from './NoteWeatherAndMood'
 import { PasswordInput } from './PasswordInput'
 
 const Sidebar = () => {
   return (
     <SidebarWrapper>
+      <NoteWeatherAndMood />
       <NoteCombinedSwitch />
       <PasswordInput />
+      <GetLocation />
       <CustomCreatedInput />
 
       <ImageSection />
@@ -41,7 +45,7 @@ const MetaSection = () => {
 
 export const NoteEditorSidebar = () => {
   return (
-    <div className="hidden flex-col lg:flex mt-6">
+    <div className="hidden flex-col lg:flex">
       <Sidebar />
 
       <PresentComponentFab Component={Sidebar} />

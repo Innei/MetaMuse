@@ -38,6 +38,7 @@ export class PostPagerDto extends createZodDto(
   basePagerSchema.extend({
     sortBy: z.enum(['created', 'modified']).optional(),
     select: z.array(PostSchema.keyof().or(z.enum(['category']))).optional(),
+    exclude: z.array(PostSchema.keyof()).optional(),
   }),
 ) {}
 

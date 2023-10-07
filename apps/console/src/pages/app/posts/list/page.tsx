@@ -103,9 +103,11 @@ export default withQueryPager(function Page() {
           {
             key: 'count.read',
             label: <i className="icon-[mingcute--book-6-line]" />,
+            type: 'number',
           },
           {
             key: 'count.like',
+            type: 'number',
             label: <i className="icon-[mingcute--heart-line]" />,
           },
           {
@@ -138,10 +140,12 @@ export default withQueryPager(function Page() {
                 {item.category.name}
               </span>
             </p>
-            <p>
-              <span>标签：</span>
-              {item.tags.map((tag) => tag.name).join(',')}
-            </p>
+            {item.tags.length ? (
+              <p>
+                <span>标签：</span>
+                {item.tags.map((tag) => tag.name).join(',')}
+              </p>
+            ) : null}
             <p className="flex items-center text-foreground/80">
               <i className="icon-[mingcute--book-6-line]" />
               <span className="ml-1">{item.count.read}</span>

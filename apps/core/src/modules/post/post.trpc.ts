@@ -80,11 +80,13 @@ export class PostTrpcRouter implements OnModuleInit {
           }
         }),
 
-      paginate: procedureAuth
-        .input(PostPagerDto.schema)
-        .query(
-          async ({ input: query }) => await this.service.paginatePosts(query),
-        ),
+      paginate: procedureAuth.input(PostPagerDto.schema).query(
+        async ({ input: query }) =>
+          await this.service.paginatePosts({
+            ...query,
+            exclude: ['text', ...(query.exclude ?? [])],
+          }),
+      ),
 
       createTag: procedureAuth
         .input(

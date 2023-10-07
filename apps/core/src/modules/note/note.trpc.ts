@@ -32,11 +32,13 @@ export class NoteTrpcRouter implements OnModuleInit {
     const procedureAuth = this.trpcService.procedureAuth
 
     return defineTrpcRouter('note', {
-      paginate: procedureAuth
-        .input(NotePagerDto.schema)
-        .query(
-          async ({ input: query }) => await this.service.paginateNotes(query),
-        ),
+      paginate: procedureAuth.input(NotePagerDto.schema).query(
+        async ({ input: query }) =>
+          await this.service.paginateNotes({
+            ...query,
+            exclude: ['text', ...(query.exclude ?? [])],
+          }),
+      ),
 
       getLatestId: procedureAuth.query(async () => {
         return this.service.getLatestNoteId()

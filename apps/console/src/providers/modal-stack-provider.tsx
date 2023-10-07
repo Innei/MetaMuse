@@ -1,8 +1,10 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import {
+  createContext,
   createElement,
   memo,
   useCallback,
+  useContext,
   useEffect,
   useId,
   useMemo,
@@ -28,6 +30,14 @@ import { clsxm } from '~/lib/helper'
 import { jotaiStore } from '~/lib/store'
 
 const modalIdToPropsMap = {} as Record<string, ModalProps>
+
+const CurrentModalContext = createContext<ModalContentPropsInternal>(
+  null as any,
+)
+
+export const useCurrentModal = () => {
+  return useContext(CurrentModalContext)
+}
 
 export type ModalContentComponent<T> = FC<ModalContentPropsInternal & T>
 type ModalContentPropsInternal = {
@@ -203,7 +213,9 @@ const Modal: Component<{
             >
               <div className="contents" onClick={stopPropagation}>
                 <CustomModalComponent>
-                  {createElement(content, ModalProps)}
+                  <CurrentModalContext.Provider value={ModalProps}>
+                    {createElement(content, ModalProps)}
+                  </CurrentModalContext.Provider>
                 </CustomModalComponent>
               </div>
             </div>
@@ -246,7 +258,9 @@ const Modal: Component<{
               <Divider className="my-2 flex-shrink-0 border-slate-200 opacity-80 dark:border-neutral-800" />
 
               <div className="min-h-0 flex-shrink flex-grow overflow-auto px-4 py-2">
-                {createElement(content, ModalProps)}
+                <CurrentModalContext.Provider value={ModalProps}>
+                  {createElement(content, ModalProps)}
+                </CurrentModalContext.Provider>
               </div>
 
               <Dialog.DialogClose

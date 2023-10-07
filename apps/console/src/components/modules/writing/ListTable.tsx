@@ -38,6 +38,7 @@ import { MotionDivToBottom } from '~/components/ui/motion'
 import { useQueryPager } from '~/hooks/biz/use-query-pager'
 import { useI18n } from '~/i18n/hooks'
 import { buildNSKey } from '~/lib/key'
+import { formatNumber } from '~/lib/transformer'
 import { useModalStack } from '~/providers/modal-stack-provider'
 
 import { SortAndFilterButton } from './ListSortAndFilter'
@@ -227,7 +228,7 @@ export const ListTable = <Data extends DataBaseType>({
     </ListTableContext.Provider>
   )
 }
-
+type ColDataType = 'text' | 'datetime' | 'number'
 export type ListColumn<T, Key extends string = string> = Omit<
   TableColumnProps<T>,
   'key' | 'children'
@@ -236,7 +237,7 @@ export type ListColumn<T, Key extends string = string> = Omit<
   key: Key
   render?: (data: T) => ReactNode
 
-  type?: 'text' | 'datetime'
+  type?: ColDataType
 }
 
 interface TableRenderProps<
@@ -275,7 +276,7 @@ const TableRender = <T extends DataBaseType>({
       item: T
       key: string
       col: ListColumn<T>
-      type?: 'text' | 'datetime'
+      type?: ColDataType
     }) => {
       const { item, key } = payload
       switch (payload.type) {
@@ -283,9 +284,11 @@ const TableRender = <T extends DataBaseType>({
           if (!item[key]) return '-'
           return <RelativeTime time={item[key]} />
         }
+        case 'number':
+          return formatNumber(+get(item, key) ?? 0)
         case 'text':
         default:
-          return get(item, key) ?? '-'
+          return get(item, key) ?? ''
       }
     },
     [],

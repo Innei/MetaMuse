@@ -7,12 +7,14 @@ export const EditorLayer: FC<{
   const [TitleEl, HeaderEl, ContentEl, FooterEl] = children
   return (
     <>
-      <div className="flex justify-between">
+      <div className="flex justify-between flex-wrap items-center mb-2">
         <div className="mb-3 flex items-center justify-between">
           <p className="flex items-center text-lg font-medium">{TitleEl}</p>
         </div>
 
-        {HeaderEl}
+        <div className="space-x-2 flex-shrink-0 lg:space-x-4 flex-grow text-right">
+          {HeaderEl}
+        </div>
       </div>
 
       <div className="flex flex-grow lg:grid lg:grid-cols-[auto_400px] lg:gap-4">

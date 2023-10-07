@@ -32,6 +32,7 @@ export class NotePagerDto extends createZodDto(
   basePagerSchema.extend({
     sortBy: z.enum(['created', 'modified']).optional(),
     select: z.array(NoteSchema.keyof()).optional(),
+    exclude: z.array(NoteSchema.keyof()).optional(),
   }),
 ) {}
 

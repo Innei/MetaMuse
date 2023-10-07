@@ -14,7 +14,7 @@ declare global {
       type: string
     }
 
-    type NoteCoordinate = {
+    type NoteCoordinates = {
       latitude: number
       longitude: number
     }

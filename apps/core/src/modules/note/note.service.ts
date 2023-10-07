@@ -6,6 +6,7 @@ import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { EventManagerService } from '@core/processors/helper/helper.event.service'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
+import { reorganizeData } from '@core/utils/data.util'
 import { Prisma } from '@meta-muse/prisma'
 import { Inject, Injectable } from '@nestjs/common'
 
@@ -26,6 +27,7 @@ export class NoteService {
   ) {
     const {
       select,
+      exclude,
       size = 10,
       page = 1,
       sortBy = 'created',
@@ -53,20 +55,7 @@ export class NoteService {
       },
     )
 
-    if (select?.length) {
-      const nextData = [] as typeof data.data
-      for (const item of data.data) {
-        if (!item) continue
-        const currentItem = {} as any
-        for (const key of select) {
-          currentItem[key] = item[key]
-        }
-        nextData.push(currentItem)
-      }
-
-      data.data = nextData
-    }
-
+    data.data = reorganizeData(data.data, select, exclude)
     return data
   }
 

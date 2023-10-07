@@ -15,6 +15,8 @@ import type { FC } from 'react'
 import { ListSortAndFilterProvider } from '~/components/modules/writing/ListSortAndFilter'
 import { ListTable } from '~/components/modules/writing/ListTable'
 import { TitleExtra } from '~/components/modules/writing/TitleExtra'
+import { FloatPopover } from '~/components/ui/float-popover'
+import { EllipsisHorizontalTextWithTooltip } from '~/components/ui/typography'
 import { useQueryPager, withQueryPager } from '~/hooks/biz/use-query-pager'
 import { useI18n } from '~/i18n/hooks'
 import { routeBuilder, Routes } from '~/lib/route-builder'
@@ -74,14 +76,52 @@ export default withQueryPager(function Page() {
               return <TitleExtra data={data} />
             },
           },
+          {
+            key: 'mood',
+            label: '心情',
+            width: 100,
+          },
+          {
+            key: 'weather',
+            label: '天气',
+            width: 100,
+          },
 
+          {
+            key: 'location',
+            width: 200,
+            label: '地点',
+            render(data) {
+              const { coordinates, location } = data
+              if (!location) return null
+
+              return (
+                <FloatPopover
+                  TriggerComponent={() => {
+                    return (
+                      <EllipsisHorizontalTextWithTooltip className="max-w-[200px]">
+                        {location}
+                      </EllipsisHorizontalTextWithTooltip>
+                    )
+                  }}
+                >
+                  <p>{location}</p>
+                  <p>
+                    {coordinates?.longitude}, {coordinates?.latitude}
+                  </p>
+                </FloatPopover>
+              )
+            },
+          },
           {
             key: 'count.read',
             label: <i className="icon-[mingcute--book-6-line]" />,
+            type: 'number',
           },
           {
             key: 'count.like',
             label: <i className="icon-[mingcute--heart-line]" />,
+            type: 'number',
           },
           {
             key: 'created',

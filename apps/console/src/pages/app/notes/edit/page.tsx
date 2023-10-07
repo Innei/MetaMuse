@@ -138,6 +138,9 @@ const ActionButtonGroup = ({ initialData }: { initialData?: NoteModel }) => {
               draft.created = parsedCreated.toISOString()
             }
 
+            if (meta.mood) draft.mood = meta.mood
+            if (meta.weather) draft.weather = meta.weather
+
             draft.meta = meta
           }
         })
@@ -145,7 +148,7 @@ const ActionButtonGroup = ({ initialData }: { initialData?: NoteModel }) => {
     },
   )
   return (
-    <div className="space-x-2 lg:space-x-4">
+    <>
       <ButtonGroup variant="ghost">
         <PreviewButton getData={getData} />
         <ImportMarkdownButton onParsedValue={handleParsed} />
@@ -203,6 +206,6 @@ const ActionButtonGroup = ({ initialData }: { initialData?: NoteModel }) => {
       >
         {initialData ? t('common.save') : t('common.submit')}
       </Button>
-    </div>
+    </>
   )
 }

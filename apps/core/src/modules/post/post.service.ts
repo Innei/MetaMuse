@@ -8,6 +8,7 @@ import { EventManagerService } from '@core/processors/helper/helper.event.servic
 import { ImageService } from '@core/processors/helper/helper.image.service'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import { isDefined } from '@core/shared/utils/validator.util'
+import { reorganizeData } from '@core/utils/data.util'
 import { deepEqual } from '@core/utils/tool.util'
 import { Prisma } from '@meta-muse/prisma'
 import { Injectable, Logger } from '@nestjs/common'
@@ -241,6 +242,7 @@ export class PostService {
   ) {
     const {
       select,
+      exclude,
       size = 10,
       page = 1,
       sortBy = 'created',
@@ -271,19 +273,7 @@ export class PostService {
       },
     )
 
-    if (select?.length) {
-      const nextData = [] as typeof data.data
-      for (const item of data.data) {
-        if (!item) continue
-        const currentItem = {} as any
-        for (const key of select) {
-          currentItem[key] = item[key]
-        }
-        nextData.push(currentItem)
-      }
-
-      data.data = nextData
-    }
+    data.data = reorganizeData(data.data, select, exclude)
 
     return data
   }
