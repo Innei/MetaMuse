@@ -43,4 +43,7 @@ export type BizEventDataMap = {
   [BusinessEvents.POST_CREATE]: NormalizedPostModel
   [BusinessEvents.POST_UPDATE]: NormalizedPostModel
   [BusinessEvents.POST_DELETE]: WithId
+  [BusinessEvents.NOTE_CREATE]: NormalizedNoteModel
+  [BusinessEvents.NOTE_UPDATE]: NormalizedNoteModel
+  [BusinessEvents.NOTE_DELETE]: WithId
 }
