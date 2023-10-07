@@ -12,6 +12,19 @@ MetaMuse is a content management system (CMS) designed to be your ultimate perso
 
 By offering an array of organizational tools and a user-friendly interface, MetaMuse aims to be your go-to platform for anything and everything creative. Own your content, own your life—MetaMuse is the CMS for the creators, by the creators.
 
+## Tech Stack
+
+- Console
+  - React
+  - Vite
+  - NextUI
+  - tRPC Client with React Query
+- Server Core
+  - NestJS
+  - Socket.IO
+  - tRPC
+  - Prisma + Zod
+
 ## License
 
 2023 © Innei, Released under the MIT License.
