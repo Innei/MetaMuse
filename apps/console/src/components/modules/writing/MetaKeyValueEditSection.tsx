@@ -55,7 +55,7 @@ export const MetaKeyValueEditSection: FC<MetaKeyValueEditSectionProps> = (
       <div className="flex justify-between items-center">
         <label className={styles.slots.label}>Meta</label>
 
-        <Button size="sm" onClick={handlePresentModal}>
+        <Button size="sm" variant="flat" onClick={handlePresentModal}>
           {t('common.edit')}
         </Button>
       </div>

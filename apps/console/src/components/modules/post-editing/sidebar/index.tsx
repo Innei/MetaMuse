@@ -1,10 +1,6 @@
-import { useState } from 'react'
-
-import { PresentDrawer } from '~/components/ui/drawer'
-import { FABPortable } from '~/components/ui/fab/FabContainer'
-
 import { ImageDetailSection } from '../../writing/ImageDetailSection'
 import { MetaKeyValueEditSection } from '../../writing/MetaKeyValueEditSection'
+import { PresentComponentFab } from '../../writing/PresentComponentFab'
 import { SidebarWrapper } from '../../writing/SidebarBase'
 import { usePostModelSingleFieldAtom } from '../data-provider'
 import { CategorySelector } from './CategorySelector'
@@ -53,23 +49,7 @@ export const PostEditorSidebar = () => {
     <div className="hidden flex-col lg:flex">
       <Sidebar />
 
-      <Fab />
+      <PresentComponentFab Component={Sidebar} />
     </div>
-  )
-}
-
-const Fab = () => {
-  const [drawerShown, setDrawerShown] = useState(false)
-  return (
-    <PresentDrawer content={Sidebar}>
-      <FABPortable
-        onlyShowInMobile
-        onClick={() => {
-          setDrawerShown(!drawerShown)
-        }}
-      >
-        <i className="icon-[mingcute--settings-6-line]" />
-      </FABPortable>
-    </PresentDrawer>
   )
 }

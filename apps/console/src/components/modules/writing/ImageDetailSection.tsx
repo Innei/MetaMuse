@@ -182,6 +182,7 @@ export const ImageDetailSection: FC<ImageDetailSectionProps> = (props) => {
             isLoading={loading}
             className="self-end"
             size="sm"
+            variant="flat"
             onClick={handleCorrectImageDimensions}
           >
             {t('module.writing.image-adjust.button')}

@@ -27,6 +27,7 @@ import {
   useNoteModelGetModelData,
   useNoteModelSetModelData,
 } from '~/components/modules/note-editing/data-provider'
+import { EditorLayer } from '~/components/modules/writing/EditorLayer'
 import { useI18n } from '~/i18n/hooks'
 import { routeBuilder, Routes } from '~/lib/route-builder'
 import { trpc } from '~/lib/trpc'
@@ -84,29 +85,20 @@ const EditPage: FC<{
   return (
     <NoteModelDataAtomProvider overrideAtom={editingAtom}>
       <BaseWritingProvider atom={editingAtom}>
-        <div className="flex justify-between">
-          <div className="mb-3 flex items-center justify-between">
-            <p className="flex items-center text-lg font-medium">
-              {props.initialData ? (
-                <>
-                  {t('common.editing')} 「{editingData.title}」
-                </>
-              ) : (
-                t('common.new-note')
-              )}
-            </p>
-          </div>
-
+        <EditorLayer>
+          <>
+            {props.initialData ? (
+              <>
+                {t('common.editing')} 「{editingData.title}」
+              </>
+            ) : (
+              t('common.new-note')
+            )}
+          </>
           <ActionButtonGroup initialData={props.initialData} />
-        </div>
-
-        <div className="flex flex-grow lg:grid lg:grid-cols-[auto_400px] lg:gap-4">
-          <div className="flex flex-grow flex-col overflow-auto">
-            <Writing middleSlot={NoteEditorUrlPlaceholder} />
-          </div>
-
+          <Writing middleSlot={NoteEditorUrlPlaceholder} />
           <NoteEditorSidebar />
-        </div>
+        </EditorLayer>
       </BaseWritingProvider>
     </NoteModelDataAtomProvider>
   )

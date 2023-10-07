@@ -357,7 +357,7 @@ const CardsRender = <T extends DataBaseType>({
           <Card
             as={MotionDivToBottom}
             shadow="sm"
-            className="ring-1 ring-zinc-200/60 dark:ring-neutral-800/70"
+            className="ring-1 ring-zinc-200/60 dark:ring-neutral-800/70 h-[250px]"
             key={item.id}
           >
             <CardHeader className="flex gap-2">
