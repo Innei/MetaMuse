@@ -7,8 +7,8 @@ export const EditorLayer: FC<{
   const [TitleEl, HeaderEl, ContentEl, FooterEl] = children
   return (
     <>
-      <div className="flex justify-between flex-wrap items-center mb-2">
-        <div className="mb-3 flex items-center justify-between">
+      <div className="flex justify-between flex-wrap items-center mb-5">
+        <div className="flex items-center justify-between">
           <p className="flex items-center text-lg font-medium">{TitleEl}</p>
         </div>
 

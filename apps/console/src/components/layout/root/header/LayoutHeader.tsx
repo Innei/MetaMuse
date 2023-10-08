@@ -1,5 +1,5 @@
-import { Avatar } from '@nextui-org/react'
-import { useCallback } from 'react'
+import { Avatar, Button } from '@nextui-org/react'
+import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
@@ -7,7 +7,10 @@ import type { SeoDto } from '@core/modules/configs/configs.dto'
 import type { RouteExtendObject } from '~/router/interface'
 import type { MouseEventHandler, ReactNode } from 'react'
 
+import { useIsMobile } from '~/atoms'
 import { BreadcrumbDivider } from '~/components/icons'
+import { PresentDrawer } from '~/components/ui/drawer'
+import { clsxm } from '~/lib/helper'
 import { trpc } from '~/lib/trpc'
 import { router } from '~/router'
 import { appRoutes } from '~/router/builder'
@@ -27,11 +30,11 @@ export const LayoutHeader = () => {
           <button className="p-2 text-2xl">𝕄</button>
           <BreadcrumbDivider className="opacity-20" />
           <span className="font-bold opacity-90">{(seo as SeoDto)?.title}</span>
-          <BreadcrumbDivider className="opacity-20" />
+          <BreadcrumbDivider className="opacity-0 lg:opacity-20" />
         </div>
 
         <div className="relative flex min-w-0 flex-grow items-center justify-between">
-          <HeaderMenu />
+          <HeaderMenu className="hidden lg:flex" />
 
           <RightBar />
         </div>
@@ -44,8 +47,9 @@ export const LayoutHeader = () => {
 const RightBar = () => {
   const user = useUser()
   return (
-    <div className="relative flex items-center space-x-2">
+    <div className="relative flex-grow lg:flex-grow-0 justify-end flex items-center space-x-2">
       <ThemeToggle />
+      <MobileMenuDrawerButton />
       <Avatar
         size="sm"
         src={user?.avatar || ''}
@@ -57,7 +61,29 @@ const RightBar = () => {
   )
 }
 
-const HeaderMenu = () => {
+const MobileMenuDrawerButton = () => {
+  const isMobile = useIsMobile()
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  if (!isMobile) return null
+
+  return (
+    <PresentDrawer content={HeaderMenu}>
+      <Button
+        variant="light"
+        className="rounded-full !mr-2"
+        isIconOnly
+        onClick={() => {
+          setIsDrawerOpen(!isDrawerOpen)
+        }}
+      >
+        <i className="icon-[mingcute--menu-line]" />
+      </Button>
+    </PresentDrawer>
+  )
+}
+
+const HeaderMenu: Component = ({ className }) => {
   const firstLevelMenu = appRoutes
     .map((route) => {
       const title = route.meta?.title
@@ -83,7 +109,7 @@ const HeaderMenu = () => {
   }, [])
 
   return (
-    <ul className="ml-2 flex items-center space-x-2 text-sm">
+    <ul className={clsxm('ml-2 items-center gap-2 text-sm', className)}>
       {firstLevelMenu.map((menu) => {
         const isActive =
           menu.path === routeObject.path ||
@@ -117,7 +143,7 @@ const HeaderMenu = () => {
 
 const SecondaryNavLine = () => {
   return (
-    <nav className="flex h-12 items-center justify-between">
+    <nav className="flex h-12 items-center justify-between overflow-auto lg:overflow-visible">
       <SecondaryLevelMenu />
 
       <div className="hidden flex-shrink-0 text-xs lg:flex">

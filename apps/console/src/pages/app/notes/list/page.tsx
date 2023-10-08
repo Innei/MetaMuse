@@ -4,7 +4,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@nextui-org/react'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { atom, useAtomValue } from 'jotai'
 import { toast } from 'sonner'
@@ -145,23 +145,29 @@ export default withQueryPager(function Page() {
         onNewClick={useEventCallback(() => {
           nav(routeBuilder(Routes.NoteEditOrNew, {}))
         })}
-        renderCardBody={useEventCallback((item) => (
-          <>
-            <p className="flex items-center text-foreground/80">
-              <i className="icon-[mingcute--book-6-line]" />
-              <span className="ml-1">{item.count.read}</span>
-              <span className="w-5" />
-              <i className="icon-[mingcute--heart-line] ml-2" />
-              <span className="ml-1">{item.count.like}</span>
-            </p>
-            <p className="text-foreground/60">
-              <RelativeTime time={item.created} />
-            </p>
-          </>
-        ))}
-        renderCardFooter={useEventCallback((item) => (
-          <Actions data={item as any} />
-        ))}
+        renderCardBody={useCallback(
+          (item: StringifyNestedDates<NormalizedNoteModel>) => (
+            <>
+              <p className="flex items-center text-foreground/80">
+                <i className="icon-[mingcute--book-6-line]" />
+                <span className="ml-1">{item.count.read}</span>
+                <span className="w-5" />
+                <i className="icon-[mingcute--heart-line] ml-2" />
+                <span className="ml-1">{item.count.like}</span>
+              </p>
+              <p className="text-foreground/60">
+                <RelativeTime time={item.created} />
+              </p>
+            </>
+          ),
+          [],
+        )}
+        renderCardFooter={useCallback(
+          (item: StringifyNestedDates<NormalizedNoteModel>) => (
+            <Actions data={item as any} />
+          ),
+          [],
+        )}
         data={
           data as any as PaginationResult<
             StringifyNestedDates<NormalizedNoteModel>

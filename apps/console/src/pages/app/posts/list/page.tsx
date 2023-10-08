@@ -5,7 +5,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@nextui-org/react'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { atom, useAtomValue } from 'jotai'
 import { toast } from 'sonner'
@@ -55,6 +55,35 @@ export default withQueryPager(function Page() {
   const { mutateAsync: batchDelete } = trpc.post.batchDelete.useMutation()
   const utils = trpc.useContext()
   const t = useI18n()
+  const renderCardBody = useCallback(
+    (item: StringifyNestedDates<NormalizedPostModel>) => (
+      <>
+        <p>
+          <span>
+            位于分类：
+            {item.category.name}
+          </span>
+        </p>
+        {item.tags.length ? (
+          <p>
+            <span>标签：</span>
+            {item.tags.map((tag) => tag.name).join(',')}
+          </p>
+        ) : null}
+        <p className="flex items-center text-foreground/80">
+          <i className="icon-[mingcute--book-6-line]" />
+          <span className="ml-1">{item.count.read}</span>
+          <span className="w-5" />
+          <i className="icon-[mingcute--heart-line] ml-2" />
+          <span className="ml-1">{item.count.like}</span>
+        </p>
+        <p className="text-foreground/60">
+          <RelativeTime time={item.created} />
+        </p>
+      </>
+    ),
+    [],
+  )
   return (
     <ListSortAndFilterProvider
       sortingAtom={sortingAtom}
@@ -132,35 +161,13 @@ export default withQueryPager(function Page() {
         onNewClick={useEventCallback(() => {
           nav(routeBuilder(Routes.PostEditOrNew, {}))
         })}
-        renderCardBody={useEventCallback((item) => (
-          <>
-            <p>
-              <span>
-                位于分类：
-                {item.category.name}
-              </span>
-            </p>
-            {item.tags.length ? (
-              <p>
-                <span>标签：</span>
-                {item.tags.map((tag) => tag.name).join(',')}
-              </p>
-            ) : null}
-            <p className="flex items-center text-foreground/80">
-              <i className="icon-[mingcute--book-6-line]" />
-              <span className="ml-1">{item.count.read}</span>
-              <span className="w-5" />
-              <i className="icon-[mingcute--heart-line] ml-2" />
-              <span className="ml-1">{item.count.like}</span>
-            </p>
-            <p className="text-foreground/60">
-              <RelativeTime time={item.created} />
-            </p>
-          </>
-        ))}
-        renderCardFooter={useEventCallback((item) => (
-          <Actions data={item as any} />
-        ))}
+        renderCardBody={renderCardBody}
+        renderCardFooter={useCallback(
+          (item: StringifyNestedDates<NormalizedPostModel>) => (
+            <Actions data={item as any} />
+          ),
+          [],
+        )}
         data={
           data as PaginationResult<StringifyNestedDates<NormalizedPostModel>>
         }
