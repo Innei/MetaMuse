@@ -2,7 +2,7 @@ import { defineRouteMeta } from '~/router/define'
 
 export default defineRouteMeta({
   redirect: '/notes/list',
-  title: '手记',
+  title: (t) => t('navigator.note'),
   icon: <i className="icon-[mingcute--quill-pen-line]" />,
   priority: 3,
 })

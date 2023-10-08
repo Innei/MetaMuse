@@ -1,15 +1,18 @@
 import { useLayoutEffect } from 'react'
+import type { RouteExtendObject } from '~/router/interface'
 
 import { useAppInitialData } from '~/providers/initial'
+import { useExtractTitle, useExtractTitleFunction } from '~/router/helper'
 import { useCurrentRouteObject } from '~/router/hooks'
-import { RouteExtendObject } from '~/router/interface'
 
 export const SeoObserver = () => {
   const route = useCurrentRouteObject()
 
-  const { title } = route.meta || {}
+  const { title: maybeTitle } = route.meta || {}
   const parent = route.parent
 
+  const title = useExtractTitle(maybeTitle)
+  const extractTitle = useExtractTitleFunction()
   const { seo } = useAppInitialData()
 
   useLayoutEffect(() => {
@@ -18,13 +21,15 @@ export const SeoObserver = () => {
     let jointParentTitle = ''
 
     if (parent?.meta?.title) {
-      jointParentTitle = parent.meta.title
+      jointParentTitle = extractTitle(parent.meta.title) || ''
       findParentTitle(parent)
     }
 
     function findParentTitle(route: RouteExtendObject) {
       if (route.parent?.meta?.title) {
-        jointParentTitle = `${route.parent.meta.title} - ${jointParentTitle}`
+        jointParentTitle = `${extractTitle(
+          route.parent.meta.title,
+        )} - ${jointParentTitle}`
         findParentTitle(route.parent)
       }
     }

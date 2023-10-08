@@ -1,6 +1,86 @@
 {
-  "common": {
+  "navigator": {
+    "dashboard": "仪表盘",
+    "post": "文章",
+    "note": "笔记",
+    "list": "列表",
     "edit": "编辑",
-    "editing": "编辑"
+    "topic": "话题",
+    "category": "分类"
+  },
+  "common": {
+    "accent": "重点",
+    "allow-comment": "允许评论",
+    "cancel": "取消",
+    "category": "分类",
+    "confirm": "确认",
+    "copy-link": "复制链接",
+    "copyright": "版权",
+    "create-success": "创建成功",
+    "custom-created": "自定义创建于",
+    "delete": "删除",
+    "delete-success": "删除成功",
+    "confirm-delete": "确定删除吗？",
+    "edit": "编辑",
+    "editing": "正在编辑",
+    "height": "高度",
+    "import": "导入",
+    "invalid-date": "无效日期",
+    "isDraft": "是草稿",
+    "new": "新建",
+    "items": "项目",
+    "new-post": "新文章",
+    "new-note": "新笔记",
+    "ok": "确定",
+    "sure": "确定",
+    "pin": "固定",
+    "preview": "预览",
+    "published": "已发布",
+    "reset": "重置",
+    "save": "保存",
+    "save-success": "保存成功",
+    "should-published": "应该发布吗？",
+    "submit": "提交",
+    "tags": "标签",
+    "title": "标题",
+    "visit": "访问",
+    "width": "宽度",
+    "type": "类型",
+    "action": "操作",
+    "invalidJSON": "无效的 JSON",
+    "password": "密码",
+    "custom": "自定义",
+    "timeout": "超时",
+    "clear": "清除"
+  },
+  "module": {
+    "writing": {
+      "image-adjust": {
+        "title": "调整 Markdown 中包含的图像信息",
+        "button": "自动调整"
+      }
+    },
+    "posts": {
+      "related_posts": "相关文章",
+      "select_posts": "选择相关文章"
+    },
+    "notes": {
+      "mark_as_memory": "标记为回忆",
+      "mood": "心情",
+      "weather": "天气",
+      "get_current_location": "获取当前位置",
+      "location": "位置",
+      "not_support_location": "浏览器不支持位置",
+      "location_permission_denied": "位置权限被拒绝",
+      "search_location": "搜索位置",
+      "search_by_keyword": "按关键词搜索"
+    },
+    "summary": {
+      "title": "摘要",
+      "placeholder": "为您的文章写一个摘要。"
+    },
+    "parse_md_yaml": {
+      "title": "导入带有 YAML 前置内容的 Markdown"
+    }
   }
 }

@@ -14,6 +14,7 @@ import { clsxm } from '~/lib/helper'
 import { trpc } from '~/lib/trpc'
 import { router } from '~/router'
 import { appRoutes } from '~/router/builder'
+import { useExtractTitleFunction } from '~/router/helper'
 import { useCurrentRouteObject } from '~/router/hooks'
 import { useUser } from '~/store/user'
 
@@ -84,13 +85,14 @@ const MobileMenuDrawerButton = () => {
 }
 
 const HeaderMenu: Component = ({ className }) => {
+  const extractTitle = useExtractTitleFunction()
   const firstLevelMenu = appRoutes
     .map((route) => {
       const title = route.meta?.title
       if (!title) return null
 
       return {
-        title,
+        title: extractTitle(title),
         path: route.path,
         icon: route.meta?.icon,
       }
@@ -157,6 +159,8 @@ const SecondaryLevelMenu = () => {
   const routeObject = useCurrentRouteObject()
   const parent = routeObject.parent
 
+  const extractTitle = useExtractTitleFunction()
+
   if (!parent) return null
   if (!parent.children?.length) return null
 
@@ -182,7 +186,7 @@ const SecondaryLevelMenu = () => {
                 />
               )}
               {route.meta?.icon}
-              <span>{route.meta?.title}</span>
+              <span>{extractTitle(route.meta?.title)}</span>
             </Link>
           </li>
         )
@@ -201,6 +205,7 @@ const Breadcrumb = () => {
     parent = parent.parent
   }
 
+  const extractTitle = useExtractTitleFunction()
   return (
     <>
       {routes.map((route, index) => {
@@ -208,7 +213,7 @@ const Breadcrumb = () => {
 
         return (
           <span key={route.path} className={clsx('flex items-center py-1')}>
-            <span>{route.meta?.title}</span>
+            <span>{extractTitle(route.meta?.title)}</span>
             {!isLast && <BreadcrumbDivider className="opacity-20" />}
           </span>
         )

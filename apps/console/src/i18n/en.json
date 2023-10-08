@@ -1,4 +1,13 @@
 {
+  "navigator": {
+    "dashboard": "Dashboard",
+    "post": "Post",
+    "note": "Note",
+    "list": "List",
+    "edit": "Edit",
+    "topic": "Topic",
+    "category": "Category"
+  },
   "common": {
     "accent": "Accent",
     "allow-comment": "Allow comment",

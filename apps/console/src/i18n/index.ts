@@ -21,7 +21,25 @@ export const init18n = () => {
   use(LanguageDetector)
     .use(initReactI18next) // passes i18n down to react-i18next
     .init({
-      lng: 'en',
+      detection: {
+        order: [
+          'querystring',
+          'navigator',
+          'cookie',
+          'localStorage',
+          'sessionStorage',
+          'htmlTag',
+        ],
+        lookupQuerystring: 'lang',
+        lookupCookie: 'i18next',
+        lookupLocalStorage: 'i18nextLng',
+        lookupSessionStorage: 'i18nextLng',
+
+        // cache user language
+        caches: ['localStorage'],
+        excludeCacheFor: ['cimode'],
+      },
+
       debug: true,
       resources,
       // lng: 'en', // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources

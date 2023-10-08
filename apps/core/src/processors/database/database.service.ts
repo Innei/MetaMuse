@@ -9,10 +9,12 @@ import {
 @Injectable()
 export class DatabaseService implements OnModuleInit, OnModuleDestroy {
   private client: ExtendedPrismaClient
+
+  static readonly client = createExtendedPrismaClient({
+    url: DATABASE.url,
+  })
   constructor() {
-    this.client = createExtendedPrismaClient({
-      url: DATABASE.url,
-    })
+    this.client = DatabaseService.client
   }
   async onModuleInit() {
     await this.client.$connect()

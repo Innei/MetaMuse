@@ -1,3 +1,3 @@
-import { RouteMeta } from './interface'
+import type { RouteMeta } from './interface'
 
 export const defineRouteMeta = (meta: RouteMeta) => meta

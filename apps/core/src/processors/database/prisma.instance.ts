@@ -112,7 +112,6 @@ export const createExtendedPrismaClient = ({ url }: { url?: string } = {}) => {
   return extendedPrismaClient
 }
 export type ExtendedPrismaClient = ReturnType<typeof createExtendedPrismaClient>
-type a = ExtendedPrismaClient['']
 
 // export type AllModelNames = Exclude<
 //   keyof extendedPrismaClient,
