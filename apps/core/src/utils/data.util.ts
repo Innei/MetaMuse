@@ -35,3 +35,11 @@ export const reorganizeData = <T>(
   }
   return result
 }
+
+export const toOrder = (sortOrder: number | 'desc' | 'asc') => {
+  if (typeof sortOrder === 'string') return sortOrder
+  return {
+    ['-1']: 'desc',
+    [1]: 'asc',
+  }[sortOrder.toString()]
+}

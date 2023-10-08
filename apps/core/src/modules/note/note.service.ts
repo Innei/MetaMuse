@@ -1,12 +1,13 @@
-import { omit } from 'lodash'
+import { noop, omit } from 'lodash'
 
 import { BizException } from '@core/common/exceptions/biz.exception'
 import { BusinessEvents } from '@core/constants/business-event.constant'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
+import { EventScope } from '@core/constants/event-scope.constant'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { EventManagerService } from '@core/processors/helper/helper.event.service'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
-import { reorganizeData } from '@core/utils/data.util'
+import { reorganizeData, toOrder } from '@core/utils/data.util'
 import { Prisma } from '@meta-muse/prisma'
 import { Inject, Injectable } from '@nestjs/common'
 
@@ -33,10 +34,6 @@ export class NoteService {
       sortBy = 'created',
       sortOrder = -1,
     } = options
-    const nextSortOrder = {
-      ['-1']: 'desc',
-      [1]: 'asc',
-    }[sortOrder.toString()]
 
     const data = await this.db.prisma.note.paginate(
       {
@@ -45,7 +42,7 @@ export class NoteService {
 
         orderBy: [
           {
-            [sortBy]: nextSortOrder,
+            [sortBy]: toOrder(sortOrder),
           },
         ],
       },
@@ -95,12 +92,30 @@ export class NoteService {
       | BusinessEvents.NOTE_DELETE,
     id: string,
   ) {
-    // TODO
     switch (type) {
       case BusinessEvents.NOTE_CREATE:
-      case BusinessEvents.NOTE_UPDATE:
+      case BusinessEvents.NOTE_UPDATE: {
+        const doc = await this.getNoteById(id).catch(noop)
+        if (!doc) return
+        if (!doc.password && doc.isPublished) {
+          if (doc.publicAt && doc.publicAt.getTime() > Date.now()) {
+            return
+          }
+          this.eventService.emit(BusinessEvents.NOTE_UPDATE, doc, {
+            scope: EventScope.TO_VISITOR,
+          })
+        }
+        this.eventService.emit(BusinessEvents.NOTE_UPDATE, doc, {
+          scope: EventScope.TO_SYSTEM,
+        })
         break
+      }
       case BusinessEvents.NOTE_DELETE:
+        this.eventService.emit(
+          BusinessEvents.NOTE_DELETE,
+          { id },
+          { scope: EventScope.ALL },
+        )
         break
     }
   }

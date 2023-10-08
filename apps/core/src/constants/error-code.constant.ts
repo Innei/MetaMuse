@@ -1,6 +1,7 @@
 export enum ErrorCodeEnum {
   NoContentCanBeModified = 1000,
   InvalidQuery = 1001,
+  ResourceNotFound = 1002,
 
   NotReady = 5000,
   NotInitialized = 5001,
@@ -33,9 +34,9 @@ export const ErrorCode = Object.freeze<Record<ErrorCodeEnum, [string, number]>>(
     [ErrorCodeEnum.NotReady]: ['not ready, please try again later', 503],
     [ErrorCodeEnum.NotInitialized]: [
       'not initialized, site owner is missing',
-
       503,
     ],
+    [ErrorCodeEnum.ResourceNotFound]: ['resource not found', 404],
 
     /// Post
     [ErrorCodeEnum.PostNotFound]: ['post not found', 404],

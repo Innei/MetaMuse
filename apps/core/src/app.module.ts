@@ -25,6 +25,7 @@ import { HelpersModule } from './modules/helpers/helpers.module'
 import { NoteModule } from './modules/note/note.module'
 import { PageModule } from './modules/page/page.module'
 import { PostModule } from './modules/post/post.module'
+import { TopicModule } from './modules/topic/topic.module'
 import { UserModule } from './modules/user/user.module'
 import { CacheModule } from './processors/cache/cache.module'
 import { DatabaseModule } from './processors/database/database.module'
@@ -61,6 +62,7 @@ const appInterceptors: Type<any>[] = [
     NoteModule,
     HelpersModule,
     PageModule,
+    TopicModule,
 
     // waiting for all biz modules loaded
     tRPCModule,

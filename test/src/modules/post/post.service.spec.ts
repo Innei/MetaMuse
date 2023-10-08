@@ -33,6 +33,7 @@ describe('/modules/post/post.service', () => {
     const result = await proxy.service.create({
       ...mockPostInputData,
       categoryId: id,
+      isPublished: true,
     })
 
     expect(result).toMatchObject({
@@ -40,7 +41,9 @@ describe('/modules/post/post.service', () => {
       categoryId: id,
       category,
     })
-    expect(mockedEventManagerService.emit).toBeCalledWith('POST_CREATE', result)
+
+    // 1 for TO_VISITOR 2 for TO_SYSTEM
+    expect(mockedEventManagerService.emit).toBeCalledTimes(2)
   })
 
   it('should throw when post exist', async () => {

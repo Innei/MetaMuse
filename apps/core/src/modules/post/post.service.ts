@@ -3,12 +3,13 @@ import { omit } from 'lodash'
 import { BizException } from '@core/common/exceptions/biz.exception'
 import { BusinessEvents } from '@core/constants/business-event.constant'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
+import { EventScope } from '@core/constants/event-scope.constant'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { EventManagerService } from '@core/processors/helper/helper.event.service'
 import { ImageService } from '@core/processors/helper/helper.image.service'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import { isDefined } from '@core/shared/utils/validator.util'
-import { reorganizeData } from '@core/utils/data.util'
+import { reorganizeData, toOrder } from '@core/utils/data.util'
 import { deepEqual } from '@core/utils/tool.util'
 import { Prisma } from '@meta-muse/prisma'
 import { Injectable, Logger } from '@nestjs/common'
@@ -136,6 +137,8 @@ export class PostService {
         this.logger.warn(`Save image dimensions failed, ${err?.message}`)
       })
 
+    await this.notifyPostUpdate(BusinessEvents.POST_CREATE, model.id)
+
     return model
   }
 
@@ -151,13 +154,18 @@ export class PostService {
       case BusinessEvents.POST_UPDATE: {
         const result = await this.getPostById(id).catch(() => null)
         if (!result) return
-        if (!result.isPublished) return
-        await this.eventService.emit(type, result)
+        if (result.isPublished)
+          await this.eventService.emit(type, result, {
+            scope: EventScope.TO_VISITOR,
+          })
+        await this.eventService.emit(type, result, {
+          scope: EventScope.TO_SYSTEM,
+        })
         break
       }
 
       case BusinessEvents.POST_DELETE:
-        await this.eventService.emit(type, { id })
+        await this.eventService.emit(type, { id }, { scope: EventScope.ALL })
         break
     }
   }
@@ -248,10 +256,6 @@ export class PostService {
       sortBy = 'created',
       sortOrder = -1,
     } = options
-    const nextSortOrder = {
-      ['-1']: 'desc',
-      [1]: 'asc',
-    }[sortOrder.toString()]
 
     const data = await this.db.prisma.post.paginate(
       {
@@ -263,7 +267,7 @@ export class PostService {
             pin: 'desc',
           },
           {
-            [sortBy]: nextSortOrder,
+            [sortBy]: toOrder(sortOrder),
           },
         ],
       },

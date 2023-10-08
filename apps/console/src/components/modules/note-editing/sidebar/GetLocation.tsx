@@ -102,7 +102,7 @@ export const GetLocation = () => {
         <Button
           isIconOnly
           isLoading={loading}
-          variant="light"
+          // variant="light"
           color="danger"
           onClick={() => {
             setLocation(null)

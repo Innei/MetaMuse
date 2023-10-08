@@ -3,12 +3,12 @@ import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common'
 
 import {
   createExtendedPrismaClient,
-  extendedPrismaClient,
+  ExtendedPrismaClient,
 } from './prisma.instance'
 
 @Injectable()
 export class DatabaseService implements OnModuleInit, OnModuleDestroy {
-  private client: extendedPrismaClient
+  private client: ExtendedPrismaClient
   constructor() {
     this.client = createExtendedPrismaClient({
       url: DATABASE.url,

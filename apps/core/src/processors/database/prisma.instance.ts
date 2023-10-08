@@ -28,15 +28,7 @@ export const createExtendedPrismaClient = ({ url }: { url?: string } = {}) => {
   //   })
   // }
   const extendedPrismaClient = prismaClient.$extends({
-    result: {
-      // post: {
-      //   relatedIds: {
-      //     compute(post) {
-      //       return post.related.map((x) => x.id)
-      //     },
-      //   },
-      // },
-    },
+    result: {},
     model: {
       $allModels: {
         async paginate<T, A>(
@@ -119,4 +111,37 @@ export const createExtendedPrismaClient = ({ url }: { url?: string } = {}) => {
 
   return extendedPrismaClient
 }
-export type extendedPrismaClient = ReturnType<typeof createExtendedPrismaClient>
+export type ExtendedPrismaClient = ReturnType<typeof createExtendedPrismaClient>
+type a = ExtendedPrismaClient['']
+
+// export type AllModelNames = Exclude<
+//   keyof extendedPrismaClient,
+//   | 'eventType'
+//   | 'callback'
+//   | '$connect'
+//   | '$disconnect'
+//   | '$use'
+//   | '$executeRaw'
+//   | '$executeRawUnsafe'
+//   | '$queryRaw'
+//   | '$queryRawUnsafe'
+//   | '$transaction'
+//   | '$extends'
+//   | symbol
+// >
+
+export type AllModelNames = Prisma.TypeMap['meta']['modelProps']
+
+export type ModelFindInput<T extends AllModelNames> = NonNullable<
+  Parameters<ExtendedPrismaClient[T]['findFirst']>[0]
+>
+
+export type ModelCreateInput<T extends AllModelNames> = NonNullable<
+  Parameters<ExtendedPrismaClient[T]['create']>[0]
+>
+
+export type ModelInputWhere<T extends AllModelNames> =
+  ModelFindInput<T>['where']
+
+export type ModelInputData<T extends AllModelNames> =
+  ModelCreateInput<T>['data']
