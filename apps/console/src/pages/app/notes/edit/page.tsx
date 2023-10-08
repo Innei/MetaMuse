@@ -41,6 +41,7 @@ const createInitialEditingData = (): NoteModel => {
     hasMemory: false,
 
     id: '',
+    coordinates: null,
     images: [],
     isPublished: true,
     mood: null,

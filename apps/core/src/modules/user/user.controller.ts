@@ -1,5 +1,6 @@
 import { ApiController } from '@core/common/decorators/api-controller.decorator'
 import { Auth } from '@core/common/decorators/auth.decorator'
+import { HttpCache } from '@core/common/decorators/cache.decorator'
 import {
   CurrentToken,
   Owner,
@@ -81,6 +82,12 @@ export class UserController {
       auth_token: token,
       ...newUser,
     }
+  }
+
+  @Get('/check_logged')
+  @HttpCache.disable
+  checkLogged(@Owner() isMaster: boolean) {
+    return { ok: !!isMaster, isGuest: !isMaster }
   }
 
   @Get('/')

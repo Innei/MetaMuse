@@ -30,7 +30,10 @@ export default function LoginPage() {
       throw err
     })
 
-    nav('/dashboard', { replace: true })
+    const search = new URLSearchParams(location.search)
+    const to = search.get('to')
+    const target = to ? decodeURIComponent(to) : '/dashboard'
+    nav(target, { replace: true })
   }
 
   useEffect(() => {

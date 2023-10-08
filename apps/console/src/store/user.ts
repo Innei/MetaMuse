@@ -56,6 +56,18 @@ export const loginByToken = async () => {
   jotaiStore.set(isLoggedAtom, true)
 }
 
+export const useCheckAuth = () => {
+  return useMutation({
+    mutationFn: async () => {
+      const result = await $axios.get<{
+        ok: number
+      }>('/user/check_logged')
+
+      return result.ok
+    },
+  })
+}
+
 export const isLogged = () => jotaiStore.get(isLoggedAtom)
 
 export const useIsLogged = () => useAtomValue(isLoggedAtom)
