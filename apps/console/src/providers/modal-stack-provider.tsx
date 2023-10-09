@@ -21,7 +21,7 @@ import { useEventCallback } from 'usehooks-ts'
 import type { Target, Transition } from 'framer-motion'
 import type { FC, PropsWithChildren, SyntheticEvent } from 'react'
 
-import { useViewport } from '~/atoms'
+import { useIsMobile } from '~/atoms'
 import { CloseIcon } from '~/components/icons'
 import { Divider } from '~/components/ui/divider'
 import { DialogOverlay } from '~/components/ui/dlalog/DialogOverlay'
@@ -202,7 +202,7 @@ const Modal: Component<{
     }),
     [close],
   )
-  const isMobile = useViewport((v) => v.w < 640)
+  const isMobile = useIsMobile()
 
   if (isMobile) {
     const drawerLength = jotaiStore.get(drawerStackAtom).length
@@ -211,6 +211,7 @@ const Modal: Component<{
       <PresentDrawer
         open
         zIndex={1000 + drawerLength}
+        onOpenChange={onClose}
         // title={title}
         content={
           <CurrentModalContext.Provider value={ModalProps}>

@@ -107,7 +107,7 @@ const EditorModal: FC<{
   }
 
   return (
-    <div className="flex flex-col w-[600px] flex-grow relative">
+    <div className="flex flex-col w-full lg:w-[600px] flex-grow relative">
       <div ref={editorWrapperRef} className="h-[400px]" />
       <div className="flex justify-end flex-shrink-0">
         <Button size="sm" onClick={handleSave} variant="shadow" color="primary">

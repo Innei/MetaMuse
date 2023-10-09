@@ -8,6 +8,12 @@
     "topic": "Topic",
     "category": "Category"
   },
+  "validator": {
+    "max_length": "The maximum length is {{max}}.",
+    "required": "Required",
+    "min_length": "The minimum length is {{min}}.",
+    "url": "Invalid URL."
+  },
   "common": {
     "accent": "Accent",
     "allow-comment": "Allow comment",
@@ -51,7 +57,12 @@
     "password": "Password",
     "custom": "Custom",
     "timeout": "Timeout",
-    "clear": "Clear"
+    "clear": "Clear",
+    "name": "Name",
+    "slug": "Slug",
+    "icon": "Icon",
+    "desc": "Description",
+    "longdesc": "Long description"
   },
   "module": {
     "writing": {
