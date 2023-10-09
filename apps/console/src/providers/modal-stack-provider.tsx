@@ -21,9 +21,11 @@ import { useEventCallback } from 'usehooks-ts'
 import type { Target, Transition } from 'framer-motion'
 import type { FC, PropsWithChildren, SyntheticEvent } from 'react'
 
+import { useViewport } from '~/atoms'
 import { CloseIcon } from '~/components/icons'
 import { Divider } from '~/components/ui/divider'
 import { DialogOverlay } from '~/components/ui/dlalog/DialogOverlay'
+import { drawerStackAtom, PresentDrawer } from '~/components/ui/drawer'
 import { microReboundPreset } from '~/constants/spring'
 import { stopPropagation } from '~/lib/dom'
 import { clsxm } from '~/lib/helper'
@@ -194,8 +196,29 @@ const Modal: Component<{
       })
   }, [animateController])
 
-  const ModalProps: ModalContentPropsInternal = {
-    dismiss: close,
+  const ModalProps: ModalContentPropsInternal = useMemo(
+    () => ({
+      dismiss: close,
+    }),
+    [close],
+  )
+  const isMobile = useViewport((v) => v.w < 640)
+
+  if (isMobile) {
+    const drawerLength = jotaiStore.get(drawerStackAtom).length
+
+    return (
+      <PresentDrawer
+        open
+        zIndex={1000 + drawerLength}
+        // title={title}
+        content={
+          <CurrentModalContext.Provider value={ModalProps}>
+            {createElement(content, ModalProps)}
+          </CurrentModalContext.Provider>
+        }
+      />
+    )
   }
 
   if (CustomModalComponent) {
