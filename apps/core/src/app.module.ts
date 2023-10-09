@@ -21,6 +21,7 @@ import { AggregateModule } from './modules/aggregate/aggregate.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { CategoryModule } from './modules/category/category.module'
 import { ConfigsModule } from './modules/configs/configs.module'
+import { FileModule } from './modules/file/file.module'
 import { HelpersModule } from './modules/helpers/helpers.module'
 import { NoteModule } from './modules/note/note.module'
 import { PageModule } from './modules/page/page.module'
@@ -63,6 +64,7 @@ const appInterceptors: Type<any>[] = [
     HelpersModule,
     PageModule,
     TopicModule,
+    FileModule,
 
     // waiting for all biz modules loaded
     tRPCModule,

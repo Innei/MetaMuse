@@ -8,6 +8,7 @@ import { EventManagerService } from './helper.event.service'
 import { HttpService } from './helper.http.service'
 import { ImageService } from './helper.image.service'
 import { JWTService } from './helper.jwt.service'
+import { UploadService } from './helper.upload.service'
 import { UrlBuilderService } from './helper.url-builder.service'
 
 const providers: Provider<any>[] = [
@@ -17,6 +18,7 @@ const providers: Provider<any>[] = [
   ImageService,
   JWTService,
   UrlBuilderService,
+  UploadService,
 ]
 
 @Module({
