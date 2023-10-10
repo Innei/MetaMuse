@@ -70,14 +70,16 @@ export class FileController {
   @Auth()
   async upload(@Query() query: FileUploadDto, @Req() req: FastifyRequest) {
     const file = await this.uploadService.getAndValidMultipartField(req)
+
     const { type = 'file' } = query
 
     const ext = path.extname(file.filename)
-    await file.toBuffer()
 
     const filename = (await md5Stream(file.file)) + ext
 
-    await this.service.writeFile(type, filename, file.file)
+    if (!(await this.service.exists(type, filename))) {
+      await this.service.writeFile(type, filename, file.file)
+    }
 
     return {
       url: await this.service.resolveFileUrl(type, filename),

@@ -5,6 +5,7 @@ import {
   ModalHeader,
 } from '@nextui-org/react'
 import { useRef, useState } from 'react'
+import { toast } from 'sonner'
 import type { FormForwardRef } from '~/components/ui/form'
 import type { FC } from 'react'
 
@@ -14,6 +15,7 @@ import { stringRuleMax, stringRuleUrl } from '~/components/ui/form/utils'
 import { NextUIModal } from '~/components/ui/modal'
 import { Uploader } from '~/components/ui/uploader'
 import { useI18n } from '~/i18n/hooks'
+import { trpc } from '~/lib/trpc'
 
 export default function Page() {
   const t = useI18n()
@@ -36,7 +38,7 @@ const ActionButtonGroup = () => {
 const NewButton = () => {
   const t = useI18n()
   const [newModalOpen, setNewModalOpen] = useState(false)
-
+  const { mutateAsync: create } = trpc.topic.create.useMutation()
   return (
     <>
       <Button
@@ -60,7 +62,18 @@ const NewButton = () => {
             {t('common.new')} - {t('navigator.topic')}
           </ModalHeader>
 
-          <EditingForm onSubmit={(res) => {}} />
+          <EditingForm
+            onSubmit={(res) => {
+              create(res)
+                .then(() => {
+                  setNewModalOpen(false)
+                  toast.success(t('common.create-success'))
+                })
+                .catch((e) => {
+                  toast.error(e.message)
+                })
+            }}
+          />
         </ModalContent>
       </NextUIModal>
     </>
@@ -111,7 +124,7 @@ const EditingForm: FC<{
             bizType="icon"
             addAuthHeader
             onFinish={(_, res) => {
-              console.log(res)
+              formRef.current?.setValue('icon', res.url)
             }}
           >
             <i className="icon-[mingcute--upload-2-line]" />

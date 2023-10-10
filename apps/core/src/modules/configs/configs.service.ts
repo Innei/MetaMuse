@@ -8,7 +8,6 @@ import { Injectable, Logger } from '@nestjs/common'
 
 import { UserService } from '../user/user.service'
 import { generateDefaultConfig } from './configs.default'
-import { SeoDto, UrlDto } from './configs.dto'
 import { IConfig } from './configs.interface'
 
 @Injectable()
@@ -71,16 +70,7 @@ export class ConfigsService {
   public defaultConfig = generateDefaultConfig()
 
   public get<T extends keyof IConfig>(key: T): Promise<Readonly<IConfig[T]>> {
-    return Promise.resolve(
-      {
-        url: {
-          webUrl: 'https://example.com',
-        } as UrlDto,
-        seo: {
-          title: '静かな森',
-        } as SeoDto,
-      }[key],
-    )
+    return Promise.resolve(this.defaultConfig[key])
   }
 
   /// get kv

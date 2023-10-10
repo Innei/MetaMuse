@@ -86,4 +86,8 @@ export class FileService {
     const { serverUrl } = await this.configService.get('url')
     return `${serverUrl.replace(/\/+$/, '')}/objects/${type}/${name}`
   }
+
+  exists(type: FileType, name: string) {
+    return this.checkIsExist(this.resolveFilePath(type, name))
+  }
 }

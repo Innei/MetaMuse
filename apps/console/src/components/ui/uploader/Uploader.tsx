@@ -105,7 +105,7 @@ export const Uploader: Component<
         },
       })
       .then((res) => {
-        onFinish?.(file, res)
+        onFinish?.(file, res.data)
         updateFileStatus('done')
       })
       .catch(() => {
