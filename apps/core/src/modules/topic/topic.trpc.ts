@@ -7,6 +7,7 @@ import { EventManagerService } from '@core/processors/helper/helper.event.servic
 import { defineTrpcRouter } from '@core/processors/trpc/trpc.helper'
 import { tRPCService } from '@core/processors/trpc/trpc.service'
 import { SnowflakeIdDto, SnowflakeIdSchema } from '@core/shared/dto/id.dto'
+import { PagerDto } from '@core/shared/dto/pager.dto'
 import { makeOptionalPropsNullable } from '@core/shared/utils/zod.util'
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
 
@@ -57,6 +58,25 @@ export class TopicTrpcRouter implements OnModuleInit {
               }
             })
         }),
+
+      all: procedureAuth.query(async () => {
+        return dbModel.findMany()
+      }),
+      paginate: procedureAuth.input(PagerDto.schema).query(
+        async ({ input: query }) =>
+          await dbModel.paginate(
+            {
+              where: {},
+              orderBy: {
+                created: 'desc',
+              },
+            },
+            {
+              size: query.size || 10,
+              page: query.size || 1,
+            },
+          ),
+      ),
 
       update: procedureAuth
         .input(

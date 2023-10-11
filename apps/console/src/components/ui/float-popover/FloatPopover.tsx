@@ -33,6 +33,7 @@ type FloatPopoverProps<T> = PropsWithChildren<{
    * @default popover
    */
   type?: 'tooltip' | 'popover'
+  isDisabled?: boolean
 }> &
   UseFloatingOptions
 
@@ -52,6 +53,7 @@ export const FloatPopover = function FloatPopover<T extends {}>(
     as: As = 'div',
     type = 'popover',
     triggerComponentProps,
+    isDisabled,
     ...floatingProps
   } = props
 
@@ -83,6 +85,7 @@ export const FloatPopover = function FloatPopover<T extends {}>(
   }, [debug])
 
   const doPopoverShow = useEventCallback(() => {
+    if (isDisabled) return
     setOpen(true)
   })
 

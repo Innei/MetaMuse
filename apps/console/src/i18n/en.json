@@ -92,6 +92,9 @@
     },
     "parse_md_yaml": {
       "title": "Import markdown with YAML front matter format"
+    },
+    "topic": {
+      "detail": "Topic detail"
     }
   }
 }

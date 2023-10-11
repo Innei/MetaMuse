@@ -1,8 +1,9 @@
-import { Tooltip } from '@nextui-org/react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { PropsWithChildren } from 'react'
 
 import { clsxm } from '~/lib/helper'
+
+import { FloatPopover } from '../float-popover'
 
 const isTextOverflowed = (element: HTMLElement) => {
   return (
@@ -14,11 +15,10 @@ type EllipsisProps = PropsWithChildren<{
   width?: string
   className?: string
   disabled?: boolean
-  arrow?: boolean
 }>
 
 export const EllipsisTextWithTooltip = (props: EllipsisProps) => {
-  const { children, className, width, arrow, disabled } = props
+  const { children, className, width, disabled } = props
 
   const [textElRef, setTextElRef] = useState<HTMLSpanElement | null>()
   const [isOverflowed, setIsOverflowed] = useState(false)
@@ -45,32 +45,36 @@ export const EllipsisTextWithTooltip = (props: EllipsisProps) => {
   }, [textElRef])
 
   return (
-    <Tooltip
-      showArrow={arrow}
+    <FloatPopover
+      type="tooltip"
+      wrapperClassName="truncate min-w-0 w-full"
       isDisabled={!isOverflowed || disabled}
-      content={
-        <span
-          className="tippy-block max-w-[30vw] hover:!bg-transparent break-all"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {children}
-        </span>
-      }
+      TriggerComponent={useCallback(
+        () => (
+          <span
+            className={className}
+            ref={setTextElRef}
+            style={
+              width
+                ? {
+                    maxWidth: width,
+                  }
+                : undefined
+            }
+          >
+            {children}
+          </span>
+        ),
+        [children, className, width],
+      )}
     >
       <span
-        className={className}
-        ref={setTextElRef}
-        style={
-          width
-            ? {
-                maxWidth: width,
-              }
-            : undefined
-        }
+        className="max-w-[30vw] hover:!bg-transparent break-all"
+        onClick={(e) => e.stopPropagation()}
       >
         {children}
       </span>
-    </Tooltip>
+    </FloatPopover>
   )
 }
 

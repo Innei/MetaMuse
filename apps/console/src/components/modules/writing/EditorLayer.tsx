@@ -1,10 +1,13 @@
 import type { FC, ReactNode } from 'react'
 
+import { clsxm } from '~/lib/helper'
+
 export const EditorLayer: FC<{
   children: ReactNode[]
+  mainClassName?: string
 }> = (props) => {
-  const { children } = props
-  const [TitleEl, HeaderEl, ContentEl, FooterEl] = children
+  const { children, mainClassName } = props
+  const [TitleEl, HeaderEl, ContentEl, FooterEl, ...rest] = children
   return (
     <>
       <div className="flex justify-between flex-wrap items-center mb-5">
@@ -17,11 +20,17 @@ export const EditorLayer: FC<{
         </div>
       </div>
 
-      <div className="flex flex-grow lg:grid lg:grid-cols-[auto_400px] lg:gap-4">
+      <main
+        className={clsxm(
+          'flex flex-grow lg:grid lg:grid-cols-[auto_400px] lg:gap-4',
+          mainClassName,
+        )}
+      >
         <div className="flex flex-grow flex-col overflow-auto">{ContentEl}</div>
 
         {FooterEl}
-      </div>
+      </main>
+      {rest}
     </>
   )
 }
