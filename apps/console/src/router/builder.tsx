@@ -203,5 +203,28 @@ async function builder() {
     routePath2RouteObjectMapping,
   }
 }
+
 const { appRoutes, routePath2RouteObjectMapping } = await builder()
-export { appPages, appRoutes, routePath2RouteObjectMapping }
+
+function flattenRoutes(routes: RouteExtendObject[], parentPath = '') {
+  let result = [] as RouteExtendObject[]
+
+  for (const route of routes) {
+    const fullPath = `${parentPath}/${route.path}`
+    result.push({
+      ...route,
+      index: false,
+      path: fullPath,
+      children: [], // Empty children array since we're flattening the structure
+    })
+
+    if (route.children && route.children.length > 0) {
+      result = result.concat(flattenRoutes(route.children, fullPath))
+    }
+  }
+
+  return result
+}
+
+const flattedRoutes = flattenRoutes(appRoutes)
+export { appPages, appRoutes, routePath2RouteObjectMapping, flattedRoutes }

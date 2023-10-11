@@ -144,6 +144,9 @@ const HeaderMenu: Component = ({ className }) => {
 }
 
 const SecondaryNavLine = () => {
+  const routeObject = useCurrentRouteObject()
+  const parent = routeObject.parent
+  if (!parent) return null
   return (
     <nav className="flex h-12 items-center justify-between overflow-auto lg:overflow-visible">
       <SecondaryLevelMenu />
