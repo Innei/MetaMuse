@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import type { HTMLMotionProps } from 'framer-motion'
 import type { PropsWithChildren } from 'react'
 
-import { softSpringPreset } from '~/constants/spring'
+import { microReboundPreset } from '~/constants/spring'
 
 export const MotionDivToBottom = forwardRef<
   HTMLDivElement,
@@ -25,7 +25,7 @@ export const MotionDivToBottom = forwardRef<
         opacity: 0,
         y: -10,
       }}
-      transition={softSpringPreset}
+      transition={microReboundPreset}
       {...rest}
       ref={ref}
     >

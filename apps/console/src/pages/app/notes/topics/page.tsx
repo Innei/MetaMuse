@@ -164,6 +164,7 @@ const NewButton = () => {
   const t = useI18n()
   const [newModalOpen, setNewModalOpen] = useState(false)
   const { mutateAsync: create } = trpc.topic.create.useMutation()
+  const utils = trpc.useContext()
   return (
     <>
       <Button
@@ -193,6 +194,7 @@ const NewButton = () => {
                 .then(() => {
                   setNewModalOpen(false)
                   toast.success(t('common.create-success'))
+                  utils.topic.invalidate()
                 })
                 .catch((e) => {
                   toast.error(e.message)
@@ -210,6 +212,7 @@ const EditButton = () => {
   const t = useI18n()
   const [modalOpen, setModalOpen] = useState(false)
   const { mutateAsync: create } = trpc.topic.update.useMutation()
+  const utils = trpc.useContext()
   return (
     <>
       <Button
@@ -239,6 +242,7 @@ const EditButton = () => {
                 .then(() => {
                   setModalOpen(false)
                   toast.success(t('common.save-success'))
+                  utils.topic.invalidate()
                 })
                 .catch((e) => {
                   toast.error(e.message)

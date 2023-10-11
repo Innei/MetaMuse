@@ -165,7 +165,7 @@ model Note {
   /// [NoteCoordinates]
   coordinates Json?
   location    String?
-  topic       NoteTopic? @relation(fields: [topicId], references: [name])
+  topic       NoteTopic? @relation(fields: [topicId], references: [id])
   hasMemory   Boolean    @default(false) @map("has_memory")
 
   /// [ArticleCount]

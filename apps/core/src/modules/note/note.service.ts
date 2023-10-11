@@ -62,6 +62,7 @@ export class NoteService {
         where: {
           id,
         },
+        include: NoteIncluded,
       })
       .catch(
         resourceNotFoundWrapper(new BizException(ErrorCodeEnum.NoteNotFound)),
@@ -120,20 +121,28 @@ export class NoteService {
     }
   }
 
-  private dtoToPost(dto: NoteDto, type: 'create'): Prisma.NoteCreateInput
-  private dtoToPost(dto: NotePatchDto, type: 'update'): Prisma.NoteUpdateInput
-  private dtoToPost(
+  private dtoToModel(dto: NoteDto, type: 'create'): Prisma.NoteCreateInput
+  private dtoToModel(dto: NotePatchDto, type: 'update'): Prisma.NoteUpdateInput
+  private dtoToModel(
     dto: NoteDto | NotePatchDto,
     type: 'create' | 'update',
   ): Prisma.NoteCreateInput | Prisma.NoteUpdateInput {
     const input = {
-      ...omit(dto, 'modified', 'custom_created'),
-    } as Prisma.PostCreateInput | Prisma.PostUpdateInput
+      ...omit(dto, 'modified', 'custom_created', 'topicId'),
+    } as Prisma.NoteCreateInput | Prisma.NoteUpdateInput
 
     const setOrConnect = type === 'create' ? 'connect' : 'set'
 
     if (dto.custom_created) {
       input.created = dto.custom_created
+    }
+
+    if (dto.topicId) {
+      input.topic = {
+        connect: {
+          id: dto.topicId,
+        },
+      }
     }
 
     return input
@@ -145,7 +154,7 @@ export class NoteService {
       where: {
         id,
       },
-      data: this.dtoToPost(data, 'update'),
+      data: this.dtoToModel(data, 'update'),
     })
   }
 
@@ -153,7 +162,7 @@ export class NoteService {
     // TODO check topic
     return this.db.prisma.note.create({
       data: {
-        ...this.dtoToPost(data, 'create'),
+        ...this.dtoToModel(data, 'create'),
         meta: data.meta,
       },
     })
