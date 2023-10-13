@@ -62,11 +62,16 @@ const ListTableContext = createContext<ListTableContextValue>(null!)
 type ListTableContextValue = ReturnType<typeof createDefaultCtxValue>
 
 type HeaderProps = {
-  onNewClick: () => void
-  onBatchDeleteClick: (ids: string[]) => void
+  onNewClick?: () => void
+  onBatchDeleteClick?: (ids: string[]) => void
+  canDisplayCardView: boolean
 }
 
-const Header: FC<HeaderProps> = ({ onNewClick, onBatchDeleteClick }) => {
+const Header: FC<HeaderProps> = ({
+  canDisplayCardView,
+  onNewClick,
+  onBatchDeleteClick,
+}) => {
   const { viewStyleAtom, selectionAtom } = useContext(ListTableContext)
   const [viewStyle, setViewStyle] = useAtom(viewStyleAtom)
   const [selection, setSelection] = useAtom(selectionAtom)
@@ -88,7 +93,7 @@ const Header: FC<HeaderProps> = ({ onNewClick, onBatchDeleteClick }) => {
                 variant="light"
                 color="danger"
                 onClick={() => {
-                  onBatchDeleteClick(Array.from(selection))
+                  onBatchDeleteClick?.(Array.from(selection))
                   setSelection(new Set())
                   dismiss()
                 }}
@@ -100,13 +105,13 @@ const Header: FC<HeaderProps> = ({ onNewClick, onBatchDeleteClick }) => {
         ),
       })
     } else {
-      onNewClick()
+      onNewClick?.()
     }
   })
   const isMobile = useIsMobile()
   return (
     <div className="mb-6 flex h-12 justify-between space-x-2">
-      {!isMobile ? (
+      {!isMobile && canDisplayCardView ? (
         <Button
           variant="flat"
           isIconOnly
@@ -132,18 +137,20 @@ const Header: FC<HeaderProps> = ({ onNewClick, onBatchDeleteClick }) => {
       <div className="space-x-2">
         <SortAndFilterButton />
 
-        <Button
-          onClick={actionButtonClick}
-          variant="shadow"
-          color={hasSelection ? 'danger' : 'primary'}
-        >
-          {hasSelection ? (
-            <i className="icon-[mingcute--delete-2-line]" />
-          ) : (
-            <AddCircleLine />
-          )}
-          {hasSelection ? t('common.delete') : t('common.new')}
-        </Button>
+        {(onNewClick || onBatchDeleteClick) && (
+          <Button
+            onClick={actionButtonClick}
+            variant="shadow"
+            color={hasSelection ? 'danger' : 'primary'}
+          >
+            {hasSelection ? (
+              <i className="icon-[mingcute--delete-2-line]" />
+            ) : (
+              <AddCircleLine />
+            )}
+            {hasSelection ? t('common.delete') : t('common.new')}
+          </Button>
+        )}
       </div>
     </div>
   )
@@ -160,7 +167,7 @@ type ListTableWrapperProps<
   Col extends ListColumn<Data> = ListColumn<Data>,
   Cols extends Col[] = Col[],
 > = PropsWithChildren<{
-  data?: PaginationResult<Data> | null
+  data?: PaginationResult<Data> | null | Data[]
   isLoading?: boolean
   renderTableRowKeyValue?: (
     data: Data,
@@ -168,8 +175,8 @@ type ListTableWrapperProps<
   ) => React.ReactNode
 }> &
   Pick<TableRenderProps<Data, Col, Cols>, 'columns'> &
-  Pick<CardsRenderProps<Data>, 'renderCardBody' | 'renderCardFooter'> &
-  HeaderProps
+  Partial<Pick<CardsRenderProps<Data>, 'renderCardBody' | 'renderCardFooter'>> &
+  Omit<HeaderProps, 'canDisplayCardView'>
 
 export const ListTable = <Data extends DataBaseType>({
   onNewClick,
@@ -190,13 +197,21 @@ export const ListTable = <Data extends DataBaseType>({
       <Spinner className="w-full flex items-center justify-center h-[300px]" />
     )
   }
-  const { data: listData, pagination } = data || {}
+  const { data: listData, pagination } = Array.isArray(data)
+    ? { data, pagination: null }
+    : data || {}
+
+  const canDisplayCardView = !!renderCardBody && !!renderCardFooter
 
   return (
     <ListTableContext.Provider value={ctxValue}>
-      <Header onNewClick={onNewClick} onBatchDeleteClick={onBatchDeleteClick} />
+      <Header
+        canDisplayCardView={canDisplayCardView}
+        onNewClick={onNewClick}
+        onBatchDeleteClick={onBatchDeleteClick}
+      />
 
-      {viewStyle == ViewStyle.Table && !isMobile ? (
+      {(viewStyle == ViewStyle.Table && !isMobile) || !canDisplayCardView ? (
         <TableRender
           data={listData}
           renderPostKeyValue={renderPostKeyValue}

@@ -60,7 +60,7 @@ export const PresentDrawer: FC<PropsWithChildren<PresentDrawerProps>> = (
           style={{
             zIndex: contentZIndex,
           }}
-          className="bg-background fixed bottom-0 left-0 right-0 mt-24 flex flex-col rounded-t-[10px] p-4"
+          className="bg-background fixed bottom-0 left-0 right-0 mt-24 flex flex-col rounded-t-[10px] p-4 max-h-[95vh]"
         >
           {dismissible && (
             <div className="mx-auto mb-8 h-1.5 w-12 flex-shrink-0 rounded-full bg-zinc-300 dark:bg-neutral-800" />

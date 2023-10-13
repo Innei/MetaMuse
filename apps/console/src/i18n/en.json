@@ -27,6 +27,7 @@
     "delete": "Delete",
     "delete-success": "Delete successfully",
     "confirm-delete": "Are you sure to delete?",
+    "confirm-delete-item": "Are you sure to delete 「{{item}}」?",
     "edit": "Edit",
     "editing": "Editing",
     "height": "Height",

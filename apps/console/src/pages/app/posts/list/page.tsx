@@ -1,10 +1,4 @@
-import {
-  Button,
-  Chip,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@nextui-org/react'
+import { Button, Chip } from '@nextui-org/react'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { atom, useAtomValue } from 'jotai'
@@ -16,6 +10,7 @@ import type { FC } from 'react'
 import { ListSortAndFilterProvider } from '~/components/modules/writing/ListSortAndFilter'
 import { ListTable } from '~/components/modules/writing/ListTable'
 import { TitleExtra } from '~/components/modules/writing/TitleExtra'
+import { DeleteConfirmButton } from '~/components/ui/button/DeleteConfirmButton'
 import { useQueryPager, withQueryPager } from '~/hooks/biz/use-query-pager'
 import { useI18n } from '~/i18n/hooks'
 import { routeBuilder, Routes } from '~/lib/route-builder'
@@ -197,40 +192,18 @@ const Actions: FC<{ data: StringifyNestedDates<NormalizedPostModel> }> = ({
         size="sm"
         variant="light"
       >
-        编辑
+        {t('common.edit')}
       </Button>
-      <Popover>
-        <PopoverTrigger>
-          <Button size="sm" variant="light" className="hover:text-red-500">
-            删除
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent>
-          <div className="p-4">
-            <p className="text-center text-red-500 text-base font-bold">
-              {t('common.confirm-delete')}
-            </p>
-          </div>
-          <div>
-            <Button
-              size="sm"
-              variant="light"
-              color="danger"
-              onClick={() => {
-                deleteById({
-                  id: data.id,
-                }).then(() => {
-                  utils.post.invalidate()
-
-                  toast.success(t('common.delete-success'))
-                })
-              }}
-            >
-              {t('common.sure')}
-            </Button>
-          </div>
-        </PopoverContent>
-      </Popover>
+      <DeleteConfirmButton
+        deleteItemText={data.title}
+        onDelete={() =>
+          deleteById({
+            id: data.id,
+          }).then(() => {
+            utils.post.invalidate()
+          })
+        }
+      />
     </div>
   )
 }

@@ -15,10 +15,12 @@ type EllipsisProps = PropsWithChildren<{
   width?: string
   className?: string
   disabled?: boolean
+
+  wrapperClassName?: string
 }>
 
 export const EllipsisTextWithTooltip = (props: EllipsisProps) => {
-  const { children, className, width, disabled } = props
+  const { children, className, width, disabled, wrapperClassName } = props
 
   const [textElRef, setTextElRef] = useState<HTMLSpanElement | null>()
   const [isOverflowed, setIsOverflowed] = useState(false)
@@ -47,7 +49,7 @@ export const EllipsisTextWithTooltip = (props: EllipsisProps) => {
   return (
     <FloatPopover
       type="tooltip"
-      wrapperClassName="truncate min-w-0 w-full"
+      wrapperClassName={clsxm('truncate min-w-0 w-full', wrapperClassName)}
       isDisabled={!isOverflowed || disabled}
       TriggerComponent={useCallback(
         () => (

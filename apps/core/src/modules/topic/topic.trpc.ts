@@ -12,6 +12,7 @@ import { makeOptionalPropsNullable } from '@core/shared/utils/zod.util'
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
 
 import { TopicInputSchema } from './topic.dto'
+import { TopicService } from './topic.service'
 
 const trpcPrefix = 'topic'
 const dbModel = DatabaseService.client.noteTopic
@@ -30,8 +31,8 @@ export class TopicTrpcRouter implements OnModuleInit {
   @Inject(tRPCService)
   private trpcService: tRPCService
 
-  @Inject(DatabaseService)
-  private databaseService: DatabaseService
+  @Inject()
+  private service: TopicService
 
   onModuleInit() {
     this.router = this.createRouter()
@@ -41,6 +42,17 @@ export class TopicTrpcRouter implements OnModuleInit {
     const procedureAuth = this.trpcService.procedureAuth
 
     return defineTrpcRouter(trpcPrefix, {
+      notesByTopicId: procedureAuth
+        .input(
+          z.object({
+            topicId: z.string(),
+          }),
+        )
+        .query(async ({ input }) => {
+          return this.service.getNotesByTopicId(input.topicId)
+        }),
+
+      /// base
       id: procedureAuth
         .input(
           z.object({

@@ -1,15 +1,15 @@
 import {
+  Avatar,
   Button,
   ButtonGroup,
   Divider,
-  Listbox,
-  ListboxItem,
   ModalContent,
   ModalHeader,
   ScrollShadow,
 } from '@nextui-org/react'
 import { useEffect, useRef, useState } from 'react'
-import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
 import { toast } from 'sonner'
 import type { FormForwardRef } from '~/components/ui/form'
 import type { FC } from 'react'
@@ -18,27 +18,40 @@ import { useIsMobile } from '~/atoms'
 import { Empty } from '~/components/common/Empty'
 import { PageLoading } from '~/components/common/PageLoading'
 import { EditorLayer } from '~/components/modules/writing/EditorLayer'
+import { ListTable } from '~/components/modules/writing/ListTable'
+import { MotionButtonBase } from '~/components/ui/button'
+import { DeleteConfirmButton } from '~/components/ui/button/DeleteConfirmButton'
 import { PresentDrawer } from '~/components/ui/drawer'
 import { Form, FormInput, FormSubmit } from '~/components/ui/form'
 import { stringRuleMax, stringRuleUrl } from '~/components/ui/form/utils'
 import { NextUIModal } from '~/components/ui/modal'
-import { EllipsisHorizontalTextWithTooltip } from '~/components/ui/typography'
 import { Uploader } from '~/components/ui/uploader'
+import { withQueryPager } from '~/hooks/biz/use-query-pager'
 import { useI18n } from '~/i18n/hooks'
+import { buildNSKey } from '~/lib/key'
+import { jotaiStore } from '~/lib/store'
 import { trpc } from '~/lib/trpc'
 
-const selectedTopicIdAtom = atom(null as string | null)
+import { NoteTableColumns } from '../list/page'
+
+const selectedTopicIdAtom = atomWithStorage(
+  buildNSKey('select-topic-id'),
+  null as string | null,
+)
 export default function Page() {
   const t = useI18n()
   const { isLoading, data } = trpc.topic.all.useQuery()
   const setId = useSetAtom(selectedTopicIdAtom)
   const onceRef = useRef(false)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
+    if (isMobile) return
     // set default selected topic, first
     if (onceRef.current) {
       return
     }
+
     onceRef.current = true
     if (!data) return
     if (!isLoading) {
@@ -49,7 +62,6 @@ export default function Page() {
     }
   }, [isLoading, data])
 
-  const isMobile = useIsMobile()
   if (isLoading) return <PageLoading />
   return (
     <EditorLayer mainClassName="flex lg:grid lg:grid-cols-[400px_auto] lg:gap-4">
@@ -92,62 +104,90 @@ const useCurrentSelectedTopic = () => {
 const TopicDetail = () => {
   const topic = useCurrentSelectedTopic()
   const t = useI18n()
+  const { mutateAsync: deleteTopic } = trpc.topic.delete.useMutation()
+  const utils = trpc.useContext()
   if (!topic) return <Empty />
   return (
     <main>
       <h2 className="font-medium text-lg">{t('module.topic.detail')}</h2>
 
-      {/* TODO icon render */}
-      <div className="flex flex-col my-4">
-        <span>
-          {t('common.name')}: {topic?.name}
-        </span>
-        <span>
-          {t('common.desc')}: {topic?.introduce}
-        </span>
-        <span>
-          {t('common.longdesc')}: {topic?.description}
-        </span>
+      <div className="grid grid-cols-[auto,1fr] my-4 gap-4">
+        <Avatar
+          src={topic.icon || ''}
+          name={topic.name.slice(0, 1)}
+          size="lg"
+        />
+        <div className="flex flex-col">
+          <span>
+            {t('common.name')}: {topic?.name}
+          </span>
+          <span>
+            {t('common.desc')}: {topic?.introduce}
+          </span>
+          <span>
+            {t('common.longdesc')}: {topic?.description}
+          </span>
 
-        <span>
-          {t('common.slug')}: /topics/{topic?.slug}
-        </span>
+          <span>
+            {t('common.slug')}: /topics/{topic?.slug}
+          </span>
+        </div>
       </div>
-      <EditButton />
+      <div className="space-x-4">
+        <EditButton />
+        <DeleteConfirmButton
+          deleteItemText={topic.name}
+          onDelete={() =>
+            deleteTopic({ id: topic.id })
+              .then(() => {
+                utils.topic.invalidate()
+                jotaiStore.set(selectedTopicIdAtom, null)
+              })
+              .catch((e) => void toast.error(e.message))
+          }
+        />
+      </div>
 
       <Divider className="my-4" />
       {/* TODO notes table */}
+      <NoteTopicTable />
     </main>
   )
 }
 
+const NoteTopicTable = withQueryPager(() => {
+  const topicId = useAtomValue(selectedTopicIdAtom) || ''
+  const { data } = trpc.topic.notesByTopicId.useQuery(
+    { topicId },
+    { enabled: !!topicId },
+  )
+  // @ts-expect-error
+  return <ListTable data={data} columns={NoteTableColumns} />
+})
+
 const Topics = () => {
   const { data: topics } = trpc.topic.all.useQuery()
   const [selectedTopicId, setSelectedTopicId] = useAtom(selectedTopicIdAtom)
+
+  if (topics?.length === 0) return <Empty />
   return (
     <ScrollShadow className="h-0 overflow-auto flex-grow">
-      <Listbox
-        onAction={(key) => {
-          setSelectedTopicId(key as string)
-        }}
-        className="p-0 gap-0 dark:divide-default-100/80 bg-content1 max-w-[300px]"
-        itemClasses={{
-          base: 'px-3 gap-3 h-12 data-[hover=true]:bg-default-100/80 data-[active=true]:bg-default-200/80',
-        }}
-      >
-        {(topics || []).map((topic) => (
-          <ListboxItem
-            key={topic.id}
-            endContent={null}
-            startContent={null}
-            data-active={selectedTopicId === topic.id}
-          >
-            <EllipsisHorizontalTextWithTooltip>
+      <div className="p-0 gap-0 dark:divide-default-100/80 max-w-full lg:max-w-[300px]">
+        <div className="gap-1 flex flex-col">
+          {(topics || []).map((topic) => (
+            <MotionButtonBase
+              key={topic.id}
+              data-active={selectedTopicId === topic.id}
+              onClick={() => {
+                setSelectedTopicId(topic.id)
+              }}
+              className="flex truncate w-full h-12 py-2 px-4 rounded-lg items-center hover:bg-default-100/80 data-[active=true]:bg-default-200/80"
+            >
               {topic.name}
-            </EllipsisHorizontalTextWithTooltip>
-          </ListboxItem>
-        ))}
-      </Listbox>
+            </MotionButtonBase>
+          ))}
+        </div>
+      </div>
     </ScrollShadow>
   )
 }
