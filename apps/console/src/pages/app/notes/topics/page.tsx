@@ -117,19 +117,16 @@ const TopicDetail = () => {
           name={topic.name.slice(0, 1)}
           size="lg"
         />
-        <div className="flex flex-col">
-          <span>
-            {t('common.name')}: {topic?.name}
+        <div className="flex flex-col gap-2">
+          <span className="font-medium text-xl">{topic?.name}</span>
+          <span className="float-right text-foreground-600 text-sm">
+            /topics/{topic?.slug}
           </span>
-          <span>
-            {t('common.desc')}: {topic?.introduce}
+          <span className="text-foreground-800 text-sm">
+            {topic?.introduce}
           </span>
-          <span>
-            {t('common.longdesc')}: {topic?.description}
-          </span>
-
-          <span>
-            {t('common.slug')}: /topics/{topic?.slug}
+          <span className="mt-2 text-foreground-600 text-sm">
+            {topic?.description}
           </span>
         </div>
       </div>
@@ -251,7 +248,7 @@ const EditButton = () => {
   const topic = useCurrentSelectedTopic()
   const t = useI18n()
   const [modalOpen, setModalOpen] = useState(false)
-  const { mutateAsync: create } = trpc.topic.update.useMutation()
+  const { mutateAsync: update } = trpc.topic.update.useMutation()
   const utils = trpc.useContext()
   return (
     <>
@@ -278,7 +275,10 @@ const EditButton = () => {
           <EditingForm
             initialValues={topic}
             onSubmit={(res) => {
-              create(res)
+              update({
+                ...res,
+                id: topic!.id,
+              })
                 .then(() => {
                   setModalOpen(false)
                   toast.success(t('common.save-success'))
@@ -325,7 +325,7 @@ const EditingForm: FC<{
         rules={stringRuleMax(128)}
       />
       <FormInput
-        name="desc"
+        name="introduce"
         required
         label={t('common.desc')}
         rules={stringRuleMax(255)}
@@ -350,7 +350,7 @@ const EditingForm: FC<{
       />
       <FormInput
         emptyAsNull
-        name="longDesc"
+        name="description"
         textarea
         label={t('common.longdesc')}
         rules={stringRuleMax(1024)}

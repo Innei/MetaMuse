@@ -11,7 +11,7 @@ export function makeOptionalPropsNullable<Schema extends z.AnyZodObject>(
     (acc, [key, value]) => {
       acc[key] =
         value instanceof z.ZodOptional
-          ? value.unwrap().nullable()
+          ? value.unwrap().nullable().optional()
           : value.optional()
       return acc
     },
