@@ -37,6 +37,7 @@ import { RelativeTime } from '~/components/ui/date-time'
 import { MotionDivToBottom } from '~/components/ui/motion'
 import { useQueryPager } from '~/hooks/biz/use-query-pager'
 import { useI18n } from '~/i18n/hooks'
+import { clsxm } from '~/lib/helper'
 import { buildNSKey } from '~/lib/key'
 import { formatNumber } from '~/lib/transformer'
 import { useModalStack } from '~/providers/modal-stack-provider'
@@ -176,7 +177,9 @@ type ListTableWrapperProps<
 }> &
   Pick<TableRenderProps<Data, Col, Cols>, 'columns'> &
   Partial<Pick<CardsRenderProps<Data>, 'renderCardBody' | 'renderCardFooter'>> &
-  Omit<HeaderProps, 'canDisplayCardView'>
+  Omit<HeaderProps, 'canDisplayCardView'> & {
+    tableClassName?: string
+  }
 
 export const ListTable = <Data extends DataBaseType>({
   onNewClick,
@@ -187,6 +190,7 @@ export const ListTable = <Data extends DataBaseType>({
   columns,
   renderCardBody,
   renderCardFooter,
+  tableClassName,
 }: ListTableWrapperProps<Data>) => {
   const ctxValue = useMemo(createDefaultCtxValue, [])
   const [page, , setPage] = useQueryPager()
@@ -217,6 +221,7 @@ export const ListTable = <Data extends DataBaseType>({
           renderPostKeyValue={renderPostKeyValue}
           columns={columns}
           isLoading={isLoading}
+          tableClassName={tableClassName}
         />
       ) : (
         <CardsRender
@@ -264,6 +269,8 @@ interface TableRenderProps<
   columns: Cols
   renderPostKeyValue?: (data: T, key: Cols[number]['key']) => React.ReactNode
   data?: T[]
+
+  tableClassName?: string
 }
 
 const TableRender = <T extends DataBaseType>({
@@ -271,6 +278,7 @@ const TableRender = <T extends DataBaseType>({
   data,
   columns,
   renderPostKeyValue,
+  tableClassName: className,
 }: TableRenderProps<T>) => {
   const { selectionAtom } = useContext(ListTableContext)
   const [selection, setSelection] = useAtom(selectionAtom)
@@ -310,13 +318,17 @@ const TableRender = <T extends DataBaseType>({
   )
   return (
     <Table
-      className="min-h-[32.8rem] overflow-auto bg-transparent [&_table]:min-w-[1000px]"
+      className={clsxm(
+        'min-h-[32.8rem] overflow-auto bg-transparent [&_table]:min-w-[1000px]',
+        className,
+      )}
       removeWrapper
       selectionMode="multiple"
       onSelectionChange={useEventCallback((e) => {
         setSelection(new Set(e) as Set<string>)
       })}
       selectedKeys={selection}
+      isHeaderSticky
     >
       <TableHeader>
         {memoColumns.map((column) => (

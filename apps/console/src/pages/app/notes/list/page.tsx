@@ -84,11 +84,13 @@ export const NoteTableColumns: ListColumn<
     key: 'created',
     label: '创建时间',
     type: 'datetime',
+    width: 300,
   },
   {
     key: 'modified',
     label: '修改时间',
     type: 'datetime',
+    width: 300,
   },
   {
     key: 'action',

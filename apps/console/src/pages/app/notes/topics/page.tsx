@@ -15,6 +15,7 @@ import {
   TableRow,
 } from '@nextui-org/react'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { produce } from 'immer'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { toast } from 'sonner'
@@ -38,6 +39,7 @@ import { NextUIModal } from '~/components/ui/modal'
 import { Uploader } from '~/components/ui/uploader'
 import { withQueryPager } from '~/hooks/biz/use-query-pager'
 import { useI18n } from '~/i18n/hooks'
+import { diffSets } from '~/lib/diff'
 import { buildNSKey } from '~/lib/key'
 import { jotaiStore } from '~/lib/store'
 import { trpc } from '~/lib/trpc'
@@ -119,46 +121,47 @@ const TopicDetail = () => {
   const utils = trpc.useContext()
   if (!topic) return <Empty />
   return (
-    <main>
-      <h2 className="font-medium text-lg">{t('module.topic.detail')}</h2>
+    <main className="h-full overflow-auto flex flex-col">
+      <div className="h-0 flex-grow flex flex-col">
+        <h2 className="font-medium text-lg">{t('module.topic.detail')}</h2>
 
-      <div className="grid grid-cols-[auto,1fr] my-4 gap-4">
-        <Avatar
-          src={topic.icon || ''}
-          name={topic.name.slice(0, 1)}
-          size="lg"
-        />
-        <div className="flex flex-col gap-2">
-          <span className="font-medium text-xl">{topic?.name}</span>
-          <span className="float-right text-foreground-600 text-sm">
-            /topics/{topic?.slug}
-          </span>
-          <span className="text-foreground-800 text-sm">
-            {topic?.introduce}
-          </span>
-          <span className="mt-2 text-foreground-600 text-sm">
-            {topic?.description}
-          </span>
+        <div className="grid grid-cols-[auto,1fr] my-4 gap-4">
+          <Avatar
+            src={topic.icon || ''}
+            name={topic.name.slice(0, 1)}
+            size="lg"
+          />
+          <div className="flex flex-col gap-2">
+            <span className="font-medium text-xl">{topic?.name}</span>
+            <span className="float-right text-foreground-600 text-sm">
+              /topics/{topic?.slug}
+            </span>
+            <span className="text-foreground-800 text-sm">
+              {topic?.introduce}
+            </span>
+            <span className="mt-2 text-foreground-600 text-sm">
+              {topic?.description}
+            </span>
+          </div>
         </div>
-      </div>
-      <div className="space-x-4">
-        <EditButton />
-        <DeleteConfirmButton
-          deleteItemText={topic.name}
-          onDelete={() =>
-            deleteTopic({ id: topic.id })
-              .then(() => {
-                utils.topic.invalidate()
-                jotaiStore.set(selectedTopicIdAtom, null)
-              })
-              .catch((e) => void toast.error(e.message))
-          }
-        />
-      </div>
+        <div className="space-x-4">
+          <EditButton />
+          <DeleteConfirmButton
+            deleteItemText={topic.name}
+            onDelete={() =>
+              deleteTopic({ id: topic.id })
+                .then(() => {
+                  utils.topic.invalidate()
+                  jotaiStore.set(selectedTopicIdAtom, null)
+                })
+                .catch((e) => void toast.error(e.message))
+            }
+          />
+        </div>
 
-      <Divider className="my-4" />
-      {/* TODO notes table */}
-      <NoteTopicTable />
+        <Divider className="my-4" />
+        <NoteTopicTable />
+      </div>
     </main>
   )
 }
@@ -198,6 +201,7 @@ const NoteTopicTable = withQueryPager(() => {
             toast.error(e.message)
           })
       }}
+      tableClassName="min-h-0 !h-0 flex-grow overflow-auto"
     />
   )
 })
@@ -234,16 +238,76 @@ const AddNotesToTopicModal = ({ topicId }: { topicId: string }) => {
     return set
   }, [data])
 
-  const { mutateAsync: addNotes } = trpc.topic.addNotesToTopic.useMutation()
+  const utils = trpc.useContext()
+  function handleNoteMutation(noteIds: string[], topicId?: string) {
+    utils.note.paginate.setInfiniteData(
+      {
+        size: 20,
+      },
+      (prev) => {
+        return produce(prev, (draft) => {
+          if (!draft?.pages) return
+          for (const page of draft.pages) {
+            for (const note of page.data) {
+              if (!note) continue
+              if (noteIds.includes(note.id)) {
+                note.topicId = topicId || null
+              }
+            }
+          }
+        })
+      },
+    )
+  }
+
+  const { mutateAsync: addNotes } = trpc.topic.addNotesToTopic.useMutation({
+    onMutate: ({ noteIds, topicId }) => {
+      handleNoteMutation(noteIds, topicId)
+    },
+  })
+
   const { mutateAsync: removeNotes } =
-    trpc.topic.removeNotesFromTopic.useMutation()
+    trpc.topic.removeNotesFromTopic.useMutation({
+      onMutate: ({ noteIds }) => {
+        handleNoteMutation(noteIds)
+      },
+    })
+
+  const isDirtyRef = useRef(false)
+
+  useEffect(() => {
+    return () => {
+      if (isDirtyRef.current) {
+        utils.note.paginate.invalidate()
+        utils.topic.notesByTopicId.invalidate({
+          topicId,
+        })
+      }
+    }
+  }, [])
+
   return (
     <Table
       isHeaderSticky
       baseRef={scrollerRef}
       selectedKeys={selection}
       onSelectionChange={(keys) => {
-        // todo
+        isDirtyRef.current = true
+        const diff = diffSets(keys as Set<string>, selection)
+        if (diff.added.size) {
+          removeNotes({ topicId, noteIds: Array.from(diff.added) }).catch(
+            (e) => {
+              toast.error(e.message)
+            },
+          )
+        }
+        if (diff.removed.size) {
+          addNotes({ topicId, noteIds: Array.from(diff.removed) }).catch(
+            (e) => {
+              toast.error(e.message)
+            },
+          )
+        }
       }}
       bottomContent={
         hasNextPage ? (
