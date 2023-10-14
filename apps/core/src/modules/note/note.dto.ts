@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 import { ArticleImagesSchema } from '@core/shared/dto/image.dto'
 import { basePagerSchema } from '@core/shared/dto/pager.dto'
-import { makeOptionalPropsNullable } from '@core/shared/utils/zod.util'
+import { makeAllPropsOptional } from '@core/shared/utils/zod.util'
 import { NoteOptionalDefaultsSchema, NoteSchema } from '@meta-muse/prisma/zod'
 
 import { NoteSchemaProjection } from './note.protect'
@@ -37,5 +37,5 @@ export class NotePagerDto extends createZodDto(
 ) {}
 
 export class NotePatchDto extends createZodDto(
-  makeOptionalPropsNullable(NoteInputSchema),
+  makeAllPropsOptional(NoteInputSchema),
 ) {}

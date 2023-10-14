@@ -8,7 +8,7 @@ import { defineTrpcRouter } from '@core/processors/trpc/trpc.helper'
 import { tRPCService } from '@core/processors/trpc/trpc.service'
 import { SnowflakeIdDto, SnowflakeIdSchema } from '@core/shared/dto/id.dto'
 import { PagerDto } from '@core/shared/dto/pager.dto'
-import { makeOptionalPropsNullable } from '@core/shared/utils/zod.util'
+import { makeAllPropsOptional } from '@core/shared/utils/zod.util'
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
 
 import { TopicInputSchema } from './topic.dto'
@@ -18,7 +18,7 @@ const trpcPrefix = 'topic'
 const dbModel = DatabaseService.client.noteTopic
 
 const createSchema = TopicInputSchema
-const patchSchema = makeOptionalPropsNullable(createSchema)
+const patchSchema = makeAllPropsOptional(createSchema)
 
 @TRPCRouter()
 @Injectable()

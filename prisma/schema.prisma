@@ -100,8 +100,9 @@ model Post {
   category   Category  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   copyright  Boolean   @default(true)
 
-  allowComment Boolean   @default(true) @map("allow_comment")
-  tags         PostTag[]
+  allowComment  Boolean   @default(true) @map("allow_comment")
+  commentsIndex Int       @default(1) @map("comments_index")
+  tags          PostTag[]
 
   summary String?
 
@@ -132,7 +133,6 @@ model Category {
   slug    String   @unique
   created DateTime @default(now()) @map("created_at")
   Post    Post[]
-  Page    Page[]
 
   @@index([slug], name: "slugIndex")
 }
@@ -156,7 +156,8 @@ model Note {
   created  DateTime  @default(now()) @map("created_at")
   modified DateTime? @map("updated_at")
 
-  allowComment Boolean @default(true) @map("allow_comment")
+  commentsIndex Int     @default(1) @map("comments_index")
+  allowComment  Boolean @default(true) @map("allow_comment")
 
   password    String     @default("")
   publicAt    DateTime?  @map("public_at")
@@ -206,17 +207,62 @@ model Page {
 
   order Int @default(0)
 
-  allowComment Boolean @default(true) @map("allow_comment")
+  allowComment  Boolean @default(true) @map("allow_comment")
+  commentsIndex Int     @default(1) @map("comments_index")
 
   /// [ArticleCount]
   count  Json @default("{\"read\": 0, \"like\": 0}") /// @zod.custom.omit(["model", "input"])
   /// [ArticleImages]
   images Json @default("[]")
 
-  meta       Json?     @default("{}") /// @zod.custom.omit(["model", "input"])
-  Category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?
+  meta Json? @default("{}") /// @zod.custom.omit(["model", "input"])
 
   @@index([slug])
   @@index([created])
+}
+
+model Recently {
+  id      String  @id @default("")
+  content String
+  refId   String? // This represents the _id from the RefType. Adjust as needed.
+  refType String
+  up      Int     @default(0)
+  down    Int     @default(0)
+}
+
+model Comment {
+  id            String          @id @default("")
+  created       DateTime        @default(now()) @map("created_at")
+  refId         String          @map("ref_id")
+  refType       CommentRefTypes @map("ref_type")
+  author        String
+  mail          String?
+  url           String?
+  text          String
+  state         CommentState?   @default(UNREAD)
+  parentId      String?
+  parent        Comment?        @relation("CommentToComment", fields: [parentId], references: [id])
+  children      Comment[]       @relation("CommentToComment")
+  commentsIndex Int?            @default(1) @map("comments_index")
+  key           String?
+  ip            String?
+  agent         String?
+  pin           Boolean?        @default(false)
+  location      String?
+  isWhispers    Boolean?        @default(false) @map("is_whispers")
+  source        String?
+  avatar        String?
+}
+
+enum CommentRefTypes {
+  Post
+  Note
+  Page
+  Recently
+}
+
+enum CommentState {
+  UNREAD
+  READ
+  SPAM
 }

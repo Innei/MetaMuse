@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 import { BizException } from '@core/common/exceptions/biz.exception'
 import { errorMessageFor } from '@core/i18n/biz-code'
 import { inferRouterInputs, inferRouterOutputs, initTRPC } from '@trpc/server'
@@ -18,6 +20,12 @@ export const tRpc = initTRPC.context<Context>().create({
 
       bizMessage =
         errorMessageFor(BizError.code, preferredLanguage) || BizError.message
+    }
+
+    if (error.cause instanceof z.ZodError) {
+      bizMessage = Array.from(
+        Object.keys(error.cause.flatten().fieldErrors),
+      )[0][0]
     }
 
     return {

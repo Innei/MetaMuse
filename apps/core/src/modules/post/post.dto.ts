@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 import { ArticleImagesSchema } from '@core/shared/dto/image.dto'
 import { basePagerSchema } from '@core/shared/dto/pager.dto'
-import { makeOptionalPropsNullable } from '@core/shared/utils/zod.util'
+import { makeAllPropsOptional } from '@core/shared/utils/zod.util'
 import { PostOptionalDefaultsSchema, PostSchema } from '@meta-muse/prisma/zod'
 
 import { PostSchemaProjection } from './post.protect'
@@ -31,7 +31,7 @@ export const PostInputSchema = PostOptionalDefaultsSchema.extend({
 export class PostDto extends createZodDto(PostInputSchema) {}
 
 export class PostPatchDto extends createZodDto(
-  makeOptionalPropsNullable(PostInputSchema),
+  makeAllPropsOptional(PostInputSchema),
 ) {}
 
 export class PostPagerDto extends createZodDto(
