@@ -149,6 +149,9 @@ importers:
       framer-motion:
         specifier: 10.16.4
         version: 10.16.4(react-dom@18.2.0)(react@18.2.0)
+      fuse.js:
+        specifier: 6.6.2
+        version: 6.6.2
       i18next:
         specifier: 23.5.1
         version: 23.5.1
@@ -601,7 +604,7 @@ importers:
         version: 1.4.2(@swc/core@1.3.93)
       vite:
         specifier: 4.4.11
-        version: 4.4.11(@types/node@20.8.6)
+        version: 4.4.11(@types/node@20.8.3)
       vite-tsconfig-paths:
         specifier: 4.2.1
         version: 4.2.1(typescript@5.2.2)(vite@4.4.11)
