@@ -1,6 +1,8 @@
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 
+import { SnowflakeIdSchema } from './id.dto'
+
 export const basePagerSchema = z.object({
   size: z.coerce.number().int().min(1).max(50).default(10).optional(),
   page: z.coerce.number().int().min(1).default(1).optional(),
@@ -16,6 +18,8 @@ export const basePagerSchema = z.object({
       return val
     })
     .optional(),
+
+  cursor: SnowflakeIdSchema.optional(),
 })
 
 export class PagerDto extends createZodDto(basePagerSchema) {}

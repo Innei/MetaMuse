@@ -52,24 +52,44 @@ export class TopicTrpcRouter implements OnModuleInit {
           return this.service.getNotesByTopicId(input.topicId)
         }),
 
-      /// base
-      id: procedureAuth
+      addNotesToTopic: procedureAuth
         .input(
           z.object({
-            id: z.string(),
+            topicId: SnowflakeIdSchema,
+            noteIds: z.array(SnowflakeIdSchema),
           }),
         )
-        .query(async (opt) => {
-          return dbModel
-            .findUniqueOrThrow({
-              where: { id: opt.input.id },
-            })
-            .then((data) => {
-              return {
-                ...data,
-              }
-            })
+        .mutation(async ({ input }) => {
+          const { topicId, noteIds } = input
+
+          return this.service.addNotesToTopic(topicId, noteIds)
         }),
+
+      removeNotesFromTopic: procedureAuth
+        .input(
+          z.object({
+            topicId: SnowflakeIdSchema,
+            noteIds: z.array(SnowflakeIdSchema),
+          }),
+        )
+        .mutation(async ({ input }) => {
+          const { topicId, noteIds } = input
+
+          return this.service.removeNotesFromTopic(topicId, noteIds)
+        }),
+
+      /// base
+      id: procedureAuth.input(SnowflakeIdDto.schema).query(async (opt) => {
+        return dbModel
+          .findUniqueOrThrow({
+            where: { id: opt.input.id },
+          })
+          .then((data) => {
+            return {
+              ...data,
+            }
+          })
+      }),
 
       all: procedureAuth.query(async () => {
         return dbModel.findMany()

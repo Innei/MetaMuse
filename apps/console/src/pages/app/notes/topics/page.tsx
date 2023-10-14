@@ -6,19 +6,29 @@ import {
   ModalContent,
   ModalHeader,
   ScrollShadow,
+  Spinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
 } from '@nextui-org/react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { toast } from 'sonner'
 import type { FormForwardRef } from '~/components/ui/form'
 import type { FC } from 'react'
 
+import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll'
+
 import { useIsMobile } from '~/atoms'
 import { Empty } from '~/components/common/Empty'
 import { PageLoading } from '~/components/common/PageLoading'
 import { EditorLayer } from '~/components/modules/writing/EditorLayer'
 import { ListTable } from '~/components/modules/writing/ListTable'
+import { TitleExtra } from '~/components/modules/writing/TitleExtra'
 import { MotionButtonBase } from '~/components/ui/button'
 import { DeleteConfirmButton } from '~/components/ui/button/DeleteConfirmButton'
 import { PresentDrawer } from '~/components/ui/drawer'
@@ -31,6 +41,7 @@ import { useI18n } from '~/i18n/hooks'
 import { buildNSKey } from '~/lib/key'
 import { jotaiStore } from '~/lib/store'
 import { trpc } from '~/lib/trpc'
+import { useModalStack } from '~/providers/modal-stack-provider'
 
 import { NoteTableColumns } from '../list/page'
 
@@ -158,9 +169,116 @@ const NoteTopicTable = withQueryPager(() => {
     { topicId },
     { enabled: !!topicId },
   )
-  // @ts-expect-error
-  return <ListTable data={data} columns={NoteTableColumns} />
+
+  const { mutateAsync: removeNotesFromTopic } =
+    trpc.topic.removeNotesFromTopic.useMutation()
+  const utils = trpc.useContext()
+  const t = useI18n()
+  const { present } = useModalStack()
+  return (
+    <ListTable
+      data={data}
+      // @ts-expect-error
+      columns={NoteTableColumns}
+      onNewClick={() => {
+        present({
+          title: t('module.topic.add_notes_to_topic'),
+          content: () => <AddNotesToTopicModal topicId={topicId} />,
+        })
+      }}
+      onBatchDeleteClick={(ids) => {
+        removeNotesFromTopic({ topicId, noteIds: ids })
+          .then(() => {
+            toast.success(t('common.delete-success'))
+            utils.topic.notesByTopicId.invalidate({
+              topicId,
+            })
+          })
+          .catch((e) => {
+            toast.error(e.message)
+          })
+      }}
+    />
+  )
 })
+
+const AddNotesToTopicModal = ({ topicId }: { topicId: string }) => {
+  const { data, fetchNextPage, isLoading, hasNextPage } =
+    trpc.note.paginate.useInfiniteQuery(
+      {
+        size: 20,
+      },
+      {
+        getNextPageParam: (lastPage) =>
+          lastPage.pagination.hasNextPage
+            ? lastPage.data[lastPage.data.length - 1]?.id
+            : void 0,
+      },
+    )
+  const [loaderRef, scrollerRef] = useInfiniteScroll({
+    hasMore: hasNextPage,
+    onLoadMore: fetchNextPage,
+  })
+
+  const t = useI18n()
+  const selection = useMemo(() => {
+    const notes = data?.pages.flatMap((page) => page.data) || []
+
+    const set = new Set<string>()
+    for (const note of notes) {
+      if (!note) continue
+      if (note.topicId === topicId) {
+        set.add(note.id)
+      }
+    }
+    return set
+  }, [data])
+
+  const { mutateAsync: addNotes } = trpc.topic.addNotesToTopic.useMutation()
+  const { mutateAsync: removeNotes } =
+    trpc.topic.removeNotesFromTopic.useMutation()
+  return (
+    <Table
+      isHeaderSticky
+      baseRef={scrollerRef}
+      selectedKeys={selection}
+      onSelectionChange={(keys) => {
+        // todo
+      }}
+      bottomContent={
+        hasNextPage ? (
+          <div className="flex w-full justify-center">
+            <Spinner ref={loaderRef} />
+          </div>
+        ) : null
+      }
+      classNames={{
+        base: 'max-h-[520px] overflow-auto',
+        wrapper: 'bg-transparent border-0 ring-0 shadow-none p-0',
+      }}
+      selectionMode="multiple"
+    >
+      <TableHeader>
+        <TableColumn key="title">
+          <span>{t('common.title')}</span>
+        </TableColumn>
+      </TableHeader>
+      <TableBody
+        isLoading={isLoading}
+        items={data?.pages.flatMap((page) => page.data) || []}
+        loadingContent={<Spinner />}
+      >
+        {(item) => (
+          <TableRow key={item!.id}>
+            <TableCell>
+              <TitleExtra data={item!} />
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  )
+}
 
 const Topics = () => {
   const { data: topics } = trpc.topic.all.useQuery()
@@ -307,7 +425,6 @@ const EditingForm: FC<{
       initialValues={initialValues}
       className="p-6 gap-4 flex flex-col"
       onSubmit={(e, res) => {
-        console.log(e, res)
         onSubmit(res)
       }}
     >

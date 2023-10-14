@@ -95,7 +95,8 @@
       "title": "Import markdown with YAML front matter format"
     },
     "topic": {
-      "detail": "Topic detail"
+      "detail": "Topic detail",
+      "add_notes_to_topic": "Add notes to topic"
     }
   }
 }

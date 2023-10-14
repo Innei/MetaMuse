@@ -17,6 +17,7 @@ export enum ErrorCodeEnum {
   NoteNotFound = 10007,
   NoteExist = 10008,
   NoteNotPublished = 10009,
+  NoteTopicNotFound = 10010,
 
   AuthFailUserNotExist = 20000,
   AuthFail = 20001,
@@ -52,6 +53,7 @@ export const ErrorCode = Object.freeze<Record<ErrorCodeEnum, [string, number]>>(
     [ErrorCodeEnum.NoteNotFound]: ['note not found', 404],
     [ErrorCodeEnum.NoteNotPublished]: ['note not found', 404],
     [ErrorCodeEnum.NoteExist]: ['note already exist', 400],
+    [ErrorCodeEnum.NoteTopicNotFound]: ['note topic not found', 404],
 
     [ErrorCodeEnum.AuthFailUserNotExist]: ['auth failed, user not exist', 400],
     [ErrorCodeEnum.AuthFail]: [

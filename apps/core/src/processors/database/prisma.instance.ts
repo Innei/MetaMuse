@@ -37,7 +37,7 @@ export const createExtendedPrismaClient = ({ url }: { url?: string } = {}) => {
             A,
             Pick<
               Prisma.Args<T, 'findFirst'>,
-              'where' | 'select' | 'include' | 'orderBy'
+              'where' | 'select' | 'include' | 'orderBy' | 'cursor'
             >
           >,
           options: {
@@ -63,12 +63,13 @@ export const createExtendedPrismaClient = ({ url }: { url?: string } = {}) => {
           const { page, size: perPage } = options
           const skip = page > 0 ? perPage * (page - 1) : 0
           const countArgs = 'select' in x ? { where: x.where } : {}
+          const hasCursor = 'cursor' in x
           const [total, data] = await Promise.all([
             (this as any).count(countArgs),
             (this as any).findMany({
               ...x,
               take: perPage,
-              skip,
+              skip: hasCursor ? undefined : skip,
 
               // @ts-ignore
               orderBy: x.orderBy,
@@ -84,9 +85,11 @@ export const createExtendedPrismaClient = ({ url }: { url?: string } = {}) => {
             pagination: {
               total,
               size: perPage,
-              totalPage: lastPage,
-              currentPage: page,
-              hasNextPage: page < lastPage,
+              totalPage: hasCursor ? 0 : lastPage,
+              currentPage: hasCursor ? 0 : page,
+              hasNextPage: hasCursor
+                ? data.length === perPage
+                : page < lastPage,
               hasPrevPage: page > 1,
             },
           } as PaginationResult<any>

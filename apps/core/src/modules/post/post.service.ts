@@ -255,12 +255,19 @@ export class PostService {
       page = 1,
       sortBy = 'created',
       sortOrder = -1,
+      cursor,
     } = options
 
     const data = await this.db.prisma.post.paginate(
       {
         include: PostIncluded,
         where: filter,
+
+        cursor: cursor
+          ? {
+              id: cursor,
+            }
+          : undefined,
 
         orderBy: [
           {
