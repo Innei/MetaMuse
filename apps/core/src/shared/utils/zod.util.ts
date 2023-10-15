@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export function makeAllPropsOptional<Schema extends z.AnyZodObject>(
+export function makeAllPropsNUllable<Schema extends z.AnyZodObject>(
   schema: Schema,
 ) {
   const entries = Object.entries(schema.shape) as [
@@ -10,7 +10,9 @@ export function makeAllPropsOptional<Schema extends z.AnyZodObject>(
   const newProps = entries.reduce(
     (acc, [key, value]) => {
       acc[key] =
-        value instanceof z.ZodOptional ? (value as any) : value.optional()
+        value instanceof z.ZodOptional
+          ? value.unwrap().nullable()
+          : value.nullable()
       return acc
     },
     {} as {

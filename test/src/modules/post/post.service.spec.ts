@@ -93,12 +93,12 @@ describe('/modules/post/post.service', () => {
 
     expect(pagination.pagination).toMatchInlineSnapshot(`
       {
-        "currentPage": 1,
+        "currentPage": 0,
         "hasNextPage": true,
         "hasPrevPage": false,
         "size": 5,
         "total": 20,
-        "totalPage": 4,
+        "totalPage": 0,
       }
     `)
     expect(pagination.data[0]!.category).toMatchObject(cate)

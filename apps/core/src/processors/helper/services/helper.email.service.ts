@@ -6,6 +6,7 @@ import { BizException } from '@core/common/exceptions/biz.exception'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { EventBusEvents } from '@core/constants/event-bus.constant'
 import { ConfigsService } from '@core/modules/configs/configs.service'
+import { UserService } from '@core/modules/user/user.service'
 import {
   Injectable,
   Logger,
@@ -24,7 +25,8 @@ export class EmailService implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly configsService: ConfigsService,
     private readonly assetService: AssetService,
-    private readonly subpub: SubscribeService,
+    private readonly subscribeService: SubscribeService,
+    private readonly userService: UserService,
   ) {
     this.logger = new Logger(EmailService.name)
   }
@@ -32,7 +34,7 @@ export class EmailService implements OnModuleInit, OnModuleDestroy {
   async onModuleInit() {
     this.init()
     if (cluster.isWorker) {
-      this.subpub.subscribe(EventBusEvents.EmailInit, () => {
+      this.subscribeService.subscribe(EventBusEvents.EmailInit, () => {
         this.init()
       })
     }
@@ -122,17 +124,17 @@ export class EmailService implements OnModuleInit, OnModuleDestroy {
       secure: boolean
     }>((r, j) => {
       this.configsService.waitForConfigReady().then(({ mailOptions }) => {
-        const { options, user, pass } = mailOptions
-        if (!user && !pass) {
+        const { host, port, user, password } = mailOptions
+        if (!user && !password) {
           const message = '未启动邮件通知'
           this.logger.warn(message)
           return j(message)
         }
         // @ts-ignore
         r({
-          host: options?.host,
-          port: parseInt((options?.port as any) || '465'),
-          auth: { user, pass },
+          host,
+          port: parseInt((port as any) || '465'),
+          auth: { user, pass: password },
         } as const)
       })
     })
@@ -157,10 +159,15 @@ export class EmailService implements OnModuleInit, OnModuleDestroy {
   }
 
   async sendTestEmail() {
-    const master = await this.userService.getMaster()
-    const mailOptons = await this.configsService.get('mailOptions')
+    const master = await this.userService.getOwner()
+    const mailOptions = await this.configsService.get('mailOptions')
+    if (!master.mail)
+      throw new BizException(
+        ErrorCodeEnum.EmailSendError,
+        'owner email not set',
+      )
     return this.instance.sendMail({
-      from: `"Mx Space" <${mailOptons.user}>`,
+      from: `"Mx Space" <${mailOptions.user}>`,
       to: master.mail,
       subject: '测试邮件',
       text: '这是一封测试邮件',

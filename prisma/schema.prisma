@@ -236,7 +236,9 @@ model Comment {
   refId         String          @map("ref_id")
   refType       CommentRefTypes @map("ref_type")
   author        String
+  /// @zod.string.email()
   mail          String?
+  /// @zod.string.url()
   url           String?
   text          String
   state         CommentState?   @default(UNREAD)

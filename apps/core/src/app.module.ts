@@ -18,6 +18,7 @@ import { JSONTransformerInterceptor } from './common/interceptors/json-transform
 import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 import { ZodValidationPipe } from './common/pipes/zod-validation.pipe'
 import { AggregateModule } from './modules/aggregate/aggregate.module'
+import { ArticleModule } from './modules/article/article.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { CategoryModule } from './modules/category/category.module'
 import { CommentModule } from './modules/comment/comment.module'
@@ -67,6 +68,7 @@ const appInterceptors: Type<any>[] = [
     PageModule,
     TopicModule,
     FileModule,
+    ArticleModule,
 
     // waiting for all biz modules loaded
     tRPCModule,

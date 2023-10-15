@@ -14,3 +14,11 @@ export class UrlDto {
 
   wsUrl: string
 }
+
+export class MailOptions {
+  port: number
+  host: string
+  user: string
+  password: string
+  secure: boolean
+}

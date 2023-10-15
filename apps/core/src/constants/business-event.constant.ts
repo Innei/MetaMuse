@@ -15,6 +15,10 @@ export const enum BusinessEvents {
   NOTE_CREATE = 'NOTE_CREATE',
   NOTE_UPDATE = 'NOTE_UPDATE',
   NOTE_DELETE = 'NOTE_DELETE',
+
+  // COMMENT
+  COMMENT_CREATE = 'COMMENT_CREATE',
+  COMMENT_DELETE = 'COMMENT_DELETE',
 }
 
 /// ============= types =========

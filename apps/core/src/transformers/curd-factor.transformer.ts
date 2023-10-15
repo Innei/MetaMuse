@@ -16,7 +16,6 @@ import { EventManagerService } from '@core/processors/helper/services/helper.eve
 import { SnowflakeIdDto } from '@core/shared/dto/id.dto'
 import { basePagerSchema } from '@core/shared/dto/pager.dto'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
-import { makeAllPropsOptional } from '@core/shared/utils/zod.util'
 import { toOrder } from '@core/utils/data.util'
 import {
   Body,
@@ -63,7 +62,7 @@ export function BaseCrudFactory<
   const Upper = classUpper || class {}
 
   class PatchDto extends createZodDto(
-    patchSchema || (makeAllPropsOptional(createSchema) as ZodSchema<any, any>),
+    patchSchema || (createSchema.partial() as ZodSchema<any, any>),
   ) {}
 
   class CreateDto extends createZodDto(createSchema) {}
