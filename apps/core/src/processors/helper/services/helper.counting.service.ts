@@ -3,8 +3,8 @@ import { RedisKeys } from '@core/constants/cache.constant'
 import { getRedisKey } from '@core/shared/utils/redis.util'
 import { Injectable, Logger } from '@nestjs/common'
 
-import { CacheService } from '../cache/cache.service'
-import { DatabaseService } from '../database/database.service'
+import { CacheService } from '../../cache/cache.service'
+import { DatabaseService } from '../../database/database.service'
 
 @Injectable()
 export class CountingService {

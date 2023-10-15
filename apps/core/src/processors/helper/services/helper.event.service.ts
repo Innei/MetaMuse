@@ -10,10 +10,10 @@ import { scheduleManager } from '@core/shared/utils/schedule.util'
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 
-import { AdminEventsGateway } from '../gateway/admin/event.gateway'
-import { BroadcastBaseGateway } from '../gateway/base.gateway'
-import { SystemEventsGateway } from '../gateway/system/event.gateway'
-import { WebEventsGateway } from '../gateway/web/events.gateway'
+import { AdminEventsGateway } from '../../gateway/admin/event.gateway'
+import { BroadcastBaseGateway } from '../../gateway/base.gateway'
+import { SystemEventsGateway } from '../../gateway/system/event.gateway'
+import { WebEventsGateway } from '../../gateway/web/events.gateway'
 
 export type EventManagerOptions = {
   scope?: EventScope

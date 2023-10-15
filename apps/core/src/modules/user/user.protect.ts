@@ -11,7 +11,7 @@ export const UserSchemaProjection = createProjectionOmit(
 
 export const UserSchemaSerializeProjection = createProjectionOmit(
   UserSchema.shape,
-  ['password'],
+  ['password', 'lastLoginTime', 'lastLoginIp', 'password'],
 )
 
 export type UserSchema = z.infer<typeof UserSchema>

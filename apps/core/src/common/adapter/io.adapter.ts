@@ -1,4 +1,4 @@
-import { redisSubPub } from '@core/utils/redis-sub-pub.util'
+import { SubscribeService } from '@core/processors/helper/services/helper.subscribe.service'
 import { IoAdapter } from '@nestjs/platform-socket.io'
 import { createAdapter } from '@socket.io/redis-adapter'
 
@@ -8,7 +8,7 @@ export class RedisIoAdapter extends IoAdapter {
   createIOServer(port: number, options?: any) {
     const server = super.createIOServer(port, options)
 
-    const { pubClient, subClient } = redisSubPub
+    const { pubClient, subClient } = SubscribeService.shared
 
     const redisAdapter = createAdapter(pubClient, subClient, {
       key: RedisIoAdapterKey,

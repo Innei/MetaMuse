@@ -1,7 +1,7 @@
 import { RedisKeys } from '@core/constants/cache.constant'
 import { CacheService } from '@core/processors/cache/cache.service'
 import { DatabaseService } from '@core/processors/database/database.service'
-import { EventManagerService } from '@core/processors/helper/helper.event.service'
+import { EventManagerService } from '@core/processors/helper/services/helper.event.service'
 import { getRedisKey } from '@core/shared/utils/redis.util'
 import { sleep } from '@core/shared/utils/tool.utils'
 import { Injectable, Logger } from '@nestjs/common'

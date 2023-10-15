@@ -39,6 +39,7 @@
     "prisma:generate": "pnpm -C prisma run build"
   },
   "dependencies": {
+    "@nestjs/mapped-types": "*",
     "cross-env": "7.0.3",
     "lodash": "4.17.21"
   },

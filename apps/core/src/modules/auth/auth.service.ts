@@ -5,7 +5,7 @@ import { isDate } from 'lodash'
 import { BizException } from '@core/common/exceptions/biz.exception'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { DatabaseService } from '@core/processors/database/database.service'
-import { JWTService } from '@core/processors/helper/helper.jwt.service'
+import { JWTService } from '@core/processors/helper/services/helper.jwt.service'
 import { sleep } from '@core/shared/utils/tool.utils'
 import { Injectable } from '@nestjs/common'
 

@@ -2,6 +2,8 @@ export enum ErrorCodeEnum {
   NoContentCanBeModified = 1000,
   InvalidQuery = 1001,
   ResourceNotFound = 1002,
+  EmailTemplateNotFound = 1003,
+  EmailSendError = 1004,
 
   NotReady = 5000,
   NotInitialized = 5001,
@@ -38,6 +40,8 @@ export const ErrorCode = Object.freeze<Record<ErrorCodeEnum, [string, number]>>(
       503,
     ],
     [ErrorCodeEnum.ResourceNotFound]: ['resource not found', 404],
+    [ErrorCodeEnum.EmailTemplateNotFound]: ['email template not found', 500],
+    [ErrorCodeEnum.EmailSendError]: ['email send error', 500],
 
     /// Post
     [ErrorCodeEnum.PostNotFound]: ['post not found', 404],

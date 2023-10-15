@@ -1,5 +1,5 @@
-import { HttpService } from '@core/processors/helper/helper.http.service'
-import { JWTService } from '@core/processors/helper/helper.jwt.service'
+import { HttpService } from '@core/processors/helper/services/helper.http.servicep.service'
+import { JWTService } from '@core/processors/helper/services/helper.jwt.servicet.service'
 import { tRPCService } from '@core/processors/trpc/trpc.service'
 import { Global, Module } from '@nestjs/common'
 

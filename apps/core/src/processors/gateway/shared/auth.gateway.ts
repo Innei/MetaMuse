@@ -3,7 +3,7 @@ import { Namespace, Socket } from 'socket.io'
 import { EventBusEvents } from '@core/constants/event-bus.constant'
 import { AuthService } from '@core/modules/auth/auth.service'
 import { CacheService } from '@core/processors/cache/cache.service'
-import { JWTService } from '@core/processors/helper/helper.jwt.service'
+import { JWTService } from '@core/processors/helper/services/helper.jwt.service'
 import { OnEvent } from '@nestjs/event-emitter'
 import {
   OnGatewayConnection,

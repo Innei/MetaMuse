@@ -1,4 +1,8 @@
 export enum EventBusEvents {
-  SystemException = 'system.exception',
+  EmailInit = 'email.init',
+  PushSearch = 'search.push',
   TokenExpired = 'token.expired',
+  CleanAggregateCache = 'cache.aggregate',
+  SystemException = 'system.exception',
+  ConfigChanged = 'config.changed',
 }

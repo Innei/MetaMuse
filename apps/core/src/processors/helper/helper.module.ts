@@ -3,13 +3,15 @@ import { Global, Module, Provider } from '@nestjs/common'
 import { EventEmitterModule } from '@nestjs/event-emitter/dist/event-emitter.module'
 import { ThrottlerModule } from '@nestjs/throttler'
 
-import { AssetService } from './helper.asset.service'
-import { EventManagerService } from './helper.event.service'
-import { HttpService } from './helper.http.service'
-import { ImageService } from './helper.image.service'
-import { JWTService } from './helper.jwt.service'
-import { UploadService } from './helper.upload.service'
-import { UrlBuilderService } from './helper.url-builder.service'
+import { AssetService } from './services/helper.asset.service'
+import { EmailService } from './services/helper.email.service'
+import { EventManagerService } from './services/helper.event.service'
+import { HttpService } from './services/helper.http.service'
+import { ImageService } from './services/helper.image.service'
+import { JWTService } from './services/helper.jwt.service'
+import { SubscribeService } from './services/helper.subscribe.service'
+import { UploadService } from './services/helper.upload.service'
+import { UrlBuilderService } from './services/helper.url-builder.service'
 
 const providers: Provider<any>[] = [
   AssetService,
@@ -19,6 +21,11 @@ const providers: Provider<any>[] = [
   JWTService,
   UrlBuilderService,
   UploadService,
+  EmailService,
+  {
+    provide: SubscribeService,
+    useValue: SubscribeService.shared,
+  },
 ]
 
 @Module({

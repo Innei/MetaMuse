@@ -12,7 +12,7 @@ import {
   AllModelNames,
   ModelInputWhere,
 } from '@core/processors/database/prisma.instance'
-import { EventManagerService } from '@core/processors/helper/helper.event.service'
+import { EventManagerService } from '@core/processors/helper/services/helper.event.service'
 import { SnowflakeIdDto } from '@core/shared/dto/id.dto'
 import { basePagerSchema } from '@core/shared/dto/pager.dto'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'

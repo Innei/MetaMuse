@@ -1,4 +1,4 @@
-import { ImageService } from '@core/processors/helper/helper.image.service'
+import { ImageService } from '@core/processors/helper/services/helper.image.service'
 import { Injectable } from '@nestjs/common'
 import { defineProvider } from '@test/helper/defineProvider'
 

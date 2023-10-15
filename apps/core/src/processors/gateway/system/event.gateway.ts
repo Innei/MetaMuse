@@ -1,5 +1,5 @@
 import { CacheService } from '@core/processors/cache/cache.service'
-import { JWTService } from '@core/processors/helper/helper.jwt.service'
+import { JWTService } from '@core/processors/helper/services/helper.jwt.service'
 import {
   GatewayMetadata,
   OnGatewayConnection,

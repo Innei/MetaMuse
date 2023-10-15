@@ -20,6 +20,7 @@ import { ZodValidationPipe } from './common/pipes/zod-validation.pipe'
 import { AggregateModule } from './modules/aggregate/aggregate.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { CategoryModule } from './modules/category/category.module'
+import { CommentModule } from './modules/comment/comment.module'
 import { ConfigsModule } from './modules/configs/configs.module'
 import { FileModule } from './modules/file/file.module'
 import { HelpersModule } from './modules/helpers/helpers.module'
@@ -58,6 +59,7 @@ const appInterceptors: Type<any>[] = [
     AuthModule,
     PostModule,
     UserModule,
+    CommentModule,
     CategoryModule,
     ConfigsModule,
     NoteModule,

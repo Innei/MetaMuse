@@ -1,15 +1,11 @@
-import cluster from 'cluster'
 import { sign, verify } from 'jsonwebtoken'
 
-import { CLUSTER, ENCRYPT, SECURITY } from '@core/app.config'
+import { ENCRYPT, SECURITY } from '@core/app.config'
 import { RedisKeys } from '@core/constants/cache.constant'
-import { consola } from '@core/global/consola.global'
-import { isDev } from '@core/global/env.global'
+import { CacheService } from '@core/processors/cache/cache.service'
 import { getRedisKey } from '@core/shared/utils/redis.util'
 import { md5 } from '@core/shared/utils/tool.utils'
 import { Injectable } from '@nestjs/common'
-
-import { CacheService } from '../cache/cache.service'
 
 @Injectable()
 export class JWTService {
@@ -31,15 +27,6 @@ export class JWTService {
       Buffer.from(ENCRYPT_KEY).toString('base64').slice(0, 15) ||
       'asjhczxiucipoiopiqm2376'
 
-    if (isDev && cluster.isPrimary) {
-      consola.debug(secret)
-    }
-    if (!CLUSTER.enable || cluster.isPrimary) {
-      consola.debug(
-        'JWT Secret start with :',
-        secret.slice(0, 5) + '*'.repeat(secret.length - 5),
-      )
-    }
     this.secret = secret
   }
 

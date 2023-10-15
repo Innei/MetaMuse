@@ -1,5 +1,5 @@
 import { DatabaseService } from '@core/processors/database/database.service'
-import { UrlBuilderService } from '@core/processors/helper/helper.url-builder.service'
+import { UrlBuilderService } from '@core/processors/helper/services/helper.url-builder.service'
 import { forwardRef, Inject, Injectable } from '@nestjs/common'
 
 import { PostService } from '../post/post.service'

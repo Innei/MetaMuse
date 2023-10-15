@@ -1,13 +1,18 @@
 import IORedis, { Redis, RedisOptions } from 'ioredis'
 
-import { REDIS } from '@core/app.config'
-import { Logger } from '@nestjs/common'
+import { REDIS } from '@core/app.config.testing'
+import { isTest } from '@core/global/env.global'
+import { Injectable, Logger } from '@nestjs/common'
 
-import { isTest } from '../global/env.global'
+const logger = new Logger('SubscribeService')
 
-class RedisSubPub {
+@Injectable()
+export class SubscribeService {
+  static readonly shared = new SubscribeService()
+
   public pubClient: Redis
   public subClient: Redis
+
   constructor(private channelPrefix: string = 'meta-channel#') {
     if (!isTest) {
       this.init()
@@ -33,13 +38,11 @@ class RedisSubPub {
   public async publish(event: string, data: any) {
     const channel = this.channelPrefix + event
     const _data = JSON.stringify(data)
-    if (event !== 'log') {
-      Logger.debug(`发布事件：${channel} <- ${_data}`, RedisSubPub.name)
-    }
+    logger.debug(`发布事件：${channel} <- ${_data}`)
     await this.pubClient.publish(channel, _data)
   }
 
-  private ctc = new WeakMap<Function, Callback>()
+  private ctc = new WeakMap<Function, (channel: string, message: any) => any>()
 
   public async subscribe(event: string, callback: (data: any) => void) {
     const myChannel = this.channelPrefix + event
@@ -47,9 +50,7 @@ class RedisSubPub {
 
     const cb = (channel, message) => {
       if (channel === myChannel) {
-        if (event !== 'log') {
-          Logger.debug(`接收事件：${channel} -> ${message}`, RedisSubPub.name)
-        }
+        logger.debug(`接收事件：${channel} -> ${message}`)
         callback(JSON.parse(message))
       }
     }
@@ -69,9 +70,3 @@ class RedisSubPub {
     }
   }
 }
-
-export const redisSubPub = new RedisSubPub()
-
-type Callback = (channel: string, message: string) => void
-
-export type { RedisSubPub }

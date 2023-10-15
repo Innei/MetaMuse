@@ -1,5 +1,5 @@
-import { HttpService } from '@core/processors/helper/helper.http.service'
-import { ImageService } from '@core/processors/helper/helper.image.service'
+import { HttpService } from '@core/processors/helper/services/helper.http.service'
+import { ImageService } from '@core/processors/helper/services/helper.image.service'
 import { Test } from '@nestjs/testing'
 import { mockedConfigsServiceProvider } from '@test/mock/modules/configs.mock'
 

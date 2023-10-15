@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+import wcmatch from 'wildcard-match'
 
 import { Logger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
@@ -26,16 +27,26 @@ export async function bootstrap() {
     { logger: ['error', 'debug'] },
   )
 
-  const hosts = Origin.map((host) => new RegExp(host, 'i'))
+  app.enableCors(
+    isDev
+      ? undefined
+      : Origin
+      ? {
+          origin: (origin, callback) => {
+            let currentHost: string
+            try {
+              currentHost = new URL(origin).host
+            } catch {
+              currentHost = origin
+            }
+            const allow = Origin.some((host) => wcmatch(host)(currentHost))
 
-  app.enableCors({
-    origin: (origin, callback) => {
-      const allow = hosts.some((host) => host.test(origin))
-
-      callback(null, allow)
-    },
-    credentials: true,
-  })
+            callback(null, allow)
+          },
+          credentials: true,
+        }
+      : undefined,
+  )
 
   isDev && app.useGlobalInterceptors(new LoggingInterceptor())
   app.useGlobalGuards(new SpiderGuard())
