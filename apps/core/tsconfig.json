@@ -18,12 +18,27 @@
     "incremental": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
+    "types": [
+      "vitest/globals"
+    ],
     "paths": {
       "@core": [
         "./src"
       ],
       "@core/*": [
         "./src/*"
+      ],
+      "@prisma/client": [
+        "../../prisma/client"
+      ],
+      "@prisma/client/*": [
+        "../../prisma/*"
+      ],
+      "@test": [
+        "./test"
+      ],
+      "@test/*": [
+        "./test/*"
       ],
     }
   },

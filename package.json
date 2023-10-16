@@ -33,7 +33,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "pretest": "dotenv -e .env.test pnpm -C prisma run migrate:dev",
-    "test": "pnpm -C \"test\" run test",
+    "test": "pnpm -C \"apps/core\" run test",
     "migrate:dev": "pnpm -C prisma run migrate:dev",
     "migrate:deploy": "pnpm -C prisma run migrate:deploy",
     "prisma:generate": "pnpm -C prisma run build"

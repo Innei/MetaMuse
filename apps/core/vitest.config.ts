@@ -18,13 +18,13 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   root: './',
   test: {
-    include: ['**/*.spec.ts', '**/*.e2e-spec.ts'],
+    include: ['./test/**/*.spec.ts', './test/**/*.e2e-spec.ts'],
 
     threads: false,
     globals: true,
-    setupFiles: [resolve(__dirname, './setup-file.ts')],
+    setupFiles: [resolve(__dirname, 'test/setup-file.ts')],
     environment: 'node',
-    includeSource: [resolve(__dirname, '.')],
+    includeSource: [resolve(__dirname, './test')],
   },
   optimizeDeps: {
     needsInterop: ['lodash'],
@@ -37,14 +37,20 @@ export default defineConfig({
       },
       {
         find: '@core/app.config',
-        replacement: resolve(
-          __dirname,
-          '../apps/core/src/app.config.testing.ts',
-        ),
+        replacement: resolve(__dirname, './src/app.config.testing.ts'),
       },
       {
         find: /^@core\/(.+)/,
-        replacement: resolve(__dirname, '../apps/core/src/$1'),
+        replacement: resolve(__dirname, './src/$1'),
+      },
+      {
+        find: /^@prisma\/client$/,
+        replacement: resolve(__dirname, '../../prisma/client'),
+      },
+
+      {
+        find: /^@prisma\/client\/(.+)/,
+        replacement: resolve(__dirname, '../../prisma/$1'),
       },
     ],
   },
@@ -55,10 +61,7 @@ export default defineConfig({
   plugins: [
     swc.vite(),
     tsconfigPath({
-      projects: [
-        resolve(__dirname, './tsconfig.json'),
-        // resolve(__dirname, './tsconfig.json'),
-      ],
+      projects: [resolve(__dirname, './tsconfig.json')],
     }),
   ],
 })
