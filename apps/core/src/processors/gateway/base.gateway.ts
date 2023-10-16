@@ -34,5 +34,5 @@ export abstract class BaseGateway {
 }
 
 export abstract class BroadcastBaseGateway extends BaseGateway {
-  broadcast(event: BusinessEvents, data: any) {}
+  broadcast(event: BusinessEvents, data: any, rooms?: string[]) {}
 }

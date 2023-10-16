@@ -19,6 +19,7 @@ export type EventManagerOptions = {
   scope?: EventScope
 
   nextTick?: boolean
+  rooms?: string[]
 }
 
 export type IEventManagerHandlerDisposer = () => void
@@ -29,6 +30,7 @@ export class EventManagerService implements OnModuleInit {
   private readonly defaultOptions: Required<EventManagerOptions> = {
     scope: EventScope.TO_SYSTEM,
     nextTick: false,
+    rooms: [],
   }
 
   constructor(
@@ -98,6 +100,7 @@ export class EventManagerService implements OnModuleInit {
     const {
       scope = this.defaultOptions.scope,
       nextTick = this.defaultOptions.nextTick,
+      rooms = this.defaultOptions.rooms,
     } = options
 
     const instances = this.mapScopeToInstance[scope]
@@ -113,7 +116,7 @@ export class EventManagerService implements OnModuleInit {
             payload,
           })
         } else if (instance instanceof BroadcastBaseGateway) {
-          return instance.broadcast(event as any, data)
+          return instance.broadcast(event as any, data, rooms)
         }
       }),
     )

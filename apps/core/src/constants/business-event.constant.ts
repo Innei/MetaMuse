@@ -21,23 +21,6 @@ export const enum BusinessEvents {
   COMMENT_DELETE = 'COMMENT_DELETE',
 }
 
-/// ============= types =========
-//
-//
-
-interface IGatewayConnectData {}
-
-interface IGatewayDisconnectData {}
-
-interface IVisitorOnlineData {}
-
-interface IVisitorOfflineData {}
-
-interface IAuthFailedData {}
-interface WithId {
-  id: string
-}
-
 export type BizEventDataMap = {
   [BusinessEvents.GATEWAY_CONNECT]: IGatewayConnectData
   [BusinessEvents.GATEWAY_DISCONNECT]: IGatewayDisconnectData
@@ -50,4 +33,6 @@ export type BizEventDataMap = {
   [BusinessEvents.NOTE_CREATE]: NormalizedNoteModel
   [BusinessEvents.NOTE_UPDATE]: NormalizedNoteModel
   [BusinessEvents.NOTE_DELETE]: WithId
+  [BusinessEvents.COMMENT_CREATE]: NormalizedCommentModel
+  [BusinessEvents.COMMENT_DELETE]: WithId
 }

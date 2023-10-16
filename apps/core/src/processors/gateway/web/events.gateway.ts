@@ -80,7 +80,8 @@ export class WebEventsGateway
     )
   }
 
-  override broadcast(event: BusinessEvents, data: any) {
+  // TODO rooms imple
+  override broadcast(event: BusinessEvents, data: any, rooms?: string[]) {
     const emitter = this.cacheService.emitter
 
     emitter
