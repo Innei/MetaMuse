@@ -237,7 +237,7 @@ model Comment {
   refType       CommentRefTypes @map("ref_type")
   author        String
   /// @zod.string.email()
-  mail          String?
+  mail          String
   /// @zod.string.url()
   url           String?
   text          String

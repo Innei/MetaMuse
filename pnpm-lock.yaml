@@ -399,6 +399,9 @@ importers:
       dotenv-expand:
         specifier: 10.0.0
         version: 10.0.0
+      ejs:
+        specifier: 3.1.9
+        version: 3.1.9
       fs-extra:
         specifier: 11.1.1
         version: 11.1.1
@@ -481,6 +484,9 @@ importers:
       '@types/cache-manager':
         specifier: 4.0.3
         version: 4.0.3
+      '@types/ejs':
+        specifier: 3.1.3
+        version: 3.1.3
       '@types/fs-extra':
         specifier: 11.0.2
         version: 11.0.2
@@ -5125,6 +5131,10 @@ packages:
     dependencies:
       '@types/ms': 0.7.31
 
+  /@types/ejs@3.1.3:
+    resolution: {integrity: sha512-mv5T/JI/bu+pbfz1o+TLl1NF0NIBbjS0Vl6Ppz1YY9DkXfzZT0lelXpfS5i3ZS3U/p90it7uERQpBvLYoK8e4A==}
+    dev: true
+
   /@types/eslint-scope@3.7.4:
     resolution: {integrity: sha512-9K4zoImiZc3HlIp6AVUDE4CWYx22a+lhSZMYNpbjW04+YF0KWj4pJXnEMjdnFTiQibFFmElcsasJXDbdI/EPhA==}
     dependencies:
@@ -6418,6 +6428,10 @@ packages:
     resolution: {integrity: sha512-7HhHjtERjqlNbZtqNqy2rckN/SpOOlmDliet+lP7k+eKZEjPk3DgyeU9lIXLdeLz0uBbbVp+9Qdow9wJWgwwfg==}
     dev: false
 
+  /async@3.2.4:
+    resolution: {integrity: sha512-iAB+JbDEGXhyIUavoDl9WP/Jj106Kz9DEn1DPgYw5ruDn0e3Wgi3sKFm55sASdGBNOQB8F59d9qQ7deqrHA8wQ==}
+    dev: false
+
   /asynciterator.prototype@1.0.0:
     resolution: {integrity: sha512-wwHYEIS0Q80f5mosx3L/dfG5t5rjEa9Ft51GTaNt862EnpyGHpgz2RkZvLPp1oF5TnAiTohkEKVEu8pQPJI7Vg==}
     dependencies:
@@ -7641,6 +7655,14 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
+  /ejs@3.1.9:
+    resolution: {integrity: sha512-rC+QVNMJWv+MtPgkt0y+0rVEIdbtxVADApW9JXrUVlzHetgcyczP/E7DJmWJ4fJCZF2cPcBk0laWO9ZHMG3DmQ==}
+    engines: {node: '>=0.10.0'}
+    hasBin: true
+    dependencies:
+      jake: 10.8.7
+    dev: false
+
   /electron-to-chromium@1.4.523:
     resolution: {integrity: sha512-9AreocSUWnzNtvLcbpng6N+GkXnCcBR80IQkxRC9Dfdyg4gaWNUPBujAHUpKkiUkoSoR9UlhA4zD/IgBklmhzg==}
     dev: true
@@ -8378,6 +8400,12 @@ packages:
       strtok3: 7.0.0
       token-types: 5.0.1
     dev: true
+
+  /filelist@1.0.4:
+    resolution: {integrity: sha512-w1cEuf3S+DrLCQL7ET6kz+gmlJdbq9J7yXCSjK/OZCPA+qEN1WyF4ZAf0YYJa4/shHJra2t/d/r8SV4Ji+x+8Q==}
+    dependencies:
+      minimatch: 5.1.6
+    dev: false
 
   /filename-reserved-regex@3.0.0:
     resolution: {integrity: sha512-hn4cQfU6GOT/7cFHXBqeBg2TbrMBgdD0kcjLhvSQYYwm3s4B6cjvBfb7nBALJLAXqmU5xajSa7X2NnUud/VCdw==}
@@ -9718,6 +9746,17 @@ packages:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
     dev: true
+
+  /jake@10.8.7:
+    resolution: {integrity: sha512-ZDi3aP+fG/LchyBzUM804VjddnwfSfsdeYkwt8NcbKRvo4rFkjhs456iLFn3k2ZUWvNe4i48WACDbza8fhq2+w==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dependencies:
+      async: 3.2.4
+      chalk: 4.1.2
+      filelist: 1.0.4
+      minimatch: 3.1.2
+    dev: false
 
   /jest-worker@27.5.1:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}

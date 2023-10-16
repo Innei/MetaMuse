@@ -1,12 +1,19 @@
+import ejs from 'ejs'
+import { pick } from 'lodash'
+
 import { BizException } from '@core/common/exceptions/biz.exception'
+import { ArticleType } from '@core/constants/article.constant'
 import { BusinessEvents } from '@core/constants/business-event.constant'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { EventScope } from '@core/constants/event-scope.constant'
+import { isDev } from '@core/global/env.global'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { EmailService } from '@core/processors/helper/services/helper.email.service'
 import { EventManagerService } from '@core/processors/helper/services/helper.event.service'
+import { hasChinese } from '@core/shared/utils/tool.util'
 import { getAvatar } from '@core/shared/utils/tool.utils'
 import {
+  Comment,
   CommentRefTypes,
   CommentState,
   Note,
@@ -19,8 +26,14 @@ import { ArticleService } from '../article/article.service'
 import { ConfigsService } from '../configs/configs.service'
 import { UserSchemaSerializeProjection } from '../user/user.protect'
 import { UserService } from '../user/user.service'
+import BlockedKeywords from './block-keywords.json'
 import { CreateCommentDto } from './comment.dto'
-import { baseRenderProps } from './comment.email.default'
+import {
+  baseRenderProps,
+  CommentEmailTemplateRenderProps,
+  CommentModelRenderProps,
+  defaultCommentModelKeys,
+} from './comment.email.default'
 import { CommentReplyMailType } from './comment.enum'
 
 @Injectable()
@@ -118,6 +131,53 @@ export class CommentService implements OnModuleInit {
     })
   }
 
+  async checkSpam(doc: Comment) {
+    const res = await (async () => {
+      const commentOptions = await this.configsService.get('commentOptions')
+      if (!commentOptions.antiSpam) {
+        return false
+      }
+      const master = await this.userService.getOwner()
+      if (doc.author === master.username) {
+        return false
+      }
+      if (commentOptions.blockIps) {
+        if (!doc.ip) {
+          return false
+        }
+        const isBlock = commentOptions.blockIps.some((ip) =>
+          // @ts-ignore
+          new RegExp(ip, 'ig').test(doc.ip),
+        )
+        if (isBlock) {
+          return true
+        }
+      }
+
+      const customKeywords = commentOptions.spamKeywords || []
+      const isBlock = [...customKeywords, ...BlockedKeywords].some((keyword) =>
+        new RegExp(keyword, 'ig').test(doc.text),
+      )
+
+      if (isBlock) {
+        return true
+      }
+
+      if (commentOptions.disableNoChinese && !hasChinese(doc.text)) {
+        return true
+      }
+
+      return false
+    })()
+    if (res) {
+      this.logger.warn(
+        '--> 检测到一条垃圾评论：' +
+          `作者：${doc.author}, IP: ${doc.ip}, 内容为：${doc.text}`,
+      )
+    }
+    return res
+  }
+
   async createComment(articleId: string, doc: CreateCommentDto) {
     let ref: Post | Note | Page
     let type: CommentRefTypes
@@ -147,9 +207,112 @@ export class CommentService implements OnModuleInit {
 
     await this.articleService.incrementArticleCommentIndex(type as any, ref.id)
     this.notifyCommentEvent(BusinessEvents.COMMENT_CREATE, comment.id)
+
+    this.configsService.get('commentOptions').then((o) => {
+      if (o.antiSpam) {
+        this.checkSpam(comment).then((isSpam) => {
+          if (isSpam) {
+            this.databaseService.prisma.comment.update({
+              where: {
+                id: comment.id,
+              },
+              data: {
+                state: CommentState.SPAM,
+              },
+            })
+          }
+        })
+      }
+    })
     return comment
   }
 
+  async sendEmail(comment: Comment, type: CommentReplyMailType) {
+    const enable = await this.configsService
+      .get('mailOptions')
+      .then((config) => config.enable)
+    if (!enable) {
+      return
+    }
+
+    const masterInfo = await this.userService.getOwner()
+
+    const refType = comment.refType
+    const refResult = await this.articleService.findArticleById(comment.refId)
+    if (!refResult) {
+      this.logger.warn(
+        `Send email failed: ref doc not found, refId: ${comment.refId}, refType: ${comment.refType}`,
+      )
+      return
+    }
+    const { result: refDoc } = refResult
+    const time = new Date(comment.created)
+    const parent: Comment | null = comment.parentId
+      ? await this.databaseService.prisma.comment.findUnique({
+          where: {
+            id: comment.parentId,
+          },
+        })
+      : null
+
+    const parsedTime = `${time.getDate()}/${
+      time.getMonth() + 1
+    }/${time.getFullYear()}`
+
+    if (!refResult || !masterInfo.mail) {
+      return
+    }
+
+    this.sendCommentNotificationMail({
+      to: type === CommentReplyMailType.Owner ? masterInfo.mail : parent!.mail,
+      type,
+      source: {
+        title: refType === CommentRefTypes.Recently ? '速记' : refDoc.title,
+        text: comment.text,
+        author:
+          type === CommentReplyMailType.Guest ? parent!.author : comment.author,
+        master: masterInfo.name,
+        link: await this.articleService
+          .resolveUrlByType(
+            this.commentRefTypeToArticleType(refType),
+            refResult,
+          )
+          .then((url) => `${url}#comments-${comment.id}`),
+        time: parsedTime,
+        mail:
+          CommentReplyMailType.Owner === type ? comment.mail : masterInfo.mail,
+        ip: comment.ip || '',
+
+        aggregate: {
+          owner: masterInfo,
+          commentor: {
+            ...pick(comment, defaultCommentModelKeys),
+            created: new Date(comment.created!).toISOString(),
+            isWhispers: comment.isWhispers || false,
+          } as CommentModelRenderProps,
+          parent,
+          post: {
+            title: refDoc.title,
+            created: new Date(refDoc.created!).toISOString(),
+            id: refDoc.id!,
+            modified: refDoc.modified
+              ? new Date(refDoc.modified!).toISOString()
+              : null,
+            text: refDoc.text,
+          },
+        },
+      },
+    })
+  }
+
+  private commentRefTypeToArticleType(refType: CommentRefTypes): ArticleType {
+    return {
+      [CommentRefTypes.Post]: ArticleType.Post,
+      [CommentRefTypes.Note]: ArticleType.Note,
+      [CommentRefTypes.Page]: ArticleType.Page,
+      [CommentRefTypes.Recently]: ArticleType.Recently,
+    }[refType]
+  }
   async fillAndReplaceAvatarUrl(comments: NormalizedCommentModel[]) {
     const master = await this.userService.getOwner()
 
@@ -234,5 +397,61 @@ export class CommentService implements OnModuleInit {
     //   }${result.cityName ? `${result.cityName}` : ''}` || undefined
 
     // if (location) await this.commentModel.updateOne({ _id: id }, { location })
+  }
+
+  async sendCommentNotificationMail({
+    to,
+    source,
+    type,
+  }: {
+    to: string
+    source: Pick<
+      CommentEmailTemplateRenderProps,
+      keyof CommentEmailTemplateRenderProps
+    >
+    type: CommentReplyMailType
+  }) {
+    const { seo, mailOptions } = await this.configsService.waitForConfigReady()
+    const { user } = mailOptions
+    const from = `"${seo.title || 'Mx Space'}" <${user}>`
+
+    source.ip ??= ''
+    if (type === CommentReplyMailType.Guest) {
+      const options = {
+        from,
+        subject: `[${seo.title || 'Mx Space'}] 主人给你了新的回复呐`,
+        to,
+        html: ejs.render(
+          (await this.emailService.readTemplate(type)) as string,
+          source,
+        ),
+      }
+      if (isDev) {
+        // @ts-ignore
+        delete options.html
+        Object.assign(options, { source })
+        this.logger.log(options)
+        return
+      }
+      await this.emailService.send(options)
+    } else {
+      const options = {
+        from,
+        subject: `[${seo.title || 'Mx Space'}] 有新回复了耶~`,
+        to,
+        html: ejs.render(
+          (await this.emailService.readTemplate(type)) as string,
+          source,
+        ),
+      }
+      if (isDev) {
+        // @ts-ignore
+        delete options.html
+        Object.assign(options, { source })
+        this.logger.log(options)
+        return
+      }
+      await this.emailService.send(options)
+    }
   }
 }

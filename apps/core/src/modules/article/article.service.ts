@@ -1,18 +1,18 @@
 import { Union } from 'ts-toolbelt'
 
+import { ArticleType } from '@core/constants/article.constant'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { Note, Page, Post, Prisma } from '@meta-muse/prisma'
 import { Injectable } from '@nestjs/common'
 
-enum ArticleType {
-  Note = 'Note',
-  Page = 'Page',
-  Post = 'Post',
-}
+import { ConfigsService } from '../configs/configs.service'
 
 @Injectable()
 export class ArticleService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly configsService: ConfigsService,
+  ) {}
 
   private readonly articleModels = [
     this.databaseService.prisma.note,
@@ -79,5 +79,25 @@ export class ArticleService {
         increment: 1,
       },
     })
+  }
+
+  async resolveUrlByType(type: ArticleType, model: any) {
+    const {
+      url: { webUrl: base },
+    } = await this.configsService.waitForConfigReady()
+    switch (type) {
+      case ArticleType.Note: {
+        return new URL(`/notes/${model.nid}`, base).toString()
+      }
+      case ArticleType.Page: {
+        return new URL(`/${model.slug}`, base).toString()
+      }
+      case ArticleType.Post: {
+        return new URL(`/${model.category.slug}/${model.slug}`, base).toString()
+      }
+      case ArticleType.Recently: {
+        return new URL(`/recently/${model.id}`, base).toString()
+      }
+    }
   }
 }
