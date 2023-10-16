@@ -19,7 +19,7 @@ export const tRpc = initTRPC.context<Context>().create({
       const BizError = error.cause
 
       bizMessage =
-        errorMessageFor(BizError.code, preferredLanguage) || BizError.message
+        errorMessageFor(BizError.bizCode, preferredLanguage) || BizError.message
     }
 
     if (error.cause instanceof z.ZodError) {

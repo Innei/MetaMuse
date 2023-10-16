@@ -21,4 +21,5 @@ export class MailOptions {
   user: string
   password: string
   secure: boolean
+  enable: boolean
 }

@@ -16,12 +16,10 @@ export const generateDefaultConfig: () => IConfig = () => ({
     enable: false,
 
     user: '',
-    pass: '',
-    options: {
-      host: '',
-      port: 465,
-      secure: true,
-    },
+    password: '',
+    host: '',
+    port: 465,
+    secure: true,
   },
   commentOptions: {
     antiSpam: false,

@@ -3,6 +3,7 @@ import { resolve } from 'path'
 import chalk from 'chalk'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
+import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { HTTP_REQUEST_TIME } from '@core/constants/meta.constant'
 import { LOG_DIR } from '@core/constants/path.constant'
 import { REFLECTOR } from '@core/constants/system.constant'
@@ -56,8 +57,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
       (exception as myError)?.message ||
       ''
 
-    const bizCode = (exception as BizException).code
-
     const url = request.raw.url!
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
       Logger.error(exception, undefined, 'Catch')
@@ -80,9 +79,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
       }
     } else {
       const ip = getIp(request)
-      const logMessage = `IP: ${ip} Error Info: (${status}${
-        bizCode ? ` ,B${bizCode}` : ''
-      }) ${message} Path: ${decodeURI(url)}`
+      const logMessage = `IP: ${ip} Error Info: (${status}) ${message} Path: ${decodeURI(
+        url,
+      )}`
       if (isTest) console.log(logMessage)
       this.logger.warn(logMessage)
     }
@@ -101,21 +100,23 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const res = (exception as any).response
 
     let bizMessage = ''
+    let bizCode = null as null | ErrorCodeEnum
     if (exception instanceof BizException) {
       const acceptLanguage = request.headers['accept-language'] || ''
       const languages = acceptLanguage.split(',')
       const preferredLanguage = languages[0]?.split(';')?.[0]
 
       bizMessage =
-        errorMessageFor(exception.code, preferredLanguage as any) ||
+        errorMessageFor(exception.bizCode, preferredLanguage as any) ||
         exception.message
+      bizCode = exception.bizCode
     }
     response
       .status(status)
       .type('application/json')
       .send({
         ok: 0,
-        code: res?.code || status,
+        code: (bizCode ?? res?.code) || status,
 
         message:
           bizMessage ||

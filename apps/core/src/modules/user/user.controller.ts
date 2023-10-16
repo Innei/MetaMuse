@@ -95,7 +95,7 @@ export class UserController {
     return this.userService.getOwner().catch((err) => {
       if (
         err instanceof BizException &&
-        err.code === ErrorCodeEnum.UserNotFound
+        err.bizCode === ErrorCodeEnum.UserNotFound
       ) {
         throw new BizException(ErrorCodeEnum.NotInitialized)
       }
