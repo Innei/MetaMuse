@@ -30,6 +30,8 @@ export enum ErrorCodeEnum {
 
   UserNotFound = 30000,
   UserExist = 30001,
+
+  CommentBanned = 40000,
 }
 
 export const ErrorCode = Object.freeze<Record<ErrorCodeEnum, [string, number]>>(
@@ -73,5 +75,7 @@ export const ErrorCode = Object.freeze<Record<ErrorCodeEnum, [string, number]>>(
     [ErrorCodeEnum.JWTInvalid]: ['jwt invalid', 401],
     [ErrorCodeEnum.UserNotFound]: ['user not found', 404],
     [ErrorCodeEnum.UserExist]: ['user already exist', 400],
+
+    [ErrorCodeEnum.CommentBanned]: ['this article comment is not allowed', 403],
   },
 )

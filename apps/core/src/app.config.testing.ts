@@ -1,8 +1,8 @@
 import { AxiosRequestConfig } from 'axios'
 import { argv } from 'zx-cjs'
 
+import { mergeArgv } from './shared/utils/env.util'
 import { isDev } from './shared/utils/environment.util'
-import { mergeArgv } from './utils/env.util'
 
 console.log(argv)
 export const PORT = argv.port || 3333

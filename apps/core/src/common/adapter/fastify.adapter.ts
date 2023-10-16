@@ -1,6 +1,6 @@
 import { FastifyRequest } from 'fastify'
 
-import { getIp } from '@core/utils/ip.util'
+import { getIp } from '@core/shared/utils/ip.util'
 import fastifyCookie from '@fastify/cookie'
 import FastifyMultipart from '@fastify/multipart'
 import { Logger } from '@nestjs/common'

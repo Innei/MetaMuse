@@ -11,7 +11,6 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common'
 
-import { AuthService } from '../auth/auth.service'
 import { UserRegisterDto } from './dtos/register.dto'
 import {
   UserSchemaProjection,
@@ -22,11 +21,7 @@ import {
 export class UserService {
   private Logger = new Logger(UserService.name)
 
-  constructor(
-    private readonly authService: AuthService,
-
-    private readonly db: DatabaseService,
-  ) {}
+  constructor(private readonly db: DatabaseService) {}
 
   async register(userDto: UserRegisterDto) {
     const isExist = await this.db.prisma.user.exists({

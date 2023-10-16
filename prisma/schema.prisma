@@ -48,7 +48,7 @@ model User {
   avatar    String? @db.VarChar(1024)
   password  String  @db.VarChar(80)
   /// @zod.string.email()
-  mail      String? @db.VarChar(80)
+  mail      String  @db.VarChar(80)
   /// @zod.string.url()
   url       String? @db.VarChar(1024)
   socialIds Json?   @default("{}") @map("social_ids")

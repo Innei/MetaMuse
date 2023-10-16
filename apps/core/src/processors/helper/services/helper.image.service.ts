@@ -2,7 +2,10 @@ import imageSize from 'image-size'
 
 import { ConfigsService } from '@core/modules/configs/configs.service'
 import { ArticleImagesDto } from '@core/shared/dto/image.dto'
-import { getAverageRGB, pickImagesFromMarkdown } from '@core/utils/pic.util'
+import {
+  getAverageRGB,
+  pickImagesFromMarkdown,
+} from '@core/shared/utils/pic.util'
 import { Inject, Injectable, Logger } from '@nestjs/common'
 
 import { HttpService } from './helper.http.service'

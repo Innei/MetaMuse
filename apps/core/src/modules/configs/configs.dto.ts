@@ -23,3 +23,13 @@ export class MailOptions {
   secure: boolean
   enable: boolean
 }
+
+export class CommentOptionsDto {
+  antiSpam: boolean
+  disableComment: boolean
+  spamKeywords?: string[]
+  blockIps?: string[]
+  disableNoChinese?: boolean
+  commentShouldAudit?: boolean
+  recordIpLocation?: boolean
+}

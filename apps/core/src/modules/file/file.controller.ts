@@ -9,7 +9,7 @@ import { BizException } from '@core/common/exceptions/biz.exception'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { UploadService } from '@core/processors/helper/services/helper.upload.service'
 import { PagerDto } from '@core/shared/dto/pager.dto'
-import { md5Stream } from '@core/utils/md5.util'
+import { md5Stream } from '@core/shared/utils/md5.util'
 import { Delete, Get, Param, Post, Query, Req, Res } from '@nestjs/common'
 import { Throttle } from '@nestjs/throttler'
 

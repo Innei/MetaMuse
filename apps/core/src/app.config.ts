@@ -2,9 +2,9 @@ import { AxiosRequestConfig } from 'axios'
 import { argv } from 'zx-cjs'
 
 import { parseBooleanishValue } from './constants/parser.utilt'
+import { mergeArgv } from './shared/utils/env.util'
 import { isDev } from './shared/utils/environment.util'
 import { machineIdSync } from './shared/utils/machine.util'
-import { mergeArgv } from './utils/env.util'
 
 export const API_VERSION = 1
 
