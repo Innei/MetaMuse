@@ -2,6 +2,7 @@ import { compareSync, hashSync } from 'bcrypt'
 
 import { BizException } from '@core/common/exceptions/biz.exception'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
+import { CacheService } from '@core/processors/cache/cache.service'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import { Prisma } from '@meta-muse/prisma'
@@ -21,7 +22,10 @@ import {
 export class UserService {
   private Logger = new Logger(UserService.name)
 
-  constructor(private readonly db: DatabaseService) {}
+  constructor(
+    private readonly db: DatabaseService,
+    private readonly cacheService: CacheService,
+  ) {}
 
   async register(userDto: UserRegisterDto) {
     const isExist = await this.db.prisma.user.exists({
@@ -121,16 +125,21 @@ export class UserService {
   }
 
   getOwner() {
-    return this.db.prisma.user
-      .findFirstOrThrow()
-      .catch(
-        resourceNotFoundWrapper(new BizException(ErrorCodeEnum.UserNotFound)),
-      )
-      .then((res) => {
-        UserSchemaSerializeProjection.keys.forEach((key) => {
-          Reflect.deleteProperty(res, key)
-        })
-        return res
-      })
+    return this.cacheService.cacheGet({
+      expireTime: 60,
+      key: 'owner',
+      getValueFun: async () => {
+        return this.db.prisma.user
+          .findFirstOrThrow()
+          .catch(
+            resourceNotFoundWrapper(
+              new BizException(ErrorCodeEnum.UserNotFound),
+            ),
+          )
+          .then((res) => {
+            return UserSchemaSerializeProjection.serialize(res)
+          })
+      },
+    })
   }
 }

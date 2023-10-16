@@ -7,6 +7,7 @@ import {
 } from '@core/common/decorators/get-owner.decorator'
 import { HTTPDecorators } from '@core/common/decorators/http.decorator'
 import { IpLocation, IpRecord } from '@core/common/decorators/ip.decorator'
+import { IsOwner } from '@core/common/decorators/role.decorator'
 import { BizException } from '@core/common/exceptions/biz.exception'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { User } from '@meta-muse/prisma'
@@ -86,7 +87,7 @@ export class UserController {
 
   @Get('/check_logged')
   @HttpCache.disable
-  checkLogged(@Owner() isMaster: boolean) {
+  checkLogged(@IsOwner() isMaster: boolean) {
     return { ok: !!isMaster, isGuest: !isMaster }
   }
 

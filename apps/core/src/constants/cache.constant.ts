@@ -8,6 +8,8 @@ export enum RedisKeys {
   /** 最大在线人数 */
   MaxOnlineCount = 'max_online_count',
 
+  CacheGet = 'cache_get',
+
   // Article count
   //
   Read = 'read',

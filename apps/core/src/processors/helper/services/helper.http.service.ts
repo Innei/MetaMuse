@@ -21,11 +21,9 @@ declare module 'axios' {
 @Injectable()
 export class HttpService implements OnModuleInit {
   private http: AxiosInstance
-  private logger: Logger
+  private logger = new Logger(HttpService.name)
 
   onModuleInit() {
-    this.logger = new Logger(HttpService.name)
-
     this.initQueryClient()
     this.http = this.bindInterceptors(
       axios.create({

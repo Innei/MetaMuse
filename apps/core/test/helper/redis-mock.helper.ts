@@ -1,6 +1,8 @@
 import IORedis, { Redis } from 'ioredis'
 
+import { RedisKeys } from '@core/constants/cache.constant'
 import { CacheService } from '@core/processors/cache/cache.service'
+import { getRedisKey } from '@core/shared/utils/redis.util'
 import { Global, Module } from '@nestjs/common'
 
 export class MockCacheService {
@@ -23,6 +25,38 @@ export class MockCacheService {
 
   public getClient() {
     return this.redisClient
+  }
+
+  async cacheGet(options: {
+    key: string | (Record<string, any> | string | undefined | number)[]
+    getValueFun: () => Promise<any>
+    /**
+     * 过期时间，单位秒
+     */
+    expireTime?: number
+  }) {
+    const redis = this.getClient()
+    const { key, getValueFun, expireTime } = options
+    const cacheKey = getRedisKey(
+      RedisKeys.CacheGet,
+      Array.isArray(key) ? key.join('_') : key,
+    )
+    const cacheValue = await redis.get(cacheKey)
+    if (!cacheValue) {
+      return setValue()
+    }
+
+    try {
+      return JSON.parse(cacheValue)
+    } catch (err) {
+      return setValue()
+    }
+
+    async function setValue() {
+      const value = await getValueFun()
+      await redis.set(cacheKey, JSON.stringify(value), 'EX', expireTime || 60)
+      return value
+    }
   }
 }
 

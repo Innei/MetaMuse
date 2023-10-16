@@ -41,6 +41,8 @@ describe('/modules/post/post.service', () => {
       mail: 'i@innei.in',
       source: null,
       text: 'test',
+      ip: '1.1.1.1',
+      agent: 'chrome',
     })
 
     expect(comment.refId).toBe(note.id)

@@ -2,6 +2,8 @@ import { Cache } from 'cache-manager'
 import { Redis } from 'ioredis'
 
 import { RedisIoAdapterKey } from '@core/common/adapter/io.adapter'
+import { RedisKeys } from '@core/constants/cache.constant'
+import { getRedisKey } from '@core/shared/utils/redis.util'
 import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { Emitter } from '@socket.io/redis-emitter'
@@ -58,5 +60,38 @@ export class CacheService {
     })
 
     return this._emitter
+  }
+
+  async cacheGet(options: {
+    key: string | (Record<string, any> | string | undefined | number)[]
+    getValueFun: () => Promise<any>
+    /**
+     * 过期时间，单位秒
+     */
+    expireTime?: number
+  }) {
+    const redis = this.getClient()
+    const { key, getValueFun, expireTime } = options
+    const cacheKey = getRedisKey(
+      RedisKeys.CacheGet,
+      Array.isArray(key) ? key.join('_') : key,
+    )
+    const cacheValue = await redis.get(cacheKey)
+    if (!cacheValue) {
+      return setValue()
+    }
+
+    try {
+      return JSON.parse(cacheValue)
+    } catch (err) {
+      this.logger.error(err)
+      return setValue()
+    }
+
+    async function setValue() {
+      const value = await getValueFun()
+      await redis.set(cacheKey, JSON.stringify(value), 'EX', expireTime || 60)
+      return value
+    }
   }
 }

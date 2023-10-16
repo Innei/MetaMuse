@@ -32,6 +32,7 @@ export enum ErrorCodeEnum {
   UserExist = 30001,
 
   CommentBanned = 40000,
+  CommentConflict = 40001,
 }
 
 export const ErrorCode = Object.freeze<Record<ErrorCodeEnum, [string, number]>>(
@@ -77,5 +78,9 @@ export const ErrorCode = Object.freeze<Record<ErrorCodeEnum, [string, number]>>(
     [ErrorCodeEnum.UserExist]: ['user already exist', 400],
 
     [ErrorCodeEnum.CommentBanned]: ['this article comment is not allowed', 403],
+    [ErrorCodeEnum.CommentConflict]: [
+      "Your comment information or email conflicts with the site owner's information",
+      403,
+    ],
   },
 )

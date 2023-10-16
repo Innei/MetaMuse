@@ -27,7 +27,7 @@ import { ConfigsService } from '../configs/configs.service'
 import { UserSchemaSerializeProjection } from '../user/user.protect'
 import { UserService } from '../user/user.service'
 import BlockedKeywords from './block-keywords.json'
-import { CreateCommentDto } from './comment.dto'
+import { CreateCommentWithAgentDto } from './comment.dto'
 import {
   baseRenderProps,
   CommentEmailTemplateRenderProps,
@@ -35,6 +35,7 @@ import {
   defaultCommentModelKeys,
 } from './comment.email.default'
 import { CommentReplyMailType } from './comment.enum'
+import { CommentInclude } from './comment.protect'
 
 @Injectable()
 export class CommentService implements OnModuleInit {
@@ -65,6 +66,7 @@ export class CommentService implements OnModuleInit {
 
   async onModuleInit() {
     const ownerInfo = await this.getMailOwnerProps()
+    // TODO
     if (!ownerInfo) {
       this.logger.warn('站长信息未初始化，注册评论发信模板失败')
       return
@@ -91,6 +93,9 @@ export class CommentService implements OnModuleInit {
     type: BusinessEvents.COMMENT_CREATE | BusinessEvents.COMMENT_DELETE,
     id: string,
   ) {
+    const { commentShouldAudit } =
+      await this.configsService.get('commentOptions')
+
     switch (type) {
       case BusinessEvents.COMMENT_CREATE: {
         const comment = await this.getCommentById(id)
@@ -101,11 +106,12 @@ export class CommentService implements OnModuleInit {
           scope: EventScope.TO_SYSTEM_ADMIN,
         })
 
-        if (!comment.isWhispers) {
-          this.eventManager.emit(type, comment, {
-            scope: EventScope.TO_VISITOR,
-          })
-        }
+        if (comment.isWhispers) return
+        if (comment.state === CommentState.UNREAD && commentShouldAudit) return
+
+        this.eventManager.emit(type, comment, {
+          scope: EventScope.TO_VISITOR,
+        })
         return
       }
       case BusinessEvents.COMMENT_DELETE: {
@@ -125,9 +131,7 @@ export class CommentService implements OnModuleInit {
       where: {
         id,
       },
-      include: {
-        children: true,
-      },
+      include: CommentInclude,
     })
   }
 
@@ -178,7 +182,7 @@ export class CommentService implements OnModuleInit {
     return res
   }
 
-  async createComment(articleId: string, doc: CreateCommentDto) {
+  async createComment(articleId: string, doc: CreateCommentWithAgentDto) {
     let ref: Post | Note | Page
     let type: CommentRefTypes
     const result = await this.articleService.findArticleById(articleId)
@@ -203,16 +207,70 @@ export class CommentService implements OnModuleInit {
         refId: ref.id,
         refType: type,
       },
+      include: CommentInclude,
     })
 
     await this.articleService.incrementArticleCommentIndex(type as any, ref.id)
     this.notifyCommentEvent(BusinessEvents.COMMENT_CREATE, comment.id)
 
-    this.configsService.get('commentOptions').then((o) => {
-      if (o.antiSpam) {
-        this.checkSpam(comment).then((isSpam) => {
+    this.checkAndMarkCommentAsSpam(comment).then((isSpam) => {
+      if (isSpam) return
+      this.notifyCommentEvent(BusinessEvents.COMMENT_CREATE, comment.id)
+    })
+
+    return comment
+  }
+
+  /**
+   * 创建一条基础评论，发送邮件通知站长
+   */
+  async createBaseComment(
+    articleId: string,
+    doc: CreateCommentWithAgentDto,
+    senderType: 'owner' | 'guest',
+  ) {
+    const { disableComment } = await this.configsService.get('commentOptions')
+
+    if (disableComment) {
+      throw new BizException(ErrorCodeEnum.CommentBanned)
+    }
+    const owner = await this.userService.getOwner()
+
+    if (senderType === 'guest') {
+      if (
+        doc.mail === owner.mail ||
+        doc.author === owner.name ||
+        doc.author === owner.username
+      ) {
+        throw new BizException(ErrorCodeEnum.CommentConflict)
+      }
+    }
+    const newComment = await this.createComment(articleId, doc)
+
+    if (owner.mail === newComment.mail) return newComment
+    await this.sendEmail(newComment, CommentReplyMailType.Owner)
+    return newComment
+  }
+
+  async createThreadComment(
+    articleId: string,
+    parentId: string,
+    doc: CreateCommentWithAgentDto,
+    senderType: 'owner' | 'guest',
+  ) {
+    // TODO
+  }
+
+  checkAndMarkCommentAsSpam(comment: Comment) {
+    return new Promise<boolean>((resolve) => {
+      this.configsService.get('commentOptions').then((o) => {
+        if (!o.antiSpam) {
+          resolve(true)
+          return
+        }
+        this.checkSpam(comment).then(async (isSpam) => {
           if (isSpam) {
-            this.databaseService.prisma.comment.update({
+            await this.databaseService.prisma.comment.update({
               where: {
                 id: comment.id,
               },
@@ -221,10 +279,10 @@ export class CommentService implements OnModuleInit {
               },
             })
           }
+          resolve(isSpam)
         })
-      }
+      })
     })
-    return comment
   }
 
   async sendEmail(comment: Comment, type: CommentReplyMailType) {
