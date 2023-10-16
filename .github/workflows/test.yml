@@ -10,14 +10,12 @@ on:
     paths:
       - 'apps/core/**'
       - '.github/workflows/build-core.yml'
-      - 'test/**'
       - 'prisma/**'
   pull_request:
     branches: [main]
     paths:
       - 'apps/core/**'
       - '.github/workflows/build-core.yml'
-      - 'test/**'
       - 'prisma/**'
 
 jobs:
