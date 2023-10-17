@@ -62,14 +62,14 @@ export class CacheService {
     return this._emitter
   }
 
-  async cacheGet(options: {
+  async cacheGet<T>(options: {
     key: string | (Record<string, any> | string | undefined | number)[]
-    getValueFun: () => Promise<any>
+    getValueFun: () => Promise<T>
     /**
      * 过期时间，单位秒
      */
     expireTime?: number
-  }) {
+  }): Promise<T> {
     const redis = this.getClient()
     const { key, getValueFun, expireTime } = options
     const cacheKey = getRedisKey(

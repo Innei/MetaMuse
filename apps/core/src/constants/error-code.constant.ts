@@ -33,6 +33,7 @@ export enum ErrorCodeEnum {
 
   CommentBanned = 40000,
   CommentConflict = 40001,
+  CommentNotFound = 40002,
 }
 
 export const ErrorCode = Object.freeze<Record<ErrorCodeEnum, [string, number]>>(
@@ -82,5 +83,6 @@ export const ErrorCode = Object.freeze<Record<ErrorCodeEnum, [string, number]>>(
       "Your comment information or email conflicts with the site owner's information",
       403,
     ],
+    [ErrorCodeEnum.CommentNotFound]: ['comment not found', 404],
   },
 )

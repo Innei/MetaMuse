@@ -10,6 +10,7 @@ import { isDev } from '@core/global/env.global'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { EmailService } from '@core/processors/helper/services/helper.email.service'
 import { EventManagerService } from '@core/processors/helper/services/helper.event.service'
+import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import { hasChinese } from '@core/shared/utils/tool.util'
 import { getAvatar } from '@core/shared/utils/tool.utils'
 import {
@@ -182,7 +183,11 @@ export class CommentService implements OnModuleInit {
     return res
   }
 
-  async createComment(articleId: string, doc: CreateCommentWithAgentDto) {
+  async createComment(
+    articleId: string,
+    doc: CreateCommentWithAgentDto,
+    parentCommentId?: string,
+  ) {
     let ref: Post | Note | Page
     let type: CommentRefTypes
     const result = await this.articleService.findArticleById(articleId)
@@ -206,8 +211,12 @@ export class CommentService implements OnModuleInit {
         state: CommentState.UNREAD,
         refId: ref.id,
         refType: type,
+        parentId: parentCommentId,
       },
-      include: CommentInclude,
+      include: {
+        ...CommentInclude,
+        parent: true,
+      },
     })
 
     await this.articleService.incrementArticleCommentIndex(type as any, ref.id)
@@ -220,21 +229,16 @@ export class CommentService implements OnModuleInit {
 
     return comment
   }
-
-  /**
-   * 创建一条基础评论，发送邮件通知站长
-   */
-  async createBaseComment(
-    articleId: string,
+  async validateComment(
     doc: CreateCommentWithAgentDto,
     senderType: 'owner' | 'guest',
+    owner: Owner,
   ) {
     const { disableComment } = await this.configsService.get('commentOptions')
 
     if (disableComment) {
       throw new BizException(ErrorCodeEnum.CommentBanned)
     }
-    const owner = await this.userService.getOwner()
 
     if (senderType === 'guest') {
       if (
@@ -245,20 +249,56 @@ export class CommentService implements OnModuleInit {
         throw new BizException(ErrorCodeEnum.CommentConflict)
       }
     }
+  }
+
+  async createBaseComment(
+    articleId: string,
+    doc: CreateCommentWithAgentDto,
+    senderType: 'owner' | 'guest',
+  ) {
+    const owner = await this.userService.getOwner()
+    await this.validateComment(doc, senderType, owner)
     const newComment = await this.createComment(articleId, doc)
 
     if (owner.mail === newComment.mail) return newComment
+
     await this.sendEmail(newComment, CommentReplyMailType.Owner)
     return newComment
   }
 
   async createThreadComment(
-    articleId: string,
     parentId: string,
     doc: CreateCommentWithAgentDto,
     senderType: 'owner' | 'guest',
   ) {
-    // TODO
+    const owner = await this.userService.getOwner()
+    await this.validateComment(doc, senderType, owner)
+
+    const { refId: articleId } = await this.databaseService.prisma.comment
+      .findUniqueOrThrow({
+        where: {
+          id: parentId,
+        },
+        select: {
+          refId: true,
+        },
+      })
+      .catch(
+        resourceNotFoundWrapper(
+          new BizException(ErrorCodeEnum.CommentNotFound),
+        ),
+      )
+
+    const newComment = await this.createComment(articleId, doc, parentId)
+
+    if (newComment.parent?.mail !== owner.mail) {
+      await this.sendEmail(newComment, CommentReplyMailType.Guest)
+    }
+
+    if (owner.mail === newComment.mail) return newComment
+
+    await this.sendEmail(newComment, CommentReplyMailType.Owner)
+    return newComment
   }
 
   checkAndMarkCommentAsSpam(comment: Comment) {
@@ -318,6 +358,10 @@ export class CommentService implements OnModuleInit {
     }/${time.getFullYear()}`
 
     if (!refResult || !masterInfo.mail) {
+      return
+    }
+
+    if (type === CommentReplyMailType.Guest && !parent) {
       return
     }
 
