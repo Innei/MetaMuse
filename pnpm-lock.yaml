@@ -141,14 +141,14 @@ importers:
         specifier: 1.4.2
         version: 1.4.2(@babel/runtime@7.23.1)(react-dom@18.2.0)(react@18.2.0)
       antd:
-        specifier: 5.10.0
-        version: 5.10.0(react-dom@18.2.0)(react@18.2.0)
+        specifier: 5.10.1
+        version: 5.10.1(react-dom@18.2.0)(react@18.2.0)
       axios:
         specifier: 1.5.1
         version: 1.5.1
       camelcase-keys:
-        specifier: 9.1.0
-        version: 9.1.0
+        specifier: 9.1.1
+        version: 9.1.1
       dayjs:
         specifier: 1.11.10
         version: 1.11.10
@@ -280,8 +280,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       daisyui:
-        specifier: 3.9.2
-        version: 3.9.2
+        specifier: 3.9.3
+        version: 3.9.3
       postcss:
         specifier: 8.4.31
         version: 8.4.31
@@ -539,8 +539,8 @@ importers:
         specifier: 2.5.0
         version: 2.5.0(zod@3.22.4)
       zod-prisma-types:
-        specifier: 2.7.12
-        version: 2.7.12
+        specifier: 2.7.13
+        version: 2.7.13
       zx:
         specifier: 7.2.3
         version: 7.2.3
@@ -563,8 +563,8 @@ importers:
         specifier: 3.22.4
         version: 3.22.4
       zod-prisma-types:
-        specifier: 2.7.12
-        version: 2.7.12
+        specifier: 2.7.13
+        version: 2.7.13
     devDependencies:
       prisma:
         specifier: 5.4.2
@@ -3507,6 +3507,16 @@ packages:
       strip-ansi: 6.0.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@prisma/debug@5.4.2:
+    resolution: {integrity: sha512-YRRi7beaX/sAQs0WQ/Y0LndfWynyodJKO0qF0Vj/KQ8aynmllpL7Hahdm4MVEy6eDPeoX7FWu/otkHRGKWmKSQ==}
+    dependencies:
+      '@types/debug': 4.1.9
+      debug: 4.3.4
+      strip-ansi: 6.0.1
+    transitivePeerDependencies:
+      - supports-color
 
   /@prisma/engines-version@5.4.1-2.ac9d7041ed77bcc8a8dbd2ab6616b39013829574:
     resolution: {integrity: sha512-wvupDL4AA1vf4TQNANg7kR7y98ITqPsk6aacfBxZKtrJKRIsWjURHkZCGcQliHdqCiW/hGreO6d6ZuSv9MhdAA==}
@@ -3525,11 +3535,22 @@ packages:
       kleur: 4.1.5
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@prisma/generator-helper@5.4.2:
+    resolution: {integrity: sha512-UC2W3ZUs87jbdEOCmsQfCyGeuLA0oosAKgS+0vTCoZWnKUPGvMNxMqNPL08rpXTc1vwUFvl09R76ZVC3Zm7PHw==}
+    dependencies:
+      '@prisma/debug': 5.4.2
+      '@types/cross-spawn': 6.0.3
+      cross-spawn: 7.0.3
+      kleur: 4.1.5
+    transitivePeerDependencies:
+      - supports-color
 
   /@radix-ui/primitive@1.0.1:
     resolution: {integrity: sha512-yQ8oGX2GVsEYMWGxcovu1uGWPCxV5BFfeeYxqPmuAzUyLT9qmaMXSAhXpb0WrspIeqYzdJpkh2vHModJPgRIaw==}
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
     dev: false
 
   /@radix-ui/react-compose-refs@1.0.1(@types/react@18.2.28)(react@18.2.0):
@@ -3541,7 +3562,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       '@types/react': 18.2.28
       react: 18.2.0
     dev: false
@@ -3555,7 +3576,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       '@types/react': 18.2.28
       react: 18.2.0
     dev: false
@@ -3607,7 +3628,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
@@ -3628,7 +3649,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       '@types/react': 18.2.28
       react: 18.2.0
     dev: false
@@ -3646,7 +3667,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.2.28)(react@18.2.0)
@@ -3665,7 +3686,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@types/react': 18.2.28
       react: 18.2.0
@@ -3684,7 +3705,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.28
       '@types/react-dom': 18.2.13
@@ -3705,7 +3726,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@types/react': 18.2.28
@@ -3727,7 +3748,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       '@radix-ui/react-slot': 1.0.2(@types/react@18.2.28)(react@18.2.0)
       '@types/react': 18.2.28
       '@types/react-dom': 18.2.13
@@ -3744,7 +3765,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@types/react': 18.2.28
       react: 18.2.0
@@ -3759,7 +3780,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       '@types/react': 18.2.28
       react: 18.2.0
     dev: false
@@ -3773,7 +3794,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@types/react': 18.2.28
       react: 18.2.0
@@ -3788,7 +3809,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@types/react': 18.2.28
       react: 18.2.0
@@ -3803,7 +3824,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       '@types/react': 18.2.28
       react: 18.2.0
     dev: false
@@ -6230,8 +6251,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /antd@5.10.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-qeyfMhcDK2QeuKaC/OCjNCPrJb+3vrBHvVK2swRHsxJvKFSpRerMCShOn/I3CXogrVJazPMluGhy0FQlcHQ4pw==}
+  /antd@5.10.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-alcBmeH4oAdmEdBs6EORH3onRFRjGYRkWtVjPyJxlTIfLILb/+S5Y+ZqisV3AobC8mlj6T3RV8aKG9ic6PgtzQ==}
     peerDependencies:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
@@ -6256,7 +6277,7 @@ packages:
       rc-dialog: 9.3.3(react-dom@18.2.0)(react@18.2.0)
       rc-drawer: 6.5.2(react-dom@18.2.0)(react@18.2.0)
       rc-dropdown: 4.1.0(react-dom@18.2.0)(react@18.2.0)
-      rc-field-form: 1.38.2(react-dom@18.2.0)(react@18.2.0)
+      rc-field-form: 1.39.0(react-dom@18.2.0)(react@18.2.0)
       rc-image: 7.3.1(react-dom@18.2.0)(react@18.2.0)
       rc-input: 1.2.1(react-dom@18.2.0)(react@18.2.0)
       rc-input-number: 8.1.0(react-dom@18.2.0)(react@18.2.0)
@@ -6708,8 +6729,8 @@ packages:
       quick-lru: 4.0.1
     dev: true
 
-  /camelcase-keys@9.1.0:
-    resolution: {integrity: sha512-RcLmR20cA5J6ZSqOQcPLcJ8fpiczDLVM5V5aOR0w7UgMcev35tPU8z8Q380wWekRRQDON9cLhWOuGm03VDQ7Hg==}
+  /camelcase-keys@9.1.1:
+    resolution: {integrity: sha512-E+5dzqOoclX4Kbm2kaxeKNmNY67O6V3hyOQohE6xMj/O+HgVvh3F5LF4wSEiksY+SiOMYOJKXEKA7C4Svrd2Kw==}
     engines: {node: '>=16'}
     dependencies:
       camelcase: 8.0.0
@@ -7363,8 +7384,8 @@ packages:
       uniq: 1.0.1
     dev: false
 
-  /daisyui@3.9.2:
-    resolution: {integrity: sha512-yJZ1QjHUaL+r9BkquTdzNHb7KIgAJVFh0zbOXql2Wu0r7zx5qZNLxclhjN0WLoIpY+o2h/8lqXg7ijj8oTigOw==}
+  /daisyui@3.9.3:
+    resolution: {integrity: sha512-8li177QCu6dqlEOzE3h/dAV1y9Movbjx5bzJIO/hNqMNZtJkbHM0trjTzbDejV7N57eNGdjBvAGtxZYKzS4jow==}
     engines: {node: '>=16.9.0'}
     dependencies:
       colord: 2.9.3
@@ -12084,8 +12105,8 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /rc-field-form@1.38.2(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-O83Oi1qPyEv31Sg+Jwvsj6pXc8uQI2BtIAkURr5lvEYHVggXJhdU/nynK8wY1gbw0qR48k731sN5ON4egRCROA==}
+  /rc-field-form@1.39.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-V7Wk7uji1jBsUGGgP788H9rpFy55HLiD4lywTlktUGjK7EgW5dt+mq1MPbtCpPRMzs83vZBW4SOChOmCACz4WA==}
     engines: {node: '>=8.x'}
     peerDependencies:
       react: '>=16.9.0'
@@ -12671,7 +12692,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       react: 18.2.0
       use-composed-ref: 1.3.0(react@18.2.0)
       use-latest: 1.2.1(@types/react@18.2.28)(react@18.2.0)
@@ -15119,11 +15140,11 @@ packages:
       zod: 3.22.4
     dev: true
 
-  /zod-prisma-types@2.7.12:
-    resolution: {integrity: sha512-Gwe7oabBAb39XXTme99rFx1qtLtndD+5Wm5ua1qyG5VXvWJ3DTClHltdxCVB8hjcLlF6nkVaOccqsoTom5dHTQ==}
+  /zod-prisma-types@2.7.13:
+    resolution: {integrity: sha512-HuGrm333z/7yDnJ2ZCXTJmkTREzRpOSj5koNCNQkaqm/RxbQfv2HqAMeX9DX7KeEvMiYBb6alggSNo3Z/wXbJQ==}
     hasBin: true
     dependencies:
-      '@prisma/generator-helper': 5.4.1
+      '@prisma/generator-helper': 5.4.2
       code-block-writer: 12.0.0
       lodash: 4.17.21
       zod: 3.22.4
