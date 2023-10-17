@@ -10,6 +10,8 @@ import type {
 } from '@tanstack/react-query-persist-client'
 import type { PropsWithChildren } from 'react'
 
+import { TRPCClientError } from '@trpc/client'
+
 declare module '@tanstack/query-core' {
   export interface QueryMeta {
     persist?: boolean
@@ -34,6 +36,14 @@ export const queryClient = new QueryClient({
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
       refetchOnMount: true,
+      retry: (failureCount, error) => {
+        if (error instanceof TRPCClientError) {
+          if (error?.shape?.bizCode) {
+            return false
+          }
+        }
+        return failureCount < 3
+      },
     },
   },
 })

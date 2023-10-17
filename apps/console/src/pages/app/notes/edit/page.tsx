@@ -58,13 +58,14 @@ const createInitialEditingData = (): NoteModel => {
 export default function EditPage_() {
   const [search] = useSearchParams()
   const id = search.get('id')
-  const { data, isLoading } = trpc.note.id.useQuery(
+  const { data, isLoading, error } = trpc.note.id.useQuery(
     { id: id! },
     { enabled: !!id },
   )
 
   if (id) {
     if (isLoading) return <PageLoading />
+    console.log(error)
 
     return <EditPage initialData={data} />
   }

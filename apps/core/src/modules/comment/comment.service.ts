@@ -26,7 +26,7 @@ import { ArticleService } from '../article/article.service'
 import { ConfigsService } from '../configs/configs.service'
 import { UserSchemaSerializeProjection } from '../user/user.protect'
 import { UserService } from '../user/user.service'
-import BlockedKeywords from './block-keywords.json'
+import BlockedKeywords from './block-keywords'
 import { CreateCommentWithAgentDto } from './comment.dto'
 import {
   baseRenderProps,

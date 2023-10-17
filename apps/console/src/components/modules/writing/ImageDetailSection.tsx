@@ -17,11 +17,10 @@ import { useEventCallback } from 'usehooks-ts'
 import type { ArticleImage, ArticleImagesDto } from '@core/shared/dto/image.dto'
 import type { FC } from 'react'
 
-import { pickImagesFromMarkdown } from '@core/utils/pic.util'
-
 import { MotionButtonBase } from '~/components/ui/button'
 import { useI18n } from '~/i18n/hooks'
 import { getDominantColor } from '~/lib/color'
+import { pickImagesFromMarkdown } from '~/lib/markdown'
 
 import { styles } from './styles'
 

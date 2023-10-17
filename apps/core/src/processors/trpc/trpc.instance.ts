@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import { BizException } from '@core/common/exceptions/biz.exception'
+import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { errorMessageFor } from '@core/i18n/biz-code'
 import { inferRouterInputs, inferRouterOutputs, initTRPC } from '@trpc/server'
 
@@ -11,6 +12,7 @@ export const tRpc = initTRPC.context<Context>().create({
   errorFormatter(opts) {
     const { shape, error, ctx } = opts
     let bizMessage = ''
+    let bizCode = undefined as ErrorCodeEnum | undefined
 
     if (error.cause instanceof BizException) {
       const acceptLanguage = ctx?.lang
@@ -20,6 +22,7 @@ export const tRpc = initTRPC.context<Context>().create({
 
       bizMessage =
         errorMessageFor(BizError.bizCode, preferredLanguage) || BizError.message
+      bizCode = BizError.bizCode
     }
 
     if (error.cause instanceof z.ZodError) {
@@ -31,6 +34,7 @@ export const tRpc = initTRPC.context<Context>().create({
     return {
       ...shape,
       message: bizMessage || shape.message,
+      bizCode,
       data: {
         ...shape.data,
       },
