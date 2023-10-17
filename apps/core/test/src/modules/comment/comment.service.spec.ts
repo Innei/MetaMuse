@@ -33,12 +33,17 @@ describe('/modules/comment/comment.service', () => {
   })
 
   it('create comment', async () => {
+    const spy = vi.spyOn(CommentService.prototype, 'sendEmail')
     const note = await prisma.note.create({
       data: {
         ...generateMockNote(),
       },
     })
-    const comment = await proxy.service.createComment(note.id, mockCommentData)
+    const comment = await proxy.service.createBaseComment(
+      note.id,
+      mockCommentData,
+      'guest',
+    )
 
     expect(comment.refId).toBe(note.id)
     expect(comment.refType).toBe('Note')
@@ -56,9 +61,12 @@ describe('/modules/comment/comment.service', () => {
     `)
     await sleep(10)
     expect(mockedEventManagerService.emit).toBeCalledTimes(2)
+    expect(spy).toBeCalledTimes(1)
+    expect(spy).toBeCalledWith(expect.anything(), 'owner')
   })
 
   it('create reply comment', async () => {
+    const spy = vi.spyOn(CommentService.prototype, 'sendEmail')
     const note = await prisma.note.create({
       data: {
         ...generateMockNote(),
@@ -82,5 +90,47 @@ describe('/modules/comment/comment.service', () => {
 
     const reComment = prisma.comment.findUnique({ where: { id: comment.id } })
     expect(reComment.children.length).toBe(1)
+
+    expect(spy).toBeCalledTimes(2)
+    expect(spy.mock.calls[1]).toEqual([expect.anything(), 'owner'])
+    expect(spy.mock.calls[0]).toEqual([
+      expect.anything(),
+      'guest',
+      mockCommentData.mail,
+    ])
+  })
+
+  it('create reply comment reply comment', async () => {
+    const spy = vi.spyOn(CommentService.prototype, 'sendEmail')
+    const note = await prisma.note.create({
+      data: {
+        ...generateMockNote(),
+      },
+    })
+    const comment = await proxy.service.createComment(note.id, mockCommentData)
+    const replyComment = await proxy.service.createThreadComment(
+      comment.id,
+      {
+        ...mockCommentData,
+        mail: 'test@cc1.com',
+      },
+      'guest',
+    )
+
+    spy.mockReset()
+
+    const replyComment2 = await proxy.service.createThreadComment(
+      replyComment.id,
+      mockCommentData,
+      'guest',
+    )
+
+    expect(replyComment2.parentId).toBe(comment.id)
+    expect(spy.mock.calls[1]).toEqual([expect.anything(), 'owner'])
+    expect(spy.mock.calls[0]).toEqual([
+      expect.anything(),
+      'guest',
+      'test@cc1.com',
+    ])
   })
 })

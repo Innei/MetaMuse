@@ -289,10 +289,39 @@ export class CommentService implements OnModuleInit {
         ),
       )
 
-    const newComment = await this.createComment(articleId, doc, parentId)
+    const [root] = await this.databaseService.prisma.$queryRaw<
+      { id: string }[]
+    >`WITH RECURSIVE root_comments AS (
+    SELECT id, "Comment"."parentId" as parentId
+    FROM public."Comment"
+    WHERE id = ${parentId}
+    UNION ALL
+    SELECT c.id, c."parentId" as parentId
+    FROM public."Comment" c
+    JOIN root_comments rc ON c.id = rc.parentId
+)
+SELECT id 
+FROM root_comments 
+WHERE parentId IS NULL;`
+    if (!root)
+      throw new BizException(
+        ErrorCodeEnum.CommentNotFound,
+        'root comment not found',
+      )
+    const rootId = root.id
+    const newComment = await this.createComment(articleId, doc, rootId)
 
-    if (newComment.parent?.mail !== owner.mail) {
-      await this.sendEmail(newComment, CommentReplyMailType.Guest)
+    const parentComment = await this.databaseService.prisma.comment.findUnique({
+      where: {
+        id: parentId,
+      },
+    })
+    if (parentComment && parentComment?.mail !== owner.mail) {
+      await this.sendEmail(
+        newComment,
+        CommentReplyMailType.Guest,
+        parentComment?.mail,
+      )
     }
 
     if (owner.mail === newComment.mail) return newComment
@@ -325,7 +354,16 @@ export class CommentService implements OnModuleInit {
     })
   }
 
-  async sendEmail(comment: Comment, type: CommentReplyMailType) {
+  async sendEmail(
+    comment: Comment,
+    type: CommentReplyMailType.Owner,
+  ): Promise<void>
+  async sendEmail(
+    comment: Comment,
+    type: CommentReplyMailType.Guest,
+    to: string,
+  ): Promise<void>
+  async sendEmail(comment: Comment, type: CommentReplyMailType, to?: string) {
     const enable = await this.configsService
       .get('mailOptions')
       .then((config) => config.enable)
@@ -361,12 +399,11 @@ export class CommentService implements OnModuleInit {
       return
     }
 
-    if (type === CommentReplyMailType.Guest && !parent) {
-      return
-    }
+    const nextTo = type === CommentReplyMailType.Owner ? masterInfo.mail : to
+    if (!nextTo) return
 
     this.sendCommentNotificationMail({
-      to: type === CommentReplyMailType.Owner ? masterInfo.mail : parent!.mail,
+      to: nextTo,
       type,
       source: {
         title: refType === CommentRefTypes.Recently ? '速记' : refDoc.title,
