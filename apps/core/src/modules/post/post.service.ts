@@ -11,7 +11,7 @@ import { reorganizeData, toOrder } from '@core/shared/utils/data.util'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import { deepEqual } from '@core/shared/utils/tool.util'
 import { isDefined } from '@core/shared/utils/validator.util'
-import { Prisma } from '@meta-muse/prisma'
+import { CommentRefTypes, Prisma } from '@meta-muse/prisma'
 import { Injectable, Logger } from '@nestjs/common'
 
 import { PostDto, PostPagerDto, PostPatchDto } from './post.dto'
@@ -425,6 +425,13 @@ export class PostService {
       await prisma.post.delete({
         where: {
           id,
+        },
+      })
+
+      await prisma.comment.deleteMany({
+        where: {
+          refType: CommentRefTypes.Post,
+          refId: id,
         },
       })
     })

@@ -8,7 +8,7 @@ import { DatabaseService } from '@core/processors/database/database.service'
 import { EventManagerService } from '@core/processors/helper/services/helper.event.service'
 import { reorganizeData, toOrder } from '@core/shared/utils/data.util'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
-import { Prisma } from '@meta-muse/prisma'
+import { CommentRefTypes, Prisma } from '@meta-muse/prisma'
 import { Inject, Injectable } from '@nestjs/common'
 
 import { NoteDto, NotePagerDto, NotePatchDto } from './note.dto'
@@ -174,10 +174,18 @@ export class NoteService {
   }
 
   async deleteById(id: string) {
-    return this.db.prisma.note.delete({
-      where: {
-        id,
-      },
+    this.db.prisma.$transaction(async (prisma) => {
+      await this.db.prisma.note.delete({
+        where: {
+          id,
+        },
+      })
+      await prisma.comment.deleteMany({
+        where: {
+          refType: CommentRefTypes.Post,
+          refId: id,
+        },
+      })
     })
   }
 }

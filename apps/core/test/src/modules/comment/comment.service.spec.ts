@@ -32,7 +32,7 @@ describe('/modules/comment/comment.service', () => {
     })
   })
 
-  it('create comment', async () => {
+  test('create comment', async () => {
     const spy = vi.spyOn(CommentService.prototype, 'sendEmail')
     const note = await prisma.note.create({
       data: {
@@ -65,7 +65,7 @@ describe('/modules/comment/comment.service', () => {
     expect(spy).toBeCalledWith(expect.anything(), 'owner')
   })
 
-  it('create reply comment', async () => {
+  test('create reply comment', async () => {
     const spy = vi.spyOn(CommentService.prototype, 'sendEmail')
     const note = await prisma.note.create({
       data: {
@@ -100,7 +100,7 @@ describe('/modules/comment/comment.service', () => {
     ])
   })
 
-  it('create reply comment reply comment', async () => {
+  test('create reply comment reply comment', async () => {
     const spy = vi.spyOn(CommentService.prototype, 'sendEmail')
     const note = await prisma.note.create({
       data: {
@@ -132,5 +132,25 @@ describe('/modules/comment/comment.service', () => {
       'guest',
       'test@cc1.com',
     ])
+  })
+
+  test('create more reply comment', async () => {
+    const note = await prisma.note.create({
+      data: {
+        ...generateMockNote(),
+      },
+    })
+    const comment = await proxy.service.createComment(note.id, mockCommentData)
+    for (let i = 0; i < 10; i++) {
+      await proxy.service.createThreadComment(
+        comment.id,
+        mockCommentData,
+        'guest',
+      )
+    }
+
+    const reComment = await proxy.service.getCommentById(comment.id)
+
+    expect(reComment?.children.length).toBe(10)
   })
 })
