@@ -142,6 +142,7 @@ describe('/modules/comment/comment.service', () => {
         ...generateMockNote(),
       },
     })
+
     const comment = await proxy.service.createComment(note.id, mockCommentData)
     for (let i = 0; i < 10; i++) {
       await proxy.service.createThreadComment(

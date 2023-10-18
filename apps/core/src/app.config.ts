@@ -34,7 +34,7 @@ export const REDIS = {
   httpCacheTTL: 5,
   max: 5,
   disableApiCache:
-    (isDev || mergeArgv('disable_cache')) && mergeArgv('enable_cache_debug'),
+    (isDev && !mergeArgv('enable_cache_debug')) || mergeArgv('disable_cache'),
 }
 
 export const DATABASE = {

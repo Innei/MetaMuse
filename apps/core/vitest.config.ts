@@ -43,15 +43,6 @@ export default defineConfig({
         find: /^@core\/(.+)/,
         replacement: resolve(__dirname, './src/$1'),
       },
-      {
-        find: /^@prisma\/client$/,
-        replacement: resolve(__dirname, '../../prisma/client'),
-      },
-
-      {
-        find: /^@prisma\/client\/(.+)/,
-        replacement: resolve(__dirname, '../../prisma/$1'),
-      },
     ],
   },
 

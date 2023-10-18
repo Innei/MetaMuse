@@ -2,7 +2,7 @@ import { omit } from 'lodash'
 import { createFixture } from 'zod-fixture'
 
 import { categorySchemaProjection } from '@core/modules/category/category.project'
-import { CategorySchema } from '@prisma/client/zod'
+import { CategorySchema } from '@meta-muse/prisma/zod'
 
 export const generateMockCategory = () => {
   return omit(

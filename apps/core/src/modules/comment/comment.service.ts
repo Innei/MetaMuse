@@ -13,16 +13,19 @@ import {
 } from '@core/processors/database/database.service'
 import { EmailService } from '@core/processors/helper/services/helper.email.service'
 import { EventManagerService } from '@core/processors/helper/services/helper.event.service'
+import { PagerDto } from '@core/shared/dto/pager.dto'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import { hasChinese } from '@core/shared/utils/tool.util'
 import { getAvatar } from '@core/shared/utils/tool.utils'
 import {
+  $Enums,
   Comment,
   CommentRefTypes,
   CommentState,
   Note,
   Page,
   Post,
+  Prisma,
 } from '@meta-muse/prisma'
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common'
 
@@ -90,6 +93,63 @@ export class CommentService implements OnModuleInit {
     })
     this.emailService.registerEmailType(CommentReplyMailType.Owner, {
       ...renderProps,
+    })
+  }
+
+  async paginate(
+    options: Partial<PagerDto> & {
+      state:
+        | $Enums.CommentState
+        | Prisma.EnumCommentStateNullableFilter<'Comment'>
+      articleId?: string
+    },
+  ) {
+    const {
+      page = 1,
+      size = 20,
+      sortBy = 'created',
+      cursor,
+      sortOrder = 'desc',
+      state,
+      articleId,
+    } = options
+
+    return this.databaseService.prisma.comment.paginate(
+      {
+        where: {
+          state,
+          refId: articleId ? articleId : undefined,
+        },
+        include: CommentInclude,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          [sortBy]: sortOrder,
+        },
+      },
+      {
+        page,
+        size,
+      },
+    )
+  }
+
+  async paginateCommentsForPublic(articleId: string, options: PagerDto) {
+    const configs = await this.configsService.get('commentOptions')
+    const { commentShouldAudit } = configs
+    const { page, size, sortBy, cursor, sortOrder } = options
+
+    return this.paginate({
+      page,
+      state: commentShouldAudit
+        ? CommentState.READ
+        : {
+            in: [CommentState.READ, CommentState.UNREAD],
+          },
+      cursor,
+      sortBy,
+      size,
+      sortOrder,
+      articleId,
     })
   }
 

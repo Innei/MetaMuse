@@ -57,9 +57,16 @@ export class HttpCacheInterceptor implements NestInterceptor {
 
     const handler = context.getHandler()
     const isDisableCache = this.reflector.get(META.HTTP_CACHE_DISABLE, handler)
-    const key = this.trackBy(context) || `mx-api-cache:${request.url}`
+    const key = this.trackBy(context) || `meta-muse-cache:${request.url}`
 
     if (isDisableCache) {
+      return call$
+    }
+    const query: any = request.query || {}
+    const queryWithTs = query.ts || query.timestamp || query._t || query.t
+
+    // 如果请求中带有时间戳参数，则不缓存
+    if (queryWithTs) {
       return call$
     }
 

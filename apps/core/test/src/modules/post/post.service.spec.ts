@@ -1,6 +1,6 @@
 import { PostService } from '@core/modules/post/post.service'
 import { sleep } from '@core/shared/utils/tool.utils'
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@meta-muse/prisma'
 import { createServiceUnitTestApp } from '@test/helper/create-service-unit'
 import { prisma } from '@test/lib/prisma'
 import resetDb from '@test/lib/reset-db'

@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@meta-muse/prisma'
 
 import { prisma } from './prisma'
 

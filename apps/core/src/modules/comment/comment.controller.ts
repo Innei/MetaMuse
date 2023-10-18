@@ -5,7 +5,10 @@ import { IsOwner } from '@core/common/decorators/role.decorator'
 import { BizException } from '@core/common/exceptions/biz.exception'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { SnowflakeIdDto } from '@core/shared/dto/id.dto'
-import { Body, Get, Param, Post } from '@nestjs/common'
+import { PagerDto } from '@core/shared/dto/pager.dto'
+import { PaginationResult } from '@core/shared/interface/paginator.interface'
+import { CommentState } from '@meta-muse/prisma'
+import { Body, Get, Param, Post, Query } from '@nestjs/common'
 
 import { CreateCommentDto } from './comment.dto'
 import { CommentSchemaSerializeProjection } from './comment.protect'
@@ -96,5 +99,38 @@ export class CommentController {
       ...CommentSchemaSerializeProjection.serialize(data),
       children,
     }
+  }
+
+  @Get('/ref/:id')
+  async getCommentsByRefId(
+    @Param() params: SnowflakeIdDto,
+    @Query() query: PagerDto,
+    @IsOwner() isOwner: boolean,
+  ) {
+    let result: PaginationResult<any>
+    if (!isOwner) {
+      result = await this.commentService.paginateCommentsForPublic(
+        params.id,
+        query,
+      )
+
+      result.data = result.data.map((comment) => {
+        comment.children = comment.children.map((child) =>
+          CommentSchemaSerializeProjection.serialize(child),
+        )
+        return CommentSchemaSerializeProjection.serialize(comment)
+      })
+    } else {
+      result = await this.commentService.paginate({
+        ...query,
+        state: {
+          in: [CommentState.READ, CommentState.UNREAD],
+        },
+      })
+    }
+
+    this.commentService.fillAndReplaceAvatarUrl(result.data)
+
+    return result
   }
 }

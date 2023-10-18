@@ -22,8 +22,6 @@
     "paths": {
       "@core": ["./src"],
       "@core/*": ["./src/*"],
-      "@prisma/client": ["../../prisma/client"],
-      "@prisma/client/*": ["../../prisma/*"],
       "@test": ["./test"],
       "@test/*": ["./test/*"]
     }
