@@ -7,7 +7,10 @@ import { BusinessEvents } from '@core/constants/business-event.constant'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { EventScope } from '@core/constants/event-scope.constant'
 import { isDev } from '@core/global/env.global'
-import { DatabaseService } from '@core/processors/database/database.service'
+import {
+  DatabaseService,
+  sql,
+} from '@core/processors/database/database.service'
 import { EmailService } from '@core/processors/helper/services/helper.email.service'
 import { EventManagerService } from '@core/processors/helper/services/helper.event.service'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
@@ -187,6 +190,7 @@ export class CommentService implements OnModuleInit {
     articleId: string,
     doc: CreateCommentWithAgentDto,
     parentCommentId?: string,
+    mentionIds?: string[],
   ) {
     let ref: Post | Note | Page
     let type: CommentRefTypes
@@ -212,6 +216,7 @@ export class CommentService implements OnModuleInit {
         refId: ref.id,
         refType: type,
         parentId: parentCommentId,
+        mentions: mentionIds,
       },
       include: {
         ...CommentInclude,
@@ -289,9 +294,7 @@ export class CommentService implements OnModuleInit {
         ),
       )
 
-    const [root] = await this.databaseService.prisma.$queryRaw<
-      { id: string }[]
-    >`WITH RECURSIVE root_comments AS (
+    const [root] = (await sql`WITH RECURSIVE root_comments AS (
     SELECT id, "Comment"."parentId" as parentId
     FROM public."Comment"
     WHERE id = ${parentId}
@@ -302,14 +305,17 @@ export class CommentService implements OnModuleInit {
 )
 SELECT id 
 FROM root_comments 
-WHERE parentId IS NULL;`
+WHERE parentId IS NULL;`) as { id: string }[]
+
     if (!root)
       throw new BizException(
         ErrorCodeEnum.CommentNotFound,
         'root comment not found',
       )
     const rootId = root.id
-    const newComment = await this.createComment(articleId, doc, rootId)
+    const newComment = await this.createComment(articleId, doc, rootId, [
+      parentId,
+    ])
 
     const parentComment = await this.databaseService.prisma.comment.findUnique({
       where: {

@@ -8,6 +8,7 @@ import { SnowflakeIdDto } from '@core/shared/dto/id.dto'
 import { Body, Get, Param, Post } from '@nestjs/common'
 
 import { CreateCommentDto } from './comment.dto'
+import { CommentSchemaSerializeProjection } from './comment.protect'
 import { CommentService } from './comment.service'
 
 const idempotenceMessage = '哦吼，这句话你已经说过啦'
@@ -88,6 +89,12 @@ export class CommentController {
     }
 
     await this.commentService.fillAndReplaceAvatarUrl([data])
-    return data
+    const children = data.children.map((child) =>
+      CommentSchemaSerializeProjection.serialize(child),
+    )
+    return {
+      ...CommentSchemaSerializeProjection.serialize(data),
+      children,
+    }
   }
 }

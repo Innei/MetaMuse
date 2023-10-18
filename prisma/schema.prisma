@@ -254,6 +254,7 @@ model Comment {
   isWhispers    Boolean?        @default(false) @map("is_whispers")
   source        String?
   avatar        String?
+  mentions      String[]        @default([]) /// @zod.custom.omit(["model", "input"])
 }
 
 enum CommentRefTypes {

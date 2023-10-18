@@ -116,22 +116,6 @@ export const createExtendedPrismaClient = ({ url }: { url?: string } = {}) => {
 }
 export type ExtendedPrismaClient = ReturnType<typeof createExtendedPrismaClient>
 
-// export type AllModelNames = Exclude<
-//   keyof extendedPrismaClient,
-//   | 'eventType'
-//   | 'callback'
-//   | '$connect'
-//   | '$disconnect'
-//   | '$use'
-//   | '$executeRaw'
-//   | '$executeRawUnsafe'
-//   | '$queryRaw'
-//   | '$queryRawUnsafe'
-//   | '$transaction'
-//   | '$extends'
-//   | symbol
-// >
-
 export type AllModelNames = Prisma.TypeMap['meta']['modelProps']
 
 export type ModelFindInput<T extends AllModelNames> = NonNullable<

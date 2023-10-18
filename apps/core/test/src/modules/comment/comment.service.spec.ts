@@ -87,6 +87,7 @@ describe('/modules/comment/comment.service', () => {
     })
 
     expect(reply?.parentId).toBe(comment.id)
+    expect(reply?.mentions.includes(comment.id)).toBeTruthy()
 
     const reComment = prisma.comment.findUnique({ where: { id: comment.id } })
     expect(reComment.children.length).toBe(1)
@@ -125,6 +126,7 @@ describe('/modules/comment/comment.service', () => {
       'guest',
     )
 
+    expect(replyComment2.mentions.includes(replyComment.id)).toBeTruthy()
     expect(replyComment2.parentId).toBe(comment.id)
     expect(spy.mock.calls[1]).toEqual([expect.anything(), 'owner'])
     expect(spy.mock.calls[0]).toEqual([

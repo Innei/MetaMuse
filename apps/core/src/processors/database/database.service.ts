@@ -28,3 +28,5 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
     return this.client
   }
 }
+
+export const sql = DatabaseService.client.$queryRaw.bind(DatabaseService.client)
