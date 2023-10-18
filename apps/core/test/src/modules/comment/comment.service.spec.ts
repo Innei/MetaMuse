@@ -1,6 +1,7 @@
 import { pick } from 'lodash'
 
 import { ArticleService } from '@core/modules/article/article.service'
+import { CommentSenderType } from '@core/modules/comment/comment.enum'
 import { CommentService } from '@core/modules/comment/comment.service'
 import { UserService } from '@core/modules/user/user.service'
 import { sleep } from '@core/shared/utils/tool.utils'
@@ -42,7 +43,7 @@ describe('/modules/comment/comment.service', () => {
     const comment = await proxy.service.createBaseComment(
       note.id,
       mockCommentData,
-      'guest',
+      CommentSenderType.Guest,
     )
 
     expect(comment.refId).toBe(note.id)
@@ -72,11 +73,14 @@ describe('/modules/comment/comment.service', () => {
         ...generateMockNote(),
       },
     })
-    const comment = await proxy.service.createComment(note.id, mockCommentData)
+    const comment = await proxy.service.createComment({
+      articleId: note.id,
+      doc: mockCommentData,
+    })
     const replyComment = await proxy.service.createThreadComment(
       comment.id,
       mockCommentData,
-      'guest',
+      CommentSenderType.Guest,
     )
     expect(replyComment.refId).toBe(note.id)
 
@@ -108,14 +112,17 @@ describe('/modules/comment/comment.service', () => {
         ...generateMockNote(),
       },
     })
-    const comment = await proxy.service.createComment(note.id, mockCommentData)
+    const comment = await proxy.service.createComment({
+      articleId: note.id,
+      doc: mockCommentData,
+    })
     const replyComment = await proxy.service.createThreadComment(
       comment.id,
       {
         ...mockCommentData,
         mail: 'test@cc1.com',
       },
-      'guest',
+      CommentSenderType.Guest,
     )
 
     spy.mockReset()
@@ -123,7 +130,7 @@ describe('/modules/comment/comment.service', () => {
     const replyComment2 = await proxy.service.createThreadComment(
       replyComment.id,
       mockCommentData,
-      'guest',
+      CommentSenderType.Guest,
     )
 
     expect(replyComment2.mentions.includes(replyComment.id)).toBeTruthy()
@@ -143,12 +150,15 @@ describe('/modules/comment/comment.service', () => {
       },
     })
 
-    const comment = await proxy.service.createComment(note.id, mockCommentData)
+    const comment = await proxy.service.createComment({
+      articleId: note.id,
+      doc: mockCommentData,
+    })
     for (let i = 0; i < 10; i++) {
       await proxy.service.createThreadComment(
         comment.id,
         mockCommentData,
-        'guest',
+        CommentSenderType.Guest,
       )
     }
 

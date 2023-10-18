@@ -52,3 +52,9 @@ export const CommentPagerSchema = basePagerSchema.extend({
 })
 
 export class CommentPagerDto extends createZodDto(CommentPagerSchema) {}
+
+export const CommentOnlyTextSchema = z.object({
+  text: z.string().max(1024),
+})
+
+export class CommentOnlyTextDto extends createZodDto(CommentOnlyTextSchema) {}

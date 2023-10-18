@@ -9,3 +9,7 @@ export enum CommentRefTypes {
   Page = 'Page',
   Recently = 'Recently',
 }
+export const enum CommentSenderType {
+  Owner = 'owner',
+  Guest = 'guest',
+}

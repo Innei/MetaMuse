@@ -41,7 +41,7 @@ import {
   CommentModelRenderProps,
   defaultCommentModelKeys,
 } from './comment.email.default'
-import { CommentReplyMailType } from './comment.enum'
+import { CommentReplyMailType, CommentSenderType } from './comment.enum'
 import { CommentInclude } from './comment.protect'
 
 @Injectable()
@@ -246,12 +246,19 @@ export class CommentService implements OnModuleInit {
     return res
   }
 
-  async createComment(
-    articleId: string,
-    doc: CreateCommentWithAgentDto,
-    parentCommentId?: string,
-    mentionIds?: string[],
-  ) {
+  async createComment({
+    articleId,
+    doc,
+    parentCommentId,
+    mentionIds,
+    senderType,
+  }: {
+    articleId: string
+    doc: CreateCommentWithAgentDto
+    parentCommentId?: string
+    mentionIds?: string[]
+    senderType?: CommentSenderType
+  }) {
     let ref: Post | Note | Page
     let type: CommentRefTypes
     const result = await this.articleService.findArticleById(articleId)
@@ -272,7 +279,7 @@ export class CommentService implements OnModuleInit {
       data: {
         ...doc,
         key: `#${commentIndex + 1}`,
-        state: CommentState.UNREAD,
+        state: senderType === 'owner' ? CommentState.READ : CommentState.UNREAD,
         refId: ref.id,
         refType: type,
         parentId: parentCommentId,
@@ -296,7 +303,7 @@ export class CommentService implements OnModuleInit {
   }
   async validateComment(
     doc: CreateCommentWithAgentDto,
-    senderType: 'owner' | 'guest',
+    senderType: CommentSenderType,
     owner: Owner,
   ) {
     const { disableComment } = await this.configsService.get('commentOptions')
@@ -319,11 +326,15 @@ export class CommentService implements OnModuleInit {
   async createBaseComment(
     articleId: string,
     doc: CreateCommentWithAgentDto,
-    senderType: 'owner' | 'guest',
+    senderType: CommentSenderType,
   ) {
     const owner = await this.userService.getOwner()
     await this.validateComment(doc, senderType, owner)
-    const newComment = await this.createComment(articleId, doc)
+    const newComment = await this.createComment({
+      articleId,
+      doc,
+      senderType,
+    })
 
     if (owner.mail === newComment.mail) return newComment
 
@@ -334,7 +345,7 @@ export class CommentService implements OnModuleInit {
   async createThreadComment(
     parentId: string,
     doc: CreateCommentWithAgentDto,
-    senderType: 'owner' | 'guest',
+    senderType: CommentSenderType,
   ) {
     const owner = await this.userService.getOwner()
     await this.validateComment(doc, senderType, owner)
@@ -373,9 +384,13 @@ WHERE parentId IS NULL;`) as { id: string }[]
         'root comment not found',
       )
     const rootId = root.id
-    const newComment = await this.createComment(articleId, doc, rootId, [
-      parentId,
-    ])
+    const newComment = await this.createComment({
+      articleId,
+      doc,
+      parentCommentId: rootId,
+      mentionIds: [parentId],
+      senderType,
+    })
 
     const parentComment = await this.databaseService.prisma.comment.findUnique({
       where: {

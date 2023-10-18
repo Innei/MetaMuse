@@ -2,6 +2,7 @@ import { sign, verify } from 'jsonwebtoken'
 
 import { ENCRYPT, SECURITY } from '@core/app.config'
 import { RedisKeys } from '@core/constants/cache.constant'
+import { isDev } from '@core/global/env.global'
 import { CacheService } from '@core/processors/cache/cache.service'
 import { getRedisKey } from '@core/shared/utils/redis.util'
 import { md5 } from '@core/shared/utils/tool.utils'
@@ -33,6 +34,7 @@ export class JWTService {
   async verify(token: string) {
     try {
       verify(token, this.secret)
+      if (isDev) return true
       return await this.isTokenInRedis(token)
     } catch (er) {
       console.debug(er, token)

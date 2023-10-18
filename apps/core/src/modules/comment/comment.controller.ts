@@ -1,4 +1,6 @@
 import { ApiController } from '@core/common/decorators/api-controller.decorator'
+import { Auth } from '@core/common/decorators/auth.decorator'
+import { Owner } from '@core/common/decorators/get-owner.decorator'
 import { HTTPDecorators } from '@core/common/decorators/http.decorator'
 import { IpLocation, IpRecord } from '@core/common/decorators/ip.decorator'
 import { IsOwner } from '@core/common/decorators/role.decorator'
@@ -10,7 +12,8 @@ import { PaginationResult } from '@core/shared/interface/paginator.interface'
 import { CommentState } from '@meta-muse/prisma'
 import { Body, Get, Param, Post, Query } from '@nestjs/common'
 
-import { CreateCommentDto } from './comment.dto'
+import { CommentOnlyTextDto, CreateCommentDto } from './comment.dto'
+import { CommentSenderType } from './comment.enum'
 import { CommentSchemaSerializeProjection } from './comment.protect'
 import { CommentService } from './comment.service'
 
@@ -38,7 +41,7 @@ export class CommentController {
         ip: ipLocation.ip,
         agent: ipLocation.agent,
       },
-      isMaster ? 'owner' : 'guest',
+      isMaster ? CommentSenderType.Owner : CommentSenderType.Guest,
     )
 
     this.commentService.appendIpLocation(comment.id, ipLocation.ip)
@@ -66,7 +69,7 @@ export class CommentController {
         ip: ipLocation.ip,
         agent: ipLocation.agent,
       },
-      isMaster ? 'owner' : 'guest',
+      isMaster ? CommentSenderType.Owner : CommentSenderType.Guest,
     )
 
     this.commentService.appendIpLocation(comment.id, ipLocation.ip)
@@ -132,5 +135,63 @@ export class CommentController {
     this.commentService.fillAndReplaceAvatarUrl(result.data)
 
     return result
+  }
+
+  @Post('/master/comment/:id')
+  @Auth()
+  @HTTPDecorators.Idempotence({
+    expired: 20,
+    errorMessage: idempotenceMessage,
+  })
+  async commentByMaster(
+    @Owner() user: Owner,
+    @Param() params: SnowflakeIdDto,
+    @Body() body: CommentOnlyTextDto,
+    @IpLocation() ipLocation: IpRecord,
+  ) {
+    const { name, mail, url } = user
+    return await this.comment(
+      params,
+      {
+        author: name,
+        ...body,
+        mail,
+        url,
+        isWhispers: false,
+        source: null,
+        avatar: null,
+      },
+      true,
+      ipLocation,
+    )
+  }
+
+  @Post('/master/reply/:id')
+  @Auth()
+  @HTTPDecorators.Idempotence({
+    expired: 20,
+    errorMessage: idempotenceMessage,
+  })
+  async replyByMaster(
+    @Owner() owner: Owner,
+    @Param() params: SnowflakeIdDto,
+    @Body() body: CommentOnlyTextDto,
+    @IpLocation() ipLocation: IpRecord,
+  ) {
+    const { name, mail, url } = owner
+    return this.replyComment(
+      params,
+      {
+        author: name,
+        ...body,
+        mail,
+        url,
+        avatar: null,
+        source: null,
+        isWhispers: false,
+      },
+      true,
+      ipLocation,
+    )
   }
 }
