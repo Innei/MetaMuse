@@ -1,5 +1,6 @@
 import { AggregateTrpcRouter } from '@core/modules/aggregate/aggregate.trpc'
 import { CategoryTRPCRouter } from '@core/modules/category/category.trpc'
+import { CommentTrpcRouter } from '@core/modules/comment/comment.trpc'
 import { ConfigsTRPCRouter } from '@core/modules/configs/configs.trpc'
 import { HelpersTrpcRouter } from '@core/modules/helpers/helpers.trpc'
 import { NoteTrpcRouter } from '@core/modules/note/note.trpc'
@@ -16,4 +17,5 @@ export type tRpcRouters = [
   HelpersTrpcRouter,
   NoteTrpcRouter,
   TopicTrpcRouter,
+  CommentTrpcRouter,
 ]

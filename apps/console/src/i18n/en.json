@@ -6,7 +6,8 @@
     "list": "List",
     "edit": "Edit",
     "topic": "Topic",
-    "category": "Category"
+    "category": "Category",
+    "comment": "Comment"
   },
   "validator": {
     "max_length": "The maximum length is {{max}}.",
@@ -63,7 +64,10 @@
     "slug": "Slug",
     "icon": "Icon",
     "desc": "Description",
-    "longdesc": "Long description"
+    "longdesc": "Long description",
+    "comment": "Comment",
+    "agent": "Agent",
+    "user_agent": "User agent"
   },
   "module": {
     "writing": {
@@ -97,6 +101,12 @@
     "topic": {
       "detail": "Topic detail",
       "add_notes_to_topic": "Add notes to topic"
+    },
+    "comment": {
+      "unread": "Unread",
+      "read": "Read",
+      "reply": "Reply",
+      "spam": "Spam"
     }
   }
 }
