@@ -58,11 +58,11 @@ const UnreadTabTitle: FC = () => {
   const t = useI18n()
 
   return (
-    <span className="space-x-2">
+    <span className="space-x-2 pb-1 inline-block">
       <span>{t('module.comment.unread')}</span>
 
       {data && (
-        <Chip size="sm" color="primary">
+        <Chip size="sm" color="primary" className="scale-80">
           {data}
         </Chip>
       )}

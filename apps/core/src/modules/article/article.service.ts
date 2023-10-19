@@ -2,10 +2,12 @@ import { Union } from 'ts-toolbelt'
 
 import { ArticleType } from '@core/constants/article.constant'
 import { DatabaseService } from '@core/processors/database/database.service'
-import { Note, Page, Post, Prisma } from '@meta-muse/prisma'
+import { Note, Page, Post, Prisma, Recently } from '@meta-muse/prisma'
 import { Injectable } from '@nestjs/common'
 
 import { ConfigsService } from '../configs/configs.service'
+import { NoteIncluded } from '../note/note.protect'
+import { PostIncluded } from '../post/post.protect'
 
 @Injectable()
 export class ArticleService {
@@ -58,6 +60,47 @@ export class ArticleService {
           result: Post
         }
     >
+  }
+
+  async findArticleByType(
+    type: ArticleType.Post,
+    id: string,
+  ): Promise<NormalizedPostModel>
+  async findArticleByType(
+    type: ArticleType.Note,
+    id: string,
+  ): Promise<NormalizedNoteModel>
+  async findArticleByType(type: ArticleType.Page, id: string): Promise<Page>
+  async findArticleByType(
+    type: ArticleType.Recently,
+    id: string,
+  ): Promise<Recently>
+  async findArticleByType(type: ArticleType, id: string) {
+    switch (type) {
+      case ArticleType.Note: {
+        return await this.databaseService.prisma.note.findUnique({
+          where: { id },
+          include: NoteIncluded,
+        })
+      }
+      case ArticleType.Page: {
+        return await this.databaseService.prisma.page.findUnique({
+          where: { id },
+        })
+      }
+      case ArticleType.Post: {
+        return await this.databaseService.prisma.post.findUnique({
+          where: { id },
+          include: PostIncluded,
+        })
+      }
+
+      case ArticleType.Recently: {
+        return await this.databaseService.prisma.recently.findUnique({
+          where: { id },
+        })
+      }
+    }
   }
 
   private async updateArticle(

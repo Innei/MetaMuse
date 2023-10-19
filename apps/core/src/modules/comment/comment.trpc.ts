@@ -2,9 +2,11 @@ import { TRPCRouter } from '@core/common/decorators/trpc.decorator'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { defineTrpcRouter } from '@core/processors/trpc/trpc.helper'
 import { tRPCService } from '@core/processors/trpc/trpc.service'
+import { PaginationResult } from '@core/shared/interface/paginator.interface'
 import { CommentState } from '@meta-muse/prisma'
 import { Inject, Injectable } from '@nestjs/common'
 
+import { ArticleService } from '../article/article.service'
 import { CommentPagerSchema } from './comment.dto'
 import { CommentService } from './comment.service'
 
@@ -21,6 +23,8 @@ export class CommentTrpcRouter {
 
   @Inject(CommentService)
   private service: CommentService
+  @Inject(ArticleService)
+  private articleService: ArticleService
 
   onModuleInit() {
     this.router = this.createRouter()
@@ -39,10 +43,54 @@ export class CommentTrpcRouter {
       }),
       list: procedureAuth.input(CommentPagerSchema).query(async (opt) => {
         const { input } = opt
+        const {
+          state,
+          cursor,
+          sortBy = 'created',
+          sortOrder,
+          page = 1,
+          size = 20,
+        } = input
+        const result = await this.databaseService.prisma.comment.paginate(
+          {
+            where: {
+              state,
+            },
+            include: {
+              parent: true,
+            },
+            cursor: cursor ? { id: cursor } : undefined,
+            orderBy: {
+              [sortBy]: sortOrder,
+            },
+          },
+          {
+            page,
+            size,
+          },
+        )
 
-        return this.service.paginate({
-          ...input,
+        const dataWithPopulatedRef = await Promise.all(
+          result.data.map(async (item) => {
+            if (!item) return
+            return {
+              ...item,
+              ref: await this.articleService.findArticleByType(
+                item.refType as any,
+                item.refId,
+              ),
+            }
+          }),
+        )
+        Object.assign(result, {
+          data: dataWithPopulatedRef,
         })
+        const nextResult = result as PaginationResult<
+          (typeof result.data)[0] & {
+            ref: any
+          }
+        >
+        return nextResult
       }),
     })
   }
