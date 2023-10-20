@@ -5,6 +5,7 @@ import { ConfigsTRPCRouter } from '@core/modules/configs/configs.trpc'
 import { HelpersTrpcRouter } from '@core/modules/helpers/helpers.trpc'
 import { NoteTrpcRouter } from '@core/modules/note/note.trpc'
 import { PostTrpcRouter } from '@core/modules/post/post.trpc'
+import { ToolTrpcRouter } from '@core/modules/tool/tool.trpc'
 import { TopicTrpcRouter } from '@core/modules/topic/topic.trpc'
 import { UserTrpcRouter } from '@core/modules/user/user.trpc'
 
@@ -18,4 +19,5 @@ export type tRpcRouters = [
   NoteTrpcRouter,
   TopicTrpcRouter,
   CommentTrpcRouter,
+  ToolTrpcRouter,
 ]

@@ -12,7 +12,7 @@ import { trpc } from '~/lib/trpc'
 export const PreviewButton = <T extends { id: string }>(props: {
   getData: () => T
 }) => {
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
 
   const isInPreview = useRef(false)
   const previewWindowOrigin = useRef('')

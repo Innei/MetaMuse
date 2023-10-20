@@ -109,7 +109,7 @@ const ActionButtonGroup = ({ initialData }: { initialData?: PostModel }) => {
   const { mutateAsync: updatePost } = trpc.post.update.useMutation()
   const { mutateAsync: createPost } = trpc.post.create.useMutation()
 
-  const trpcUtil = trpc.useContext()
+  const trpcUtil = trpc.useUtils()
 
   const editorRef = useEditorRef()
   const handleParsed = useEventCallback(

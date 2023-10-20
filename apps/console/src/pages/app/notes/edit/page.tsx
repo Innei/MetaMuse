@@ -114,7 +114,7 @@ const ActionButtonGroup = ({ initialData }: { initialData?: NoteModel }) => {
   const { mutateAsync: updateNote } = trpc.note.update.useMutation()
   const { mutateAsync: createNote } = trpc.note.create.useMutation()
 
-  const trpcUtil = trpc.useContext()
+  const trpcUtil = trpc.useUtils()
 
   const editorRef = useEditorRef()
   const handleParsed = useEventCallback(

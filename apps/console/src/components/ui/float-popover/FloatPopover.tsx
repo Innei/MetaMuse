@@ -34,6 +34,9 @@ type FloatPopoverProps<T> = PropsWithChildren<{
    */
   type?: 'tooltip' | 'popover'
   isDisabled?: boolean
+
+  onOpen?: () => void
+  onClose?: () => void
 }> &
   UseFloatingOptions
 
@@ -54,6 +57,8 @@ export const FloatPopover = function FloatPopover<T extends {}>(
     type = 'popover',
     triggerComponentProps,
     isDisabled,
+    onOpen,
+    onClose,
     ...floatingProps
   } = props
 
@@ -141,6 +146,14 @@ export const FloatPopover = function FloatPopover<T extends {}>(
     }
   }, [open])
 
+  useEffect(() => {
+    if (open) {
+      onOpen?.()
+    } else {
+      onClose?.()
+    }
+  }, [open])
+
   if (!props.children) {
     return TriggerWrapper
   }
@@ -156,6 +169,7 @@ export const FloatPopover = function FloatPopover<T extends {}>(
               className={clsxm(
                 'float-popover',
                 'relative z-[99]',
+                !open && 'pointer-events-none',
                 popoverWrapperClassNames,
               )}
               {...(trigger === 'hover' || trigger === 'both' ? listener : {})}
@@ -174,7 +188,7 @@ export const FloatPopover = function FloatPopover<T extends {}>(
                   'relative z-[2]',
 
                   type === 'tooltip'
-                    ? `max-w-[25rem] break-all rounded-xl px-4 py-2`
+                    ? `max-w-[25rem] break-all rounded-xl text-sm px-4 py-2`
                     : '',
                   popoverClassNames,
                 )}

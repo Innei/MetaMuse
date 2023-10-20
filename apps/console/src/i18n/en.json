@@ -67,7 +67,10 @@
     "longdesc": "Long description",
     "comment": "Comment",
     "agent": "Agent",
-    "user_agent": "User agent"
+    "user_agent": "User agent",
+    "author": "Author",
+    "content": "Content",
+    "loading": "Loading"
   },
   "module": {
     "writing": {

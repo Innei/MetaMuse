@@ -1,9 +1,12 @@
+import { reduce } from 'lodash'
+
 import { TRPCRouter } from '@core/common/decorators/trpc.decorator'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { defineTrpcRouter } from '@core/processors/trpc/trpc.helper'
 import { tRPCService } from '@core/processors/trpc/trpc.service'
 import { PaginationResult } from '@core/shared/interface/paginator.interface'
-import { CommentState } from '@meta-muse/prisma'
+import { Comment, CommentState } from '@meta-muse/prisma'
+import { Record } from '@meta-muse/prisma/client/runtime/library'
 import { Inject, Injectable } from '@nestjs/common'
 
 import { ArticleService } from '../article/article.service'
@@ -47,7 +50,7 @@ export class CommentTrpcRouter {
           state,
           cursor,
           sortBy = 'created',
-          sortOrder,
+          sortOrder = 'desc',
           page = 1,
           size = 20,
         } = input
@@ -70,11 +73,33 @@ export class CommentTrpcRouter {
           },
         )
 
+        const mentionCommentIds = new Set<string>()
+
+        for (const item of result.data) {
+          if (!item?.mentions.length) continue
+
+          for (const mentionCommentId of item.mentions) {
+            if (mentionCommentIds.has(mentionCommentId)) continue
+
+            mentionCommentIds.add(mentionCommentId)
+          }
+        }
+
+        const mentionComments =
+          await this.databaseService.prisma.comment.findMany({
+            where: {
+              id: {
+                in: [...mentionCommentIds],
+              },
+            },
+          })
+
         const dataWithPopulatedRef = await Promise.all(
           result.data.map(async (item) => {
             if (!item) return
             return {
               ...item,
+              // NOTE optimize performance, to batch query
               ref: await this.articleService.findArticleByType(
                 item.refType as any,
                 item.refId,
@@ -87,13 +112,25 @@ export class CommentTrpcRouter {
         })
         const nextResult = result as PaginationResult<
           (typeof result.data)[0] & {
-            ref: any
+            ref: NormalizedNoteModel | NormalizedPostModel
           }
         >
         nextResult.data = await this.service.fillAndReplaceAvatarUrl(
           nextResult.data,
         )
-        return nextResult
+        return {
+          ...nextResult,
+          relations: {
+            comments: reduce(
+              mentionComments,
+              (acc, cur) => {
+                acc[cur.id] = cur
+                return acc
+              },
+              {},
+            ) as Record<string, Comment>,
+          },
+        }
       }),
     })
   }

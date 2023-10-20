@@ -160,7 +160,7 @@ CONCISE SUMMARY:`
     onSuccess(summary)
   })
 
-  const trpcUtils = trpc.useContext()
+  const trpcUtils = trpc.useUtils()
   const t = useI18n()
 
   const { mutateAsync: updateKV } = trpc.configs.kv.set.useMutation()

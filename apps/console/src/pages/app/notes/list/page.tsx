@@ -131,7 +131,7 @@ export default withQueryPager(function Page() {
 
   const nav = useNavigate()
   const { mutateAsync: batchDelete } = trpc.note.batchDelete.useMutation()
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
   const t = useI18n()
   return (
     <ListSortAndFilterProvider
@@ -187,7 +187,7 @@ const Actions: FC<{ data: StringifyNestedDates<NormalizedNoteModel> }> = ({
   data,
 }) => {
   const { mutateAsync: deleteById } = trpc.note.delete.useMutation()
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
   const t = useI18n()
   return (
     <div className="flex items-center space-x-2">

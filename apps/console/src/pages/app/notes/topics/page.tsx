@@ -118,7 +118,7 @@ const TopicDetail = () => {
   const topic = useCurrentSelectedTopic()
   const t = useI18n()
   const { mutateAsync: deleteTopic } = trpc.topic.delete.useMutation()
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
   if (!topic) return <Empty />
   return (
     <main className="h-full overflow-auto flex flex-col">
@@ -175,7 +175,7 @@ const NoteTopicTable = withQueryPager(() => {
 
   const { mutateAsync: removeNotesFromTopic } =
     trpc.topic.removeNotesFromTopic.useMutation()
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
   const t = useI18n()
   const { present } = useModalStack()
   return (
@@ -238,7 +238,7 @@ const AddNotesToTopicModal = ({ topicId }: { topicId: string }) => {
     return set
   }, [data])
 
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
   function handleNoteMutation(noteIds: string[], topicId?: string) {
     utils.note.paginate.setInfiniteData(
       {
@@ -383,7 +383,7 @@ const NewButton = () => {
   const t = useI18n()
   const [newModalOpen, setNewModalOpen] = useState(false)
   const { mutateAsync: create } = trpc.topic.create.useMutation()
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
   return (
     <>
       <Button
@@ -431,7 +431,7 @@ const EditButton = () => {
   const t = useI18n()
   const [modalOpen, setModalOpen] = useState(false)
   const { mutateAsync: update } = trpc.topic.update.useMutation()
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
   return (
     <>
       <Button

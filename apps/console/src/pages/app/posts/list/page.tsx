@@ -48,7 +48,7 @@ export default withQueryPager(function Page() {
 
   const nav = useNavigate()
   const { mutateAsync: batchDelete } = trpc.post.batchDelete.useMutation()
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
   const t = useI18n()
   const renderCardBody = useCallback(
     (item: StringifyNestedDates<NormalizedPostModel>) => (
@@ -176,7 +176,7 @@ const Actions: FC<{ data: StringifyNestedDates<NormalizedPostModel> }> = ({
   data,
 }) => {
   const { mutateAsync: deleteById } = trpc.post.delete.useMutation()
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
   const t = useI18n()
   return (
     <div className="flex items-center space-x-2">

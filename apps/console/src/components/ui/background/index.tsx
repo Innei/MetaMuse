@@ -95,7 +95,7 @@ const BackgroundModal = () => {
 
   const [, getValue, ref] = useUncontrolledInput(bg)
   const t = useI18n()
-  const utils = trpc.useContext()
+  const utils = trpc.useUtils()
 
   return (
     <ModalContent>

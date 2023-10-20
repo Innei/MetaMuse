@@ -60,13 +60,13 @@ export class IpService {
               )) as any
 
               const res = {
-                cityName: data.city,
-                countryName: data.country,
-                ip: data.query,
-                ispDomain: data.as,
-                ownerDomain: data.org,
-                regionName: data.region_name,
-              } as const
+                cityName: data.city as string,
+                countryName: data.country as string,
+                ip: data.query as string,
+                ispDomain: data.as as string,
+                ownerDomain: data.org as string,
+                regionName: data.region_name as string,
+              }
 
               return res
             }

@@ -1,6 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html {
+  font-family: 'Manrope', system-ui, sans-serif;
+}
 
 *:not(input):not(textarea):not([contenteditable='true']):not(
     .no-focus-visible

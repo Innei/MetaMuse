@@ -339,7 +339,8 @@ const TableRender = <T extends DataBaseType>({
         ))}
       </TableHeader>
       <TableBody
-        isLoading={isLoading}
+        loadingContent={<Spinner />}
+        loadingState={isLoading ? 'loading' : 'idle'}
         emptyContent="这里空空如也"
         items={data || []}
       >
