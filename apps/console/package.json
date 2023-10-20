@@ -68,7 +68,7 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
-    "@iconify-json/mingcute": "1.1.10",
+    "@iconify-json/mingcute": "1.1.11",
     "@iconify/tailwind": "0.1.3",
     "@innei/eslint-config-react-ts": "0.11.1",
     "@tailwindcss/typography": "0.5.10",
