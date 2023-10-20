@@ -1,5 +1,6 @@
 export enum ErrorCodeEnum {
   Default = 1,
+  Custom = 2,
 
   NoContentCanBeModified = 1000,
   InvalidQuery = 1001,
@@ -39,6 +40,7 @@ export enum ErrorCodeEnum {
 export const ErrorCode = Object.freeze<Record<ErrorCodeEnum, [string, number]>>(
   {
     [ErrorCodeEnum.Default]: ['Unknown error', 500],
+    [ErrorCodeEnum.Custom]: ['', 500],
 
     [ErrorCodeEnum.NoContentCanBeModified]: ['no content can be modified', 400],
     [ErrorCodeEnum.InvalidQuery]: ['invalid query', 400],

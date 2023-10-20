@@ -72,7 +72,7 @@ export class HttpService implements OnModuleInit {
       }
       req.__requestStartedAt = performance.now()
 
-      this.logger.log(
+      this.logger.debug(
         `HTTP Request: [${req.method?.toUpperCase()}] ${req.baseURL || ''}${
           req.url
         } 
@@ -93,7 +93,7 @@ data: ${this.prettyStringify(req.data)}`,
           res.config?.__requestStartedAt ??
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           endAt - res.config!.__requestStartedAt!
-        this.logger.log(
+        this.logger.debug(
           `HTTP Response ${`${res.config.baseURL || ''}${
             res.config.url
           }`} +${res.config.__requestDuration.toFixed(

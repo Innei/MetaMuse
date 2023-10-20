@@ -77,6 +77,7 @@ export class CacheService {
       Array.isArray(key) ? key.join('_') : key,
     )
     const cacheValue = await redis.get(cacheKey)
+    console.log('cacheValue', cacheValue)
     if (!cacheValue) {
       return setValue()
     }

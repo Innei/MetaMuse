@@ -9,6 +9,7 @@ import { EmailService } from './services/helper.email.service'
 import { EventManagerService } from './services/helper.event.service'
 import { HttpService } from './services/helper.http.service'
 import { ImageService } from './services/helper.image.service'
+import { IpService } from './services/helper.ip.service'
 import { JWTService } from './services/helper.jwt.service'
 import { SubscribeService } from './services/helper.subscribe.service'
 import { UploadService } from './services/helper.upload.service'
@@ -24,6 +25,7 @@ const providers: Provider<any>[] = [
   UploadService,
   EmailService,
   CountingService,
+  IpService,
   {
     provide: SubscribeService,
     useValue: SubscribeService.shared,

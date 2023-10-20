@@ -13,6 +13,7 @@ import {
 } from '@core/processors/database/database.service'
 import { EmailService } from '@core/processors/helper/services/helper.email.service'
 import { EventManagerService } from '@core/processors/helper/services/helper.event.service'
+import { IpService } from '@core/processors/helper/services/helper.ip.service'
 import { PagerDto } from '@core/shared/dto/pager.dto'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
 import { hasChinese } from '@core/shared/utils/tool.util'
@@ -64,6 +65,9 @@ export class CommentService implements OnModuleInit {
 
   @Inject()
   private readonly configsService: ConfigsService
+
+  @Inject()
+  private readonly ipService: IpService
 
   private async getMailOwnerProps() {
     const masterInfo = await this.userService.getOwner().catch(() => null)
@@ -589,42 +593,20 @@ WHERE parentId IS NULL;`) as { id: string }[]
       return
     }
 
-    // TODO
-    // const fnModel = (await this.serverlessService.model
-    //   .findOne({
-    //     name: 'ip',
-    //     reference: 'built-in',
-    //     type: SnippetType.Function,
-    //   })
-    //   .select('+secret')
-    //   .lean({
-    //     getters: true,
-    //   })) as SnippetModel
+    const result = await this.ipService.fetchIpInfo(ip)
 
-    // if (!fnModel) {
-    //   this.logger.error('[Serverless Fn] ip query function is missing.')
-    //   return model
-    // }
+    const location =
+      `${result.countryName || ''}${
+        result.regionName && result.regionName !== result.cityName
+          ? `${result.regionName}`
+          : ''
+      }${result.cityName ? `${result.cityName}` : ''}` || undefined
 
-    // const result =
-    //   await this.serverlessService.injectContextIntoServerlessFunctionAndCall(
-    //     fnModel,
-    //     {
-    //       req: {
-    //         query: { ip },
-    //       },
-    //       res: createMockedContextResponse({} as any),
-    //     } as any,
-    //   )
-
-    // const location =
-    //   `${result.countryName || ''}${
-    //     result.regionName && result.regionName !== result.cityName
-    //       ? `${result.regionName}`
-    //       : ''
-    //   }${result.cityName ? `${result.cityName}` : ''}` || undefined
-
-    // if (location) await this.commentModel.updateOne({ _id: id }, { location })
+    if (location)
+      await this.databaseService.prisma.comment.update({
+        where: { id },
+        data: { location },
+      })
   }
 
   async sendCommentNotificationMail({
