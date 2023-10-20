@@ -10,5 +10,3 @@ export const HTTP_REQUEST_TIME = 'http:req_time'
 
 export const HTTP_IDEMPOTENCE_KEY = '__idempotence_key__'
 export const HTTP_IDEMPOTENCE_OPTIONS = '__idempotence_options__'
-
-export const HTTP_RES_UPDATE_DOC_COUNT_TYPE = '__updateDocCount__'

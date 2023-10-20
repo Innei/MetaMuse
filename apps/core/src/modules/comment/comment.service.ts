@@ -533,7 +533,15 @@ WHERE parentId IS NULL;`) as { id: string }[]
       [CommentRefTypes.Recently]: ArticleType.Recently,
     }[refType]
   }
-  async fillAndReplaceAvatarUrl(comments: NormalizedCommentModel[]) {
+  async fillAndReplaceAvatarUrl<
+    T extends {
+      avatar?: string | null
+      mail?: string
+      children?: any[]
+
+      author?: string
+    },
+  >(comments: T[]): Promise<T[]> {
     const master = await this.userService.getOwner()
 
     comments.forEach(function process(comment) {
@@ -552,7 +560,7 @@ WHERE parentId IS NULL;`) as { id: string }[]
 
       if (comment.children?.length) {
         comment.children.forEach((child) => {
-          process(child as NormalizedCommentModel)
+          process(child)
         })
       }
 

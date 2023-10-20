@@ -90,6 +90,9 @@ export class CommentTrpcRouter {
             ref: any
           }
         >
+        nextResult.data = await this.service.fillAndReplaceAvatarUrl(
+          nextResult.data,
+        )
         return nextResult
       }),
     })

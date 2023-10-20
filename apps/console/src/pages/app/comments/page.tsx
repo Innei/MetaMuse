@@ -58,7 +58,7 @@ const UnreadTabTitle: FC = () => {
   const t = useI18n()
 
   return (
-    <span className="space-x-2 pb-1 inline-block">
+    <span className="space-x-1 pb-1 inline-block">
       <span>{t('module.comment.unread')}</span>
 
       {data && (
@@ -72,10 +72,15 @@ const UnreadTabTitle: FC = () => {
 
 const UnreadTable = (props: { state: CommentState }) => {
   const [page, setPage] = useRouterQueryState('page', 1)
-  const { data } = trpc.comment.list.useQuery({
-    state: props.state,
-    page,
-  })
+  const { data, isLoading } = trpc.comment.list.useQuery(
+    {
+      state: props.state,
+      page,
+    },
+    {
+      keepPreviousData: true,
+    },
+  )
 
   return null
 }

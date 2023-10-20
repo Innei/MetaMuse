@@ -28,17 +28,23 @@ export class CountingService {
     return true
   }
 
+  private async getDocById(type: ArticleType, id: string) {
+    const [doc] = await this.databaseService.prisma.$queryRawUnsafe<
+      {
+        id: string
+        title: string
+        count: PrismaJson.ArticleCount
+      }[]
+    >(`SELECT id, title, count FROM "${type}" WHERE id = $1`, id)
+    return doc
+  }
+
   public async updateReadCount(type: ArticleType, id: string, ip: string) {
     if (!this.checkIdAndIp(id, ip)) {
       return
     }
 
-    const doc = await this.databaseService.prisma.$queryRaw<{
-      id: string
-      title: string
-      count: PrismaJson.ArticleCount
-    }>`SELECT id, title, count FROM ${type} WHERE id = ${id}`
-
+    const doc = await this.getDocById(type, id)
     if (!doc) {
       this.logger.debug('无法更新阅读计数，文档不存在')
       return
@@ -54,16 +60,18 @@ export class CountingService {
       this.logger.debug(`已经增加过计数了，${id}`)
       return
     }
-    await Promise.all([
-      redis.sadd(getRedisKey(RedisKeys.Read, doc.id), ip),
-      this.databaseService.prisma.$queryRaw`UPDATE ${type}
+
+    await this.databaseService.prisma.$executeRawUnsafe(
+      `UPDATE "${type}"
 SET count = jsonb_set(
     count,
     '{read}',
     to_jsonb((count->>'read')::int + 1)
 )
-WHERE id = ${id};`,
-    ])
+WHERE id = $1`,
+      id,
+    )
+    await redis.sadd(getRedisKey(RedisKeys.Read, doc.id), ip)
     this.logger.debug(`增加阅读计数，(${doc.title}`)
   }
 
@@ -75,12 +83,7 @@ WHERE id = ${id};`,
     const redis = this.redis.getClient()
     const isLikeBefore = await this.getThisRecordIsLiked(id, ip)
 
-    const doc = await this.databaseService.prisma.$queryRaw<{
-      id: string
-      title: string
-      count: PrismaJson.ArticleCount
-    }>`SELECT id, title, count FROM ${type} WHERE id = ${id}`
-
+    const doc = await this.getDocById(type, id)
     if (!doc) {
       throw '无法更新喜欢计数，文档不存在'
     }
@@ -89,16 +92,17 @@ WHERE id = ${id};`,
       this.logger.debug(`已经增加过计数了，${id}`)
       return false
     }
-    await Promise.all([
-      redis.sadd(getRedisKey(RedisKeys.Read, doc.id), ip),
-      this.databaseService.prisma.$queryRaw`UPDATE ${type}
+    await this.databaseService.prisma.$executeRawUnsafe(
+      `UPDATE "${type}"
 SET count = jsonb_set(
-    count,
-    '{like}',
-    to_jsonb((count->>'read')::int + 1)
+count,
+'{like}',
+to_jsonb((count->>'read')::int + 1)
 )
-WHERE id = ${id};`,
-    ])
+WHERE id = $1;`,
+      id,
+    )
+    await redis.sadd(getRedisKey(RedisKeys.Read, doc.id), ip)
 
     this.logger.debug(`增加喜欢计数，(${doc.title}`)
     return true

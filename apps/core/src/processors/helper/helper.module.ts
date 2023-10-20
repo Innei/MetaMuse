@@ -4,6 +4,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter/dist/event-emitter.mod
 import { ThrottlerModule } from '@nestjs/throttler'
 
 import { AssetService } from './services/helper.asset.service'
+import { CountingService } from './services/helper.counting.service'
 import { EmailService } from './services/helper.email.service'
 import { EventManagerService } from './services/helper.event.service'
 import { HttpService } from './services/helper.http.service'
@@ -22,6 +23,7 @@ const providers: Provider<any>[] = [
   UrlBuilderService,
   UploadService,
   EmailService,
+  CountingService,
   {
     provide: SubscribeService,
     useValue: SubscribeService.shared,
