@@ -179,8 +179,9 @@ export class CommentController {
     @IpLocation() ipLocation: IpRecord,
   ) {
     const { name, mail, url } = owner
-    return this.replyComment(
-      params,
+    const { id } = params
+    const data = await this.replyComment(
+      { id },
       {
         author: name,
         ...body,
@@ -193,5 +194,9 @@ export class CommentController {
       true,
       ipLocation,
     )
+
+    await this.commentService.changeState(id, CommentState.READ)
+
+    return data
   }
 }

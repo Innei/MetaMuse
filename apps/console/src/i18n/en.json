@@ -70,7 +70,8 @@
     "user_agent": "User agent",
     "author": "Author",
     "content": "Content",
-    "loading": "Loading"
+    "loading": "Loading",
+    "reply": "Reply"
   },
   "module": {
     "writing": {
@@ -109,7 +110,9 @@
       "unread": "Unread",
       "read": "Read",
       "reply": "Reply",
-      "spam": "Spam"
+      "spam": "Spam",
+      "reply-empty": "Reply content is empty",
+      "reply-success": "Reply successfully"
     }
   }
 }

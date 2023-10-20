@@ -664,4 +664,37 @@ WHERE parentId IS NULL;`) as { id: string }[]
       await this.emailService.send(options)
     }
   }
+
+  async deleteComment(id: string) {
+    await this.databaseService.prisma.comment.delete({
+      where: {
+        id,
+      },
+    })
+    this.notifyCommentEvent(BusinessEvents.COMMENT_DELETE, id)
+
+    // this.databaseService.prisma.comment.updateMany({
+    //   where: {
+    //     mentions: {
+    //       has: id,
+    //     },
+    //   },
+    //   data: {
+    //     mentions: {
+    //       set: [],
+    //     },
+    //   },
+    // })
+  }
+
+  async changeState(id: string, state: CommentState) {
+    return this.databaseService.prisma.comment.update({
+      where: {
+        id,
+      },
+      data: {
+        state,
+      },
+    })
+  }
 }

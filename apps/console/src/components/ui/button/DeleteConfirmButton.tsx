@@ -5,17 +5,35 @@ import {
   PopoverTrigger,
 } from '@nextui-org/react'
 import { toast } from 'sonner'
-import type { FC } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 
 import { useI18n } from '~/i18n/hooks'
 
-export const DeleteConfirmButton: FC<{
-  onDelete: () => Promise<void>
-  confirmText?: string
-  deleteItemText?: string
-}> = (props) => {
+export const DeleteConfirmButton: FC<
+  {
+    onDelete: () => Promise<any>
+    confirmText?: string
+    deleteItemText?: string
+  } & PropsWithChildren
+> = (props) => {
   const { onDelete, confirmText, deleteItemText } = props
   const t = useI18n()
+
+  const defaultButton = (
+    <Button
+      size="sm"
+      variant="light"
+      color="danger"
+      onClick={() => {
+        onDelete().then(() => {
+          toast.success(t('common.delete-success'))
+        })
+      }}
+    >
+      {t('common.sure')}
+    </Button>
+  )
+
   return (
     <Popover>
       <PopoverTrigger>
@@ -32,20 +50,7 @@ export const DeleteConfirmButton: FC<{
                 : t('common.confirm-delete'))}
           </p>
         </div>
-        <div>
-          <Button
-            size="sm"
-            variant="light"
-            color="danger"
-            onClick={() => {
-              onDelete().then(() => {
-                toast.success(t('common.delete-success'))
-              })
-            }}
-          >
-            {t('common.sure')}
-          </Button>
-        </div>
+        {props.children || defaultButton}
       </PopoverContent>
     </Popover>
   )

@@ -1,7 +1,9 @@
 import {
   Avatar,
+  Button,
   Chip,
   Link,
+  ScrollShadow,
   Spinner,
   Tab,
   Table,
@@ -11,19 +13,33 @@ import {
   TableHeader,
   TableRow,
   Tabs,
+  Textarea,
 } from '@nextui-org/react'
 import { createContext, createElement, useContext, useMemo } from 'react'
 import { omit } from 'lodash-es'
+import { toast } from 'sonner'
+import { useEventCallback } from 'usehooks-ts'
 import type { Comment } from '@model'
 import type { FC } from 'react'
 import type { NormalizedComment } from './types'
 
 import { IpInfoPopover } from '~/components/biz/ip/IpInfoPopover'
+import { OouiUserAnonymous } from '~/components/icons'
 import { TitleExtra } from '~/components/modules/writing/TitleExtra'
+import { MotionButtonBase } from '~/components/ui/button'
+import { DeleteConfirmButton } from '~/components/ui/button/DeleteConfirmButton'
 import { RelativeTime } from '~/components/ui/date-time'
+import { FloatPopover } from '~/components/ui/float-popover'
+import { KAOMOJI_LIST } from '~/constants/kaomoji'
 import { useRouterQueryState } from '~/hooks/biz/use-router-query-state'
+import { useUncontrolledInput } from '~/hooks/common/use-uncontrolled-input'
 import { useI18n } from '~/i18n/hooks'
+import { $axios } from '~/lib/request'
 import { trpc } from '~/lib/trpc'
+import {
+  useCurrentModal,
+  useModalStack,
+} from '~/providers/modal-stack-provider'
 
 import { CommentState } from './constants'
 
@@ -187,35 +203,46 @@ const UrlRender = ({ url, author }: { url: string | null; author: string }) => {
 }
 
 const AuthorCell = (props: NormalizedComment) => {
-  const { author, avatar, url, mail, ip } = props
+  const { author, avatar, url, mail, ip, isWhispers } = props
   return (
     <div className="flex space-x-8">
       <div>
         <Avatar size="md" src={avatar || ''} name={author[0]} />
       </div>
       <div className="flex text-sm flex-col gap-1">
-        <UrlRender url={url} author={author} />
+        <div className="flex items-center space-x-1">
+          <UrlRender url={url} author={author} />
+          {isWhispers && <OouiUserAnonymous />}
+        </div>
 
         <Link
           size="sm"
-          className="text-xs"
+          className="text-sm"
           color="secondary"
           href={`mailto:${mail}`}
         >
           {mail}
         </Link>
 
-        {ip && <IpInfoPopover className="text-foreground/60 text-xs" ip={ip} />}
+        {ip && <IpInfoPopover className="text-foreground/60 text-sm" ip={ip} />}
       </div>
     </div>
   )
 }
 
 export const ContentCell = (props: NormalizedComment) => {
-  const { created, refType, text, id, parent: rootComment, mentions } = props
+  const {
+    created,
+    refType,
+    text,
+    id,
+    parent: rootComment,
+    mentions,
+    isWhispers,
+  } = props
   const ctx = useContext(CommentDataContext)
   const ref = ctx.refModelMap.get(id)
-  const parentComment = ctx.relationCommentMap[mentions[0]]
+  const parentComment = ctx.relationCommentMap[mentions[0]] || rootComment
 
   const TitleEl = useMemo(() => {
     if (!ref) return <span className="text-foreground/60">已删除</span>
@@ -224,8 +251,9 @@ export const ContentCell = (props: NormalizedComment) => {
   }, [ref, refType])
   return (
     <div className="flex flex-col gap-2 py-2 text-sm">
-      <div className="flex gap-2 text-xs">
-        <RelativeTime time={created} /> 于 {TitleEl}
+      <div className="flex gap-2 text-sm">
+        <RelativeTime time={created} /> 于 {TitleEl}{' '}
+        {/* {isWhispers && '悄悄说'} */}
       </div>
 
       <p>{text}</p>
@@ -245,13 +273,134 @@ export const ContentCell = (props: NormalizedComment) => {
         )}
       </div>
 
-      <CommentAction id={id} />
+      <CommentAction {...props} />
     </div>
   )
 }
 
-const CommentAction = (props: { id: string }) => {
+const CommentAction = (props: NormalizedComment) => {
   const currentState = useContext(CommentStateContext)
+  const t = useI18n()
+  const { id } = props
 
-  return null
+  const utils = trpc.useUtils()
+  const { mutateAsync: updateState } = trpc.comment.changeState.useMutation({
+    async onSuccess() {
+      utils.comment.invalidate()
+    },
+  })
+  const { mutateAsync: deleteComment } =
+    trpc.comment.deleteComment.useMutation()
+
+  const { present } = useModalStack()
+
+  return (
+    <div className="flex space-x-4 items-center">
+      {currentState === CommentState.UNREAD && (
+        <Button
+          size="sm"
+          variant="light"
+          color="primary"
+          onClick={() => {
+            updateState({
+              id,
+              state: CommentState.READ,
+            })
+          }}
+        >
+          {t('module.comment.read')}
+        </Button>
+      )}
+      <Button
+        size="sm"
+        variant="light"
+        color="secondary"
+        onClick={() => {
+          present({
+            title: `${t('module.comment.reply')} ${props.author}`,
+            content: () => <ReplyModal {...props} />,
+            clickOutsideToDismiss: false,
+          })
+        }}
+      >
+        {t('module.comment.reply')}
+      </Button>
+      <DeleteConfirmButton
+        onDelete={() => {
+          return deleteComment({
+            id,
+          })
+        }}
+      />
+    </div>
+  )
+}
+
+const ReplyModal = (props: NormalizedComment) => {
+  const { author, id, text } = props
+  const t = useI18n()
+  const [, getValue, ref] = useUncontrolledInput()
+  const handleSubmit = useEventCallback((e: any) => {
+    e.preventDefault()
+  })
+
+  const { dismiss } = useCurrentModal()
+  const utils = trpc.useUtils()
+  const handleReply = useEventCallback(async () => {
+    const text = getValue()
+    if (!text) {
+      toast.error(t('module.comment.reply-empty'))
+      return
+    }
+
+    await $axios.post(`/comments/master/reply/${id}`, {
+      text,
+    })
+    toast.success(t('module.comment.reply-success'))
+    utils.comment.list.invalidate()
+    dismiss()
+  })
+  return (
+    <form
+      className="flex flex-col w-[500px] max-w-full"
+      onSubmit={handleSubmit}
+    >
+      <div>{author} 说:</div>
+      <Textarea size="lg" variant="faded" readOnly value={text} />
+      <div className="mt-4">回复内容:</div>
+      <Textarea size="lg" maxRows={5} ref={ref} />
+
+      <div className="flex justify-between mt-4 gap-2">
+        <FloatPopover
+          trigger="click"
+          debug
+          TriggerComponent={() => (
+            <MotionButtonBase>
+              <i className="icon-[mingcute--emoji-line]" />
+            </MotionButtonBase>
+          )}
+        >
+          <ScrollShadow className="break-words w-[400px] h-[200px] pointer-events-auto overflow-scroll">
+            {KAOMOJI_LIST.map((i) => {
+              return (
+                <MotionButtonBase key={i} onClick={() => {}}>
+                  {i}
+                </MotionButtonBase>
+              )
+            })}
+          </ScrollShadow>
+        </FloatPopover>
+
+        <Button
+          variant="solid"
+          color="primary"
+          size="sm"
+          onClick={handleReply}
+          type="submit"
+        >
+          {t('common.submit')}
+        </Button>
+      </div>
+    </form>
+  )
 }

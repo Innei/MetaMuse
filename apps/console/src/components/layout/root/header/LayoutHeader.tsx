@@ -30,7 +30,7 @@ export const LayoutHeader = () => {
         <div className="flex items-center space-x-1 lg:space-x-3">
           <button className="p-2 text-2xl">𝕄</button>
           <BreadcrumbDivider className="opacity-20" />
-          <span className="font-bold opacity-90 text-sm md:text-base">
+          <span className="font-bold opacity-90 md:text-base">
             {(seo as SeoDto)?.title}
           </span>
           <BreadcrumbDivider className="opacity-0 lg:opacity-20" />
@@ -113,7 +113,7 @@ const HeaderMenu: Component = ({ className }) => {
   }, [])
 
   return (
-    <ul className={clsxm('ml-2 items-center gap-2 text-sm', className)}>
+    <ul className={clsxm('ml-2 items-center gap-2', className)}>
       {firstLevelMenu.map((menu) => {
         const isActive =
           menu.path === routeObject.path ||
@@ -170,7 +170,7 @@ const SecondaryLevelMenu = () => {
   if (!parent.children?.length) return null
 
   return (
-    <ul className="flex w-full space-x-4 text-sm">
+    <ul className="flex w-full space-x-4">
       {(parent.children as RouteExtendObject[]).map((route) => {
         const fullPath = `${parent.path}/${route.path!}`
 

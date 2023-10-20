@@ -1,9 +1,11 @@
 import { reduce } from 'lodash'
+import { z } from 'zod'
 
 import { TRPCRouter } from '@core/common/decorators/trpc.decorator'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { defineTrpcRouter } from '@core/processors/trpc/trpc.helper'
 import { tRPCService } from '@core/processors/trpc/trpc.service'
+import { SnowflakeIdDto, SnowflakeIdSchema } from '@core/shared/dto/id.dto'
 import { PaginationResult } from '@core/shared/interface/paginator.interface'
 import { Comment, CommentState } from '@meta-muse/prisma'
 import { Record } from '@meta-muse/prisma/client/runtime/library'
@@ -132,6 +134,26 @@ export class CommentTrpcRouter {
           },
         }
       }),
+
+      deleteComment: procedureAuth
+        .input(SnowflakeIdDto.schema)
+        .mutation(async ({ input }) => {
+          const { id } = input
+
+          return this.service.deleteComment(id)
+        }),
+
+      changeState: procedureAuth
+        .input(
+          z.object({
+            state: z.nativeEnum(CommentState),
+            id: SnowflakeIdSchema,
+          }),
+        )
+        .mutation(async ({ input }) => {
+          const { state, id } = input
+          return this.service.changeState(id, state)
+        }),
     })
   }
 }

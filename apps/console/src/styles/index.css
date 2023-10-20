@@ -30,10 +30,6 @@ html {
 }
 
 html {
-  font-size: 16px;
-}
-
-@screen 4k {
   font-size: 14px;
 }
 

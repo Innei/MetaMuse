@@ -58,6 +58,11 @@ const twConfig: Config = {
           medium: '1px', // border-medium (default)
           large: '2px', // border-large
         },
+        radius: {
+          small: '6px', // rounded-small
+          medium: '4px', // rounded-medium
+          large: '6px', // rounded-large
+        },
       },
     }),
     require('tailwind-scrollbar'),
