@@ -27,6 +27,8 @@ import { trpc } from '~/lib/trpc'
 
 import { CommentState } from './constants'
 
+const CommentStateContext = createContext<CommentState>(null!)
+
 export default function Page() {
   const t = useI18n()
   const TABS = useMemo(
@@ -96,6 +98,7 @@ const CommentDataContext = createContext<{
   refModelMap: Map<string, NormalizedPostModel | NormalizedNoteModel>
   relationCommentMap: Record<string, Comment>
 }>(null!)
+
 const CommentTable = (props: { state: CommentState }) => {
   const [page, setPage] = useRouterQueryState('page', 1)
   const { data, isLoading } = trpc.comment.list.useQuery(
@@ -127,47 +130,59 @@ const CommentTable = (props: { state: CommentState }) => {
   )
 
   return (
-    <CommentDataContext.Provider
-      value={useMemo(
-        () => ({
-          refModelMap,
-          relationCommentMap,
-        }),
-        [refModelMap, relationCommentMap],
-      )}
-    >
-      <Table
-        removeWrapper
-        isHeaderSticky
-        selectionMode="multiple"
-        className="mt-8 [&_tr:first-child_td]:border-t-[1rem] [&_tr:first-child_td]:border-t-transparent"
+    <CommentStateContext.Provider value={props.state}>
+      <CommentDataContext.Provider
+        value={useMemo(
+          () => ({
+            refModelMap,
+            relationCommentMap,
+          }),
+          [refModelMap, relationCommentMap],
+        )}
       >
-        <TableHeader>
-          <TableColumn key="author">{t('common.author')}</TableColumn>
-          <TableColumn key="content">{t('common.content')}</TableColumn>
-        </TableHeader>
-        <TableBody
-          loadingContent={<Spinner />}
-          loadingState={isLoading ? 'loading' : 'idle'}
-          isLoading={isLoading}
-          items={data?.data || []}
+        <Table
+          removeWrapper
+          isHeaderSticky
+          selectionMode="multiple"
+          className="mt-8 [&_tr:first-child_td]:border-t-[1rem] [&_tr:first-child_td]:border-t-transparent"
         >
-          {(item) => {
-            const itemOmitRef = omit(item, 'ref') as NormalizedComment
-            return (
-              <TableRow key={item.id}>
-                <TableCell width={400}>
-                  <AuthorCell {...itemOmitRef} />
-                </TableCell>
-                <TableCell className="align-top" width={2000} key="content">
-                  <ContentCell {...itemOmitRef} />
-                </TableCell>
-              </TableRow>
-            )
-          }}
-        </TableBody>
-      </Table>
-    </CommentDataContext.Provider>
+          <TableHeader>
+            <TableColumn key="author">{t('common.author')}</TableColumn>
+            <TableColumn key="content">{t('common.content')}</TableColumn>
+          </TableHeader>
+          <TableBody
+            loadingContent={<Spinner />}
+            loadingState={isLoading ? 'loading' : 'idle'}
+            isLoading={isLoading}
+            items={data?.data || []}
+          >
+            {(item) => {
+              const itemOmitRef = omit(item, 'ref') as NormalizedComment
+              return (
+                <TableRow key={item.id}>
+                  <TableCell width={400}>
+                    <AuthorCell {...itemOmitRef} />
+                  </TableCell>
+                  <TableCell className="align-top" width={2000} key="content">
+                    <ContentCell {...itemOmitRef} />
+                  </TableCell>
+                </TableRow>
+              )
+            }}
+          </TableBody>
+        </Table>
+      </CommentDataContext.Provider>
+    </CommentStateContext.Provider>
+  )
+}
+
+const UrlRender = ({ url, author }: { url: string | null; author: string }) => {
+  return url ? (
+    <Link size="sm" href={url}>
+      {author}
+    </Link>
+  ) : (
+    <span>{author}</span>
   )
 }
 
@@ -178,14 +193,8 @@ const AuthorCell = (props: NormalizedComment) => {
       <div>
         <Avatar size="md" src={avatar || ''} name={author[0]} />
       </div>
-      <div className="flex text-sm flex-col">
-        {url ? (
-          <Link size="sm" href={url}>
-            {author}
-          </Link>
-        ) : (
-          <span>{author}</span>
-        )}
+      <div className="flex text-sm flex-col gap-1">
+        <UrlRender url={url} author={author} />
 
         <Link
           size="sm"
@@ -203,9 +212,10 @@ const AuthorCell = (props: NormalizedComment) => {
 }
 
 export const ContentCell = (props: NormalizedComment) => {
-  const { created, refType, text, author, id } = props
+  const { created, refType, text, id, parent: rootComment, mentions } = props
   const ctx = useContext(CommentDataContext)
   const ref = ctx.refModelMap.get(id)
+  const parentComment = ctx.relationCommentMap[mentions[0]]
 
   const TitleEl = useMemo(() => {
     if (!ref) return <span className="text-foreground/60">已删除</span>
@@ -219,6 +229,29 @@ export const ContentCell = (props: NormalizedComment) => {
       </div>
 
       <p>{text}</p>
+
+      <div className="relative">
+        {parentComment && (
+          <blockquote className="ml-3 before:content-[''] before:absolute before:left-[3px] before:rounded-lg before:top-0 before:bottom-0 before:bg-primary before:w-[3px] before:h-full pl-3">
+            <div>
+              <UrlRender
+                author={parentComment.author}
+                url={parentComment.url}
+              />{' '}
+              在 <RelativeTime time={parentComment.created} /> 说:
+            </div>
+            <p className="mt-2">{parentComment.text}</p>
+          </blockquote>
+        )}
+      </div>
+
+      <CommentAction id={id} />
     </div>
   )
+}
+
+const CommentAction = (props: { id: string }) => {
+  const currentState = useContext(CommentStateContext)
+
+  return null
 }
