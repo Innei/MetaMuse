@@ -2,6 +2,7 @@ import snakecaseKeys from 'snakecase-keys'
 
 import { PostModule } from '@core/modules/post/post.module'
 import { snowflake } from '@core/processors/database/snowflake.util'
+import { CountingService } from '@core/processors/helper/services/helper.counting.service'
 import { createE2EApp } from '@test/helper/create-e2e-app'
 import { createMockGlobalModule } from '@test/helper/create-mock-global-module'
 import { reDeserializeData } from '@test/helper/serialize-data'
@@ -12,7 +13,10 @@ import { mockedImageServiceProvider } from '@test/mock/helper/helper.image'
 
 describe('ROUTE /posts', () => {
   const proxy = createE2EApp({
-    imports: [PostModule, createMockGlobalModule([mockedImageServiceProvider])],
+    imports: [
+      PostModule,
+      createMockGlobalModule([mockedImageServiceProvider, CountingService]),
+    ],
   })
 
   const createMockCategory = async () => {

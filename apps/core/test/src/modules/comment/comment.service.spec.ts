@@ -4,6 +4,8 @@ import { ArticleService } from '@core/modules/article/article.service'
 import { CommentSenderType } from '@core/modules/comment/comment.enum'
 import { CommentService } from '@core/modules/comment/comment.service'
 import { UserService } from '@core/modules/user/user.service'
+import { HttpService } from '@core/processors/helper/services/helper.http.service'
+import { IpService } from '@core/processors/helper/services/helper.ip.service'
 import { sleep } from '@core/shared/utils/tool.utils'
 import { createMockGlobalModule } from '@test/helper/create-mock-global-module'
 import { createServiceUnitTestApp } from '@test/helper/create-service-unit'
@@ -22,6 +24,8 @@ describe('/modules/comment/comment.service', () => {
         ArticleService,
         mockedEmailServiceProvider,
         UserService,
+        IpService,
+        HttpService,
       ]),
     ],
   })
