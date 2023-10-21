@@ -1,4 +1,5 @@
 import { createContext, useContext } from 'react'
+import { createContextState } from 'foxact/create-context-state'
 import type { Comment } from '@model'
 import type { CommentState } from '~/components/modules/comments/constants'
 import type { Paginator } from '~/models/paginator'
@@ -16,3 +17,9 @@ export const CommentDataContext = createContext<{
   relationCommentMap: Record<string, Comment>
 }>(null!)
 export const useCommentDataSource = () => useContext(CommentDataSourceContext)
+
+export const [
+  CommentSelectionKeysProvider,
+  useCommentSelectionKeys,
+  useSetCommentSelectionKeys,
+] = createContextState(new Set<string>())

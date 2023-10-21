@@ -326,6 +326,10 @@ const TableRender = <T extends DataBaseType>({
       removeWrapper
       selectionMode="multiple"
       onSelectionChange={useEventCallback((e) => {
+        if (e === 'all') {
+          setSelection(new Set(data!.map((item) => item.id)))
+          return
+        }
         setSelection(new Set(e) as Set<string>)
       })}
       selectedKeys={selection}

@@ -10,7 +10,11 @@ import {
 } from '@nextui-org/react'
 import { omit } from 'lodash-es'
 
-import { useCommentDataSource } from '~/components/modules/comments/CommentContext'
+import {
+  useCommentDataSource,
+  useCommentSelectionKeys,
+  useSetCommentSelectionKeys,
+} from '~/components/modules/comments/CommentContext'
 import { useI18n } from '~/i18n/hooks'
 
 import { CommentAuthorCell } from './CommentAuthorCell'
@@ -19,10 +23,20 @@ import { CommentContentCell } from './CommentContentCell'
 export const CommentDesktopTable = () => {
   const t = useI18n()
   const { isLoading, data } = useCommentDataSource()
+  const selectionKeys = useCommentSelectionKeys()
+  const setSelectionKeys = useSetCommentSelectionKeys()
   return (
     // <ScrollArea.ScrollArea rootClassName="mt-4 flex-shrink h-0 flex-grow">
     <div className="flex-shrink h-0 flex-grow overflow-auto">
       <Table
+        selectedKeys={selectionKeys}
+        onSelectionChange={(key) => {
+          if (key === 'all') {
+            setSelectionKeys(new Set(data?.map((item) => item.id)))
+            return
+          }
+          setSelectionKeys(key as Set<string>)
+        }}
         removeWrapper
         isHeaderSticky
         selectionMode="multiple"

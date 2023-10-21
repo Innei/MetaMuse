@@ -1,13 +1,16 @@
 import { Chip, Tab, Tabs } from '@nextui-org/react'
-import { createElement, useMemo } from 'react'
+import { createElement, useEffect, useMemo } from 'react'
 import type { FC } from 'react'
 
 import { useIsMobile } from '~/atoms'
 import {
+  CommentBatchActionGroup,
   CommentDataContext,
   CommentDataSourceContext,
   CommentDesktopTable,
+  CommentSelectionKeysProvider,
   CommentStateContext,
+  useSetCommentSelectionKeys,
 } from '~/components/modules/comments'
 import { CommentMobileList } from '~/components/modules/comments/CommentMobileList'
 import { CommentPagination } from '~/components/modules/comments/CommentPagation'
@@ -43,10 +46,16 @@ export default function Page() {
     [t],
   )
 
+  const [tab, setTab] = useRouterQueryState('tab', TABS[0].key)
+
   return (
-    <>
-      <div className="-mt-12 flex w-full flex-col flex-grow">
-        <Tabs variant="underlined">
+    <div className="-mt-12 flex w-full flex-col flex-grow relative">
+      <CommentSelectionKeysProvider>
+        <Tabs
+          selectedKey={tab}
+          onSelectionChange={setTab as any}
+          variant="underlined"
+        >
           {TABS.map(({ key, title, component: Component, titleComponent }) => (
             <Tab
               value={key}
@@ -60,8 +69,10 @@ export default function Page() {
             </Tab>
           ))}
         </Tabs>
-      </div>
-    </>
+
+        <CommentBatchActionGroup />
+      </CommentSelectionKeysProvider>
+    </div>
   )
 }
 
@@ -83,6 +94,11 @@ const UnreadTabTitle: FC = () => {
 }
 
 const CommentTable = (props: { state: CommentState }) => {
+  const setSelectionKeys = useSetCommentSelectionKeys()
+  useEffect(() => {
+    return () => setSelectionKeys(new Set())
+  }, [])
+
   const [page, setPage] = useRouterQueryState('page', 1)
   const { data, isLoading } = trpc.comment.list.useQuery(
     {

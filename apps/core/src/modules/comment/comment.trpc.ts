@@ -154,6 +154,35 @@ export class CommentTrpcRouter {
           const { state, id } = input
           return this.service.changeState(id, state)
         }),
+
+      batchChangeState: procedureAuth
+        .input(
+          z.object({
+            state: z.nativeEnum(CommentState),
+            ids: z.array(SnowflakeIdSchema),
+          }),
+        )
+        .mutation(async ({ input }) => {
+          const { state, ids } = input
+
+          for (const id of ids) {
+            await this.service.changeState(id, state)
+          }
+        }),
+
+      batchDelete: procedureAuth
+        .input(
+          z.object({
+            ids: z.array(SnowflakeIdSchema),
+          }),
+        )
+        .mutation(async ({ input }) => {
+          const { ids } = input
+
+          for (const id of ids) {
+            await this.service.deleteComment(id)
+          }
+        }),
     })
   }
 }

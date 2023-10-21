@@ -1,7 +1,10 @@
 import { Button } from '@nextui-org/react'
 import { useContext } from 'react'
 
-import { CommentStateContext } from '~/components/modules/comments/CommentContext'
+import {
+  CommentStateContext,
+  useSetCommentSelectionKeys,
+} from '~/components/modules/comments/CommentContext'
 import { ReplyModal } from '~/components/modules/comments/ReplyModal'
 import { DeleteConfirmButton } from '~/components/ui/button/DeleteConfirmButton'
 import { useI18n } from '~/i18n/hooks'
@@ -21,8 +24,18 @@ export const CommentAction = (props: NormalizedComment) => {
       utils.comment.list.invalidate()
     },
   })
+  const setSelectionKeys = useSetCommentSelectionKeys()
+
   const { mutateAsync: deleteComment } = trpc.comment.deleteComment.useMutation(
     {
+      onMutate({ id }) {
+        setSelectionKeys((s) => {
+          const oSize = s.size
+          s.delete(id)
+          if (s.size === oSize) return s
+          return new Set(s)
+        })
+      },
       async onSuccess() {
         utils.comment.list.invalidate()
       },
