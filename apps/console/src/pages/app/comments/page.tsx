@@ -84,7 +84,7 @@ const UnreadTabTitle: FC = () => {
     <span className="space-x-1 pb-1 inline-block">
       <span>{t('module.comment.unread')}</span>
 
-      {data && (
+      {!!data && (
         <Chip size="sm" color="primary" className="scale-80">
           {data}
         </Chip>
