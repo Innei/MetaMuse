@@ -28,14 +28,14 @@ export const CommentContentCell = (props: NormalizedComment) => {
   }, [ref, refType])
   return (
     <div className="flex flex-col gap-2 py-2 text-sm">
-      <div className="flex gap-2 text-sm">
+      <div className="flex gap-2 text-sm whitespace-nowrap">
         <RelativeTime time={created} /> 于 {TitleEl}{' '}
         {/* {isWhispers && '悄悄说'} */}
       </div>
 
-      <p>{text}</p>
+      <p className="break-words">{text}</p>
 
-      <div className="relative">
+      <div className="relative mt-2 break-words">
         {parentComment && (
           <blockquote className="ml-3 before:content-[''] before:absolute before:left-[3px] before:rounded-lg before:top-0 before:bottom-0 before:bg-primary before:w-[3px] before:h-full pl-3">
             <div>

@@ -5,6 +5,7 @@ import { Translation } from 'react-i18next'
 import { Provider } from 'jotai'
 
 import { ColorModeObserver } from './components/common/ColorModeObserver'
+import { ToasterProvider } from './components/common/ToasterProvider'
 import { FABContainer } from './components/ui/fab/FabContainer'
 import { jotaiStore } from './lib/store'
 import { trpc, tRpcClient } from './lib/trpc'
@@ -33,6 +34,7 @@ export function App() {
               </InitialDataProvider>
             </NextUIProvider>
             <ColorModeObserver />
+            <ToasterProvider />
           </Suspense>
         </Provider>
       </QueryClientProvider>

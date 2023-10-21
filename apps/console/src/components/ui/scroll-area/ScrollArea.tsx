@@ -98,10 +98,15 @@ export const Root = React.forwardRef<
 ))
 
 Root.displayName = 'ScrollArea.Root'
-export const ScrollArea: React.FC<React.PropsWithChildren> = ({ children }) => {
+export const ScrollArea: React.FC<
+  React.PropsWithChildren & {
+    rootClassName?: string
+    viewportClassName?: string
+  }
+> = ({ children, rootClassName, viewportClassName }) => {
   return (
-    <Root>
-      <Viewport>{children}</Viewport>
+    <Root className={rootClassName}>
+      <Viewport className={viewportClassName}>{children}</Viewport>
       <Scrollbar />
     </Root>
   )

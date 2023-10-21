@@ -238,6 +238,7 @@ export const ListTable = <Data extends DataBaseType>({
           className="mt-8 flex w-full items-center justify-end gap-4"
         >
           <Pagination
+            showControls
             total={pagination.totalPage}
             initialPage={page}
             variant="light"

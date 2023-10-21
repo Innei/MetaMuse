@@ -240,7 +240,7 @@ model Comment {
   mail          String
   /// @zod.string.url()
   url           String?
-  /// @zod.string.max(1024)
+  /// @zod.string.min(1).max(1024)
   text          String
   state         CommentState?   @default(UNREAD)
   parentId      String?

@@ -20,37 +20,42 @@ export const CommentDesktopTable = () => {
   const t = useI18n()
   const { isLoading, data } = useCommentDataSource()
   return (
-    <Table
-      removeWrapper
-      isHeaderSticky
-      selectionMode="multiple"
-      className="mt-8 [&_tr:first-child_td]:border-t-[1rem] [&_tr:first-child_td]:border-t-transparent"
-    >
-      <TableHeader>
-        <TableColumn key="author">{t('common.author')}</TableColumn>
-        <TableColumn key="content">{t('common.content')}</TableColumn>
-      </TableHeader>
-      <TableBody
-        loadingContent={<Spinner />}
-        loadingState={isLoading ? 'loading' : 'idle'}
-        isLoading={isLoading}
-        items={data || []}
+    // <ScrollArea.ScrollArea rootClassName="mt-4 flex-shrink h-0 flex-grow">
+    <div className="flex-shrink h-0 flex-grow overflow-auto">
+      <Table
+        removeWrapper
+        isHeaderSticky
+        selectionMode="multiple"
+        className="mt-4 [&_tr:first-child_td]:border-t-[1rem] [&_tr:first-child_td]:border-t-transparent"
       >
-        {(item) => {
-          const itemOmitRef = omit(item, 'ref') as NormalizedComment
-          return (
-            <TableRow key={item.id}>
-              <TableCell width={400}>
-                <CommentAuthorCell {...itemOmitRef} />
-              </TableCell>
-              <TableCell className="align-top" width={2000} key="content">
-                <CommentContentCell {...itemOmitRef} />
-              </TableCell>
-            </TableRow>
-          )
-        }}
-      </TableBody>
-    </Table>
+        <TableHeader>
+          <TableColumn key="author">{t('common.author')}</TableColumn>
+          <TableColumn key="content">{t('common.content')}</TableColumn>
+        </TableHeader>
+        <TableBody
+          loadingContent={<Spinner />}
+          loadingState={isLoading ? 'loading' : 'idle'}
+          isLoading={isLoading}
+          items={data || []}
+        >
+          {(item) => {
+            const itemOmitRef = omit(item, 'ref') as NormalizedComment
+            return (
+              <TableRow key={item.id}>
+                <TableCell width={400}>
+                  <CommentAuthorCell {...itemOmitRef} />
+                </TableCell>
+                <TableCell className="align-top" width={2000} key="content">
+                  <CommentContentCell {...itemOmitRef} />
+                </TableCell>
+              </TableRow>
+            )
+          }}
+        </TableBody>
+      </Table>
+    </div>
+
+    // </ScrollArea.ScrollArea>
   )
 }
 

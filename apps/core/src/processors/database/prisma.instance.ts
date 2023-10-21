@@ -62,8 +62,9 @@ export const createExtendedPrismaClient = ({ url }: { url?: string } = {}) => {
 
           const { page, size: perPage } = options
           const skip = page > 0 ? perPage * (page - 1) : 0
-          const countArgs = 'select' in x ? { where: x.where } : {}
-          const hasCursor = 'cursor' in x
+          const countArgs = 'where' in x ? { where: x.where } : {}
+          const hasCursor = 'cursor' in x && !!x.cursor
+
           const [total, data] = await Promise.all([
             (this as any).count(countArgs),
             (this as any).findMany({

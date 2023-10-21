@@ -1,1 +1,2 @@
-export const Empty = () => null
+// TODO
+export const Empty: Component = ({ className }) => <div className={className} />

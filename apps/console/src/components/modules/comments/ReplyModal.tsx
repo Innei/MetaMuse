@@ -3,7 +3,9 @@ import markdownEscape from 'markdown-escape'
 import { toast } from 'sonner'
 import { useEventCallback } from 'usehooks-ts'
 
+import { useIsMobile } from '~/atoms'
 import { MotionButtonBase } from '~/components/ui/button'
+import { PresentDrawer } from '~/components/ui/drawer'
 import { FloatPopover } from '~/components/ui/float-popover'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { KAOMOJI_LIST } from '~/constants/kaomoji'
@@ -34,9 +36,58 @@ export const ReplyModal = (props: NormalizedComment) => {
       text,
     })
     toast.success(t('module.comment.reply-success'))
-    utils.comment.list.invalidate()
+    utils.comment.list.refetch()
     dismiss()
   })
+  const KaomojiContentEl = (
+    <ScrollArea.Root className="w-auto h-[50vh] md:w-[400px] md:h-[200px] pointer-events-auto overflow-scroll">
+      <ScrollArea.Viewport>
+        <div className="grid grid-cols-4 gap-4">
+          {KAOMOJI_LIST.map((kamoji) => {
+            return (
+              <MotionButtonBase
+                key={kamoji}
+                onClick={() => {
+                  const $ta = ref.current!
+                  $ta.focus()
+
+                  requestAnimationFrame(() => {
+                    const start = $ta.selectionStart as number
+                    const end = $ta.selectionEnd as number
+                    const escapeKaomoji = markdownEscape(kamoji)
+                    $ta.value = `${$ta.value.substring(
+                      0,
+                      start,
+                    )} ${escapeKaomoji} ${$ta.value.substring(
+                      end,
+                      $ta.value.length,
+                    )}`
+
+                    requestAnimationFrame(() => {
+                      const shouldMoveToPos = start + escapeKaomoji.length + 2
+                      $ta.selectionStart = shouldMoveToPos
+                      $ta.selectionEnd = shouldMoveToPos
+
+                      $ta.focus()
+                    })
+                  })
+                }}
+              >
+                {kamoji}
+              </MotionButtonBase>
+            )
+          })}
+        </div>
+      </ScrollArea.Viewport>
+      <ScrollArea.Scrollbar />
+    </ScrollArea.Root>
+  )
+  const KaomojiButton = (
+    <MotionButtonBase>
+      <i className="icon-[mingcute--emoji-line]" />
+    </MotionButtonBase>
+  )
+  const isMobile = useIsMobile()
   return (
     <form
       className="flex flex-col w-[500px] max-w-full"
@@ -54,58 +105,19 @@ export const ReplyModal = (props: NormalizedComment) => {
       <Textarea size="lg" maxRows={5} ref={ref} />
 
       <div className="flex justify-between mt-4 gap-2">
-        <FloatPopover
-          trigger="click"
-          to={modalElRef.current!}
-          TriggerComponent={() => (
-            <MotionButtonBase>
-              <i className="icon-[mingcute--emoji-line]" />
-            </MotionButtonBase>
-          )}
-        >
-          <ScrollArea.Root className="w-[400px] h-[200px] pointer-events-auto overflow-scroll">
-            <ScrollArea.Viewport>
-              <div className="grid grid-cols-4 gap-4">
-                {KAOMOJI_LIST.map((kamoji) => {
-                  return (
-                    <MotionButtonBase
-                      key={kamoji}
-                      onClick={() => {
-                        const $ta = ref.current!
-                        $ta.focus()
-
-                        requestAnimationFrame(() => {
-                          const start = $ta.selectionStart as number
-                          const end = $ta.selectionEnd as number
-                          const escapeKaomoji = markdownEscape(kamoji)
-                          $ta.value = `${$ta.value.substring(
-                            0,
-                            start,
-                          )} ${escapeKaomoji} ${$ta.value.substring(
-                            end,
-                            $ta.value.length,
-                          )}`
-
-                          requestAnimationFrame(() => {
-                            const shouldMoveToPos =
-                              start + escapeKaomoji.length + 2
-                            $ta.selectionStart = shouldMoveToPos
-                            $ta.selectionEnd = shouldMoveToPos
-
-                            $ta.focus()
-                          })
-                        })
-                      }}
-                    >
-                      {kamoji}
-                    </MotionButtonBase>
-                  )
-                })}
-              </div>
-            </ScrollArea.Viewport>
-            <ScrollArea.Scrollbar />
-          </ScrollArea.Root>
-        </FloatPopover>
+        {isMobile ? (
+          <PresentDrawer content={KaomojiContentEl} zIndex={1002}>
+            {KaomojiButton}
+          </PresentDrawer>
+        ) : (
+          <FloatPopover
+            trigger="click"
+            to={modalElRef.current!}
+            TriggerComponent={() => KaomojiButton}
+          >
+            {KaomojiContentEl}
+          </FloatPopover>
+        )}
 
         <Button
           variant="solid"

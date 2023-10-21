@@ -1,9 +1,11 @@
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { useEffect } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Outlet, useLocation } from 'react-router-dom'
 
 import { SeoObserver } from '~/components/common/SeoObserver'
 import { LayoutHeader } from '~/components/layout/root/header'
+import { MainLayout } from '~/components/layout/root/main'
 import { ComposedKBarProvider } from '~/components/modules/kbar'
 import { useBeforeMounted } from '~/hooks/common/use-before-mounted'
 import { ModalStackProvider } from '~/providers/modal-stack-provider'
@@ -30,14 +32,18 @@ export default function Layout() {
   return (
     <ComposedKBarProvider>
       <LayoutHeader />
-      <main className="mt-28 flex min-h-0 flex-grow flex-col p-4">
+      <MainLayout>
         <ErrorBoundary fallback={null}>
           <Outlet />
         </ErrorBoundary>
-      </main>
+      </MainLayout>
 
       <ModalStackProvider />
       <SeoObserver />
+
+      {import.meta.env.DEV && (
+        <ReactQueryDevtools buttonPosition="bottom-left" />
+      )}
     </ComposedKBarProvider>
   )
 }

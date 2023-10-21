@@ -18,16 +18,21 @@ export const CommentAction = (props: NormalizedComment) => {
   const utils = trpc.useUtils()
   const { mutateAsync: updateState } = trpc.comment.changeState.useMutation({
     async onSuccess() {
-      utils.comment.invalidate()
+      utils.comment.list.invalidate()
     },
   })
-  const { mutateAsync: deleteComment } =
-    trpc.comment.deleteComment.useMutation()
+  const { mutateAsync: deleteComment } = trpc.comment.deleteComment.useMutation(
+    {
+      async onSuccess() {
+        utils.comment.list.invalidate()
+      },
+    },
+  )
 
   const { present } = useModalStack()
 
   return (
-    <div className="flex space-x-4 items-center">
+    <div className="flex space-x-4 items-center justify-end md:justify-start">
       {currentState === CommentState.UNREAD && (
         <Button
           size="sm"

@@ -2,12 +2,15 @@ import { Chip, Tab, Tabs } from '@nextui-org/react'
 import { createElement, useMemo } from 'react'
 import type { FC } from 'react'
 
+import { useIsMobile } from '~/atoms'
 import {
   CommentDataContext,
   CommentDataSourceContext,
   CommentDesktopTable,
   CommentStateContext,
 } from '~/components/modules/comments'
+import { CommentMobileList } from '~/components/modules/comments/CommentMobileList'
+import { CommentPagination } from '~/components/modules/comments/CommentPagation'
 import { useRouterQueryState } from '~/hooks/biz/use-router-query-state'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
@@ -51,7 +54,7 @@ export default function Page() {
               key={key}
               className="flex-grow flex flex-col"
             >
-              <div className="h-0 overflow-auto flex-grow">
+              <div className="h-0 flex flex-col overflow-auto flex-grow">
                 <Component state={key} />
               </div>
             </Tab>
@@ -107,6 +110,7 @@ const CommentTable = (props: { state: CommentState }) => {
     [data?.relations.comments],
   )
 
+  const isMobile = useIsMobile()
   return (
     <CommentStateContext.Provider value={props.state}>
       <CommentDataContext.Provider
@@ -119,9 +123,20 @@ const CommentTable = (props: { state: CommentState }) => {
         )}
       >
         <CommentDataSourceContext.Provider
-          value={{ isLoading, data: data?.data, setPage }}
+          value={useMemo(
+            () => ({
+              isLoading,
+              data: data?.data,
+              setPage,
+              pagination: data?.pagination,
+            }),
+            [data?.data, data?.pagination, isLoading, setPage],
+          )}
         >
-          <CommentDesktopTable />
+          <div className="flex flex-col flex-grow h-0 overflow-hidden">
+            {isMobile ? <CommentMobileList /> : <CommentDesktopTable />}
+            <CommentPagination />
+          </div>
         </CommentDataSourceContext.Provider>
       </CommentDataContext.Provider>
     </CommentStateContext.Provider>
