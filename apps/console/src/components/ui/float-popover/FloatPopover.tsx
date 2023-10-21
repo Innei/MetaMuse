@@ -29,6 +29,8 @@ type FloatPopoverProps<T> = PropsWithChildren<{
 
   as?: keyof HTMLElementTagNameMap
 
+  to?: HTMLElement
+
   /**
    * @default popover
    */
@@ -59,6 +61,7 @@ export const FloatPopover = function FloatPopover<T extends {}>(
     isDisabled,
     onOpen,
     onClose,
+    to,
     ...floatingProps
   } = props
 
@@ -164,11 +167,11 @@ export const FloatPopover = function FloatPopover<T extends {}>(
 
       <AnimatePresence>
         {open && (
-          <RootPortal>
+          <RootPortal to={to}>
             <m.div
               className={clsxm(
                 'float-popover',
-                'relative z-[99]',
+                'relative z-[99] pointer-events-auto',
                 !open && 'pointer-events-none',
                 popoverWrapperClassNames,
               )}

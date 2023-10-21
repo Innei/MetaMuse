@@ -19,7 +19,7 @@ import {
 import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { useEventCallback } from 'usehooks-ts'
 import type { Target, Transition } from 'framer-motion'
-import type { FC, PropsWithChildren, SyntheticEvent } from 'react'
+import type { FC, PropsWithChildren, RefObject, SyntheticEvent } from 'react'
 
 import { useIsMobile } from '~/atoms'
 import { CloseIcon } from '~/components/icons'
@@ -33,9 +33,11 @@ import { jotaiStore } from '~/lib/store'
 
 const modalIdToPropsMap = {} as Record<string, ModalProps>
 
-const CurrentModalContext = createContext<ModalContentPropsInternal>(
-  null as any,
-)
+type CurrentModalContentProps = ModalContentPropsInternal & {
+  ref: RefObject<HTMLElement>
+}
+
+const CurrentModalContext = createContext<CurrentModalContentProps>(null as any)
 
 export const useCurrentModal = () => {
   return useContext(CurrentModalContext)
@@ -195,12 +197,19 @@ const Modal: Component<{
         })
       })
   }, [animateController])
-
+  const modalContentRef = useRef<HTMLDivElement>(null)
   const ModalProps: ModalContentPropsInternal = useMemo(
     () => ({
       dismiss: close,
     }),
     [close],
+  )
+  const ModalContextProps = useMemo<CurrentModalContentProps>(
+    () => ({
+      ...ModalProps,
+      ref: modalContentRef,
+    }),
+    [ModalProps],
   )
   const isMobile = useIsMobile()
 
@@ -214,7 +223,7 @@ const Modal: Component<{
         onOpenChange={onClose}
         // title={title}
         content={
-          <CurrentModalContext.Provider value={ModalProps}>
+          <CurrentModalContext.Provider value={ModalContextProps}>
             {createElement(content, ModalProps)}
           </CurrentModalContext.Provider>
         }
@@ -229,6 +238,7 @@ const Modal: Component<{
           <DialogOverlay zIndex={20} />
           <Dialog.Content asChild>
             <div
+              ref={modalContentRef}
               className={clsxm(
                 'fixed inset-0 z-[20] overflow-auto',
                 modalContainerClassName,
@@ -237,7 +247,7 @@ const Modal: Component<{
             >
               <div className="contents" onClick={stopPropagation}>
                 <CustomModalComponent>
-                  <CurrentModalContext.Provider value={ModalProps}>
+                  <CurrentModalContext.Provider value={ModalContextProps}>
                     {createElement(content, ModalProps)}
                   </CurrentModalContext.Provider>
                 </CustomModalComponent>
@@ -254,6 +264,7 @@ const Modal: Component<{
         <DialogOverlay zIndex={20} />
         <Dialog.Content asChild>
           <div
+            ref={modalContentRef}
             className={clsxm(
               'fixed inset-0 z-[20] flex center',
               modalContainerClassName,
@@ -282,7 +293,7 @@ const Modal: Component<{
               <Divider className="my-2 flex-shrink-0 border-slate-200 opacity-80 dark:border-neutral-800" />
 
               <div className="min-h-0 flex-shrink flex-grow overflow-auto px-4 py-2">
-                <CurrentModalContext.Provider value={ModalProps}>
+                <CurrentModalContext.Provider value={ModalContextProps}>
                   {createElement(content, ModalProps)}
                 </CurrentModalContext.Provider>
               </div>
