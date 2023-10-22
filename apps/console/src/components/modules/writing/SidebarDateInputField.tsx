@@ -1,14 +1,16 @@
 import { Input } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
+import type { FC } from 'react'
 
 import { useI18n } from '~/i18n/hooks'
 import { isValidDate } from '~/lib/datetime'
 
-import { useNoteModelSingleFieldAtom } from '../data-provider'
-
-export const CustomCreatedInput = () => {
-  const [created, setCreated] = useNoteModelSingleFieldAtom('created')
+export const SidebarDateInputField: FC<{
+  label?: string
+  getSet: [string | undefined, (value: any) => void]
+}> = ({ label, getSet }) => {
+  const [created, setCreated] = getSet
   const t = useI18n()
 
   const [editingCreated, setEditingCreated] = useState(created)
@@ -29,7 +31,7 @@ export const CustomCreatedInput = () => {
 
   return (
     <Input
-      label={t('common.custom-created')}
+      label={label || t('common.custom-created')}
       size="sm"
       value={editingCreated}
       errorMessage={hasError ? t('common.invalid-date') : undefined}

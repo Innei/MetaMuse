@@ -3,7 +3,7 @@ import { MetaKeyValueEditSection } from '../../writing/MetaKeyValueEditSection'
 import { PresentComponentFab } from '../../writing/PresentComponentFab'
 import { SidebarWrapper } from '../../writing/SidebarBase'
 import { useNoteModelSingleFieldAtom } from '../data-provider'
-import { CustomCreatedInput } from './CustomCreatedInput'
+import { CustomCreatedInput, PublicAtInput } from './DateInput'
 import { GetLocation } from './GetLocation'
 import { NoteCombinedSwitch } from './NoteCombinedSwitch'
 import { NoteTopicSelector } from './NoteTopicSelector'
@@ -19,6 +19,7 @@ const Sidebar = () => {
       <PasswordInput />
       <GetLocation />
       <CustomCreatedInput />
+      <PublicAtInput />
 
       <ImageSection />
 

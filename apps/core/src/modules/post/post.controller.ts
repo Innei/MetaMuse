@@ -5,6 +5,7 @@ import { ArticleType } from '@core/constants/article.constant'
 import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { CountingService } from '@core/processors/helper/services/helper.counting.service'
 import { SnowflakeIdDto } from '@core/shared/dto/id.dto'
+import { scheduleManager } from '@core/shared/utils/schedule.util'
 import { Post } from '@meta-muse/prisma'
 import { Get, Param, Query } from '@nestjs/common'
 
@@ -40,7 +41,9 @@ export class PostController {
     const data = await this.service.getLastPost()
     if (!data) return null
     this.guardPostCanVisit(data)
-    this.countingService.updateReadCount(ArticleType.Post, data.id, ip.ip)
+    scheduleManager.schedule(() =>
+      this.countingService.updateReadCount(ArticleType.Post, data.id, ip.ip),
+    )
 
     return data
   }
@@ -58,8 +61,9 @@ export class PostController {
     }
 
     this.guardPostCanVisit(data)
-    this.countingService.updateReadCount(ArticleType.Post, data.id, ip.ip)
-
+    scheduleManager.schedule(() =>
+      this.countingService.updateReadCount(ArticleType.Post, data.id, ip.ip),
+    )
     return data
   }
 

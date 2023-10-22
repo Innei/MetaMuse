@@ -37,7 +37,7 @@ export class NoteTrpcRouter implements OnModuleInit {
         .query(async ({ input: query }) => {
           const result = await this.service.paginateNotes({
             ...query,
-            exclude: [...(query.exclude ?? [])],
+            exclude: ['password', ...(query.exclude ?? [])],
           })
 
           const resultWithSummary = result.data.map((item) => {

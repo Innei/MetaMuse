@@ -65,7 +65,8 @@
   "resolutions": {
     "pino": "./external/pino",
     "*>typescript": "^5.2.2",
-    "*>lodash": "4.17.21"
+    "*>lodash": "4.17.21",
+    "get-pixels@^3>request": "./external/request"
   },
   "redisMemoryServer": {
     "downloadDir": "./tmp/redis/binaries",

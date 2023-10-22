@@ -92,4 +92,13 @@ export class TopicService {
       }
     })
   }
+
+  async checkTopicExist(id: string) {
+    const count = await this.db.prisma.noteTopic.count({
+      where: {
+        id,
+      },
+    })
+    return count > 0
+  }
 }

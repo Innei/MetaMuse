@@ -95,7 +95,8 @@
       "not_support_location": "The browser does not support location",
       "location_permission_denied": "Location permission denied",
       "search_location": "Search location",
-      "search_by_keyword": "Search by keyword"
+      "search_by_keyword": "Search by keyword",
+      "public_at": "Public at"
     },
     "summary": {
       "title": "Summary",

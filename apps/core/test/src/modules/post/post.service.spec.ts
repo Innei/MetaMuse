@@ -42,6 +42,7 @@ describe('/modules/post/post.service', () => {
       category,
     })
 
+    await sleep(20)
     // 1 for TO_VISITOR 2 for TO_SYSTEM
     expect(mockedEventManagerService.emit).toBeCalledTimes(2)
   })

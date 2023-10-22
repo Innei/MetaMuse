@@ -105,7 +105,11 @@ export const ImportMarkdownButton: FC<{
             </div>
           </ModalBody>
           <ModalFooter className="flex justify-end space-x-2">
-            <Button color="primary" onClick={handleParseContent}>
+            <Button
+              variant="shadow"
+              color="primary"
+              onClick={handleParseContent}
+            >
               {t('common.ok')}
             </Button>
           </ModalFooter>

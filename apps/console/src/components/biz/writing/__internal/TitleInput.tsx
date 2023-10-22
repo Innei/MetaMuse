@@ -10,8 +10,9 @@ export const TitleInput = () => {
   return (
     <Input
       classNames={{
-        input: 'font-medium',
+        input: 'font-medium text-md',
       }}
+      size="lg"
       color="primary"
       label={t('common.title')}
       value={title}

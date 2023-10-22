@@ -45,7 +45,7 @@ const createInitialEditingData = (): NoteModel => {
     images: [],
     isPublished: true,
     mood: null,
-    nid: 0,
+    nid: null!,
     password: '',
     publicAt: null,
     topicId: null,

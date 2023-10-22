@@ -9,6 +9,7 @@ export type PostModel = Omit<
   | 'meta'
   | 'count'
   | 'created'
+  | 'commentsIndex'
 > & {
   meta?: any
   created?: string

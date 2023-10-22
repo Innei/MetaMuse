@@ -9,6 +9,8 @@ import { EventManagerService } from '@core/processors/helper/services/helper.eve
 import { ImageService } from '@core/processors/helper/services/helper.image.service'
 import { reorganizeData, toOrder } from '@core/shared/utils/data.util'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
+import { scheduleManager } from '@core/shared/utils/schedule.util'
+import { getLessThanNow } from '@core/shared/utils/time.util'
 import { deepEqual } from '@core/shared/utils/tool.util'
 import { isDefined } from '@core/shared/utils/validator.util'
 import { CommentRefTypes, Prisma } from '@meta-muse/prisma'
@@ -58,7 +60,7 @@ export class PostService {
       input.summary = null
     }
     if (dto.custom_created) {
-      input.created = dto.custom_created
+      input.created = getLessThanNow(dto.custom_created)
     }
     if (dto.tagIds) {
       input.tags = {
@@ -123,21 +125,24 @@ export class PostService {
       await this.togglePin(model.id, true)
     }
 
-    this.imageService
-      .saveImageDimensionsFromMarkdownText(
-        model.text,
-        model.images,
-        (newImages) => {
-          return this.updateById(model.id, {
-            images: newImages,
-          })
-        },
-      )
-      .catch((err) => {
-        this.logger.warn(`Save image dimensions failed, ${err?.message}`)
-      })
-
-    await this.notifyPostUpdate(BusinessEvents.POST_CREATE, model.id)
+    scheduleManager.batch(() =>
+      Promise.all([
+        this.imageService
+          .saveImageDimensionsFromMarkdownText(
+            model.text,
+            model.images,
+            (newImages) => {
+              return this.updateById(model.id, {
+                images: newImages,
+              })
+            },
+          )
+          .catch((err) => {
+            this.logger.warn(`Save image dimensions failed, ${err?.message}`)
+          }),
+        this.notifyPostUpdate(BusinessEvents.POST_CREATE, model.id),
+      ]),
+    )
 
     return model
   }
@@ -389,28 +394,30 @@ export class PostService {
     // 有关联文章
     const related = data.relatedIds?.filter((i) => i !== id) || []
 
-    if (data.text)
-      this.imageService
-        .saveImageDimensionsFromMarkdownText(
-          data.text,
-          originPost.images,
-          async (newImages) => {
-            if (deepEqual(newImages, originPost.images)) return
-            return this.updateById(id, {
-              images: newImages,
-            })
-          },
-        )
-        .catch((err) => {
-          this.logger.warn(`Save image dimensions failed, ${err?.message}`)
-        })
-
     await this.relateEachOther(
       id,
       related,
       originPost.related.map((i) => i.id),
     )
 
+    const text = data.text
+    if (text)
+      scheduleManager.schedule(() =>
+        this.imageService
+          .saveImageDimensionsFromMarkdownText(
+            text,
+            originPost.images,
+            async (newImages) => {
+              if (deepEqual(newImages, originPost.images)) return
+              return this.updateById(id, {
+                images: newImages,
+              })
+            },
+          )
+          .catch((err) => {
+            this.logger.warn(`Save image dimensions failed, ${err?.message}`)
+          }),
+      )
     this.notifyPostUpdate(BusinessEvents.POST_UPDATE, id)
   }
 

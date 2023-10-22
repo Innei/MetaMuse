@@ -6,11 +6,15 @@ import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { EventScope } from '@core/constants/event-scope.constant'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { EventManagerService } from '@core/processors/helper/services/helper.event.service'
+import { ImageService } from '@core/processors/helper/services/helper.image.service'
 import { reorganizeData, toOrder } from '@core/shared/utils/data.util'
 import { resourceNotFoundWrapper } from '@core/shared/utils/prisma.util'
+import { scheduleManager } from '@core/shared/utils/schedule.util'
+import { getLessThanNow } from '@core/shared/utils/time.util'
 import { CommentRefTypes, Prisma } from '@meta-muse/prisma'
-import { Inject, Injectable } from '@nestjs/common'
+import { forwardRef, Inject, Injectable } from '@nestjs/common'
 
+import { TopicService } from '../topic/topic.service'
 import { NoteDto, NotePagerDto, NotePatchDto } from './note.dto'
 import { NoteIncluded } from './note.protect'
 
@@ -21,6 +25,12 @@ export class NoteService {
 
   @Inject()
   private readonly eventService: EventManagerService
+
+  @Inject(forwardRef(() => TopicService))
+  private readonly topicService: TopicService
+
+  @Inject(ImageService)
+  private readonly imageService: ImageService
 
   async paginateNotes(
     options: NotePagerDto,
@@ -61,11 +71,12 @@ export class NoteService {
     return data
   }
 
-  async getNoteById(id: string) {
+  async getNoteById(id: string | number) {
     return this.db.prisma.note
       .findUniqueOrThrow({
         where: {
-          id,
+          id: typeof id === 'string' ? id : undefined,
+          nid: typeof id === 'number' ? id : undefined,
         },
         include: NoteIncluded,
       })
@@ -107,17 +118,17 @@ export class NoteService {
           if (doc.publicAt && doc.publicAt.getTime() > Date.now()) {
             return
           }
-          this.eventService.emit(BusinessEvents.NOTE_UPDATE, doc, {
+          await this.eventService.emit(BusinessEvents.NOTE_UPDATE, doc, {
             scope: EventScope.TO_VISITOR,
           })
         }
-        this.eventService.emit(BusinessEvents.NOTE_UPDATE, doc, {
+        await this.eventService.emit(BusinessEvents.NOTE_UPDATE, doc, {
           scope: EventScope.TO_SYSTEM,
         })
         break
       }
       case BusinessEvents.NOTE_DELETE:
-        this.eventService.emit(
+        await this.eventService.emit(
           BusinessEvents.NOTE_DELETE,
           { id },
           { scope: EventScope.ALL },
@@ -139,7 +150,7 @@ export class NoteService {
     const setOrConnect = type === 'create' ? 'connect' : 'set'
 
     if (dto.custom_created) {
-      input.created = dto.custom_created
+      input.created = getLessThanNow(dto.custom_created)
     }
 
     if (dto.topicId) {
@@ -164,13 +175,36 @@ export class NoteService {
   }
 
   async create(data: NoteDto) {
-    // TODO check topic
-    return this.db.prisma.note.create({
+    if (data.topicId) {
+      const isTopicExist = await this.topicService.checkTopicExist(data.topicId)
+      if (!isTopicExist) {
+        throw new BizException(ErrorCodeEnum.NoteTopicNotFound)
+      }
+    }
+
+    const note = await this.db.prisma.note.create({
       data: {
         ...this.dtoToModel(data, 'create'),
         meta: data.meta,
       },
     })
+
+    scheduleManager.batch(() =>
+      Promise.all([
+        this.notifyNoteUpdate(BusinessEvents.NOTE_CREATE, note.id),
+        this.imageService.saveImageDimensionsFromMarkdownText(
+          data.text,
+          data.images,
+          (images) => {
+            return this.updateById(note.id, {
+              images,
+            })
+          },
+        ),
+      ]),
+    )
+
+    return note
   }
 
   async deleteById(id: string) {

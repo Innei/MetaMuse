@@ -27,6 +27,7 @@ export class ImageService {
     originImages: ArticleImage[] | undefined,
     onUpdate?: (images: ArticleImage[]) => Promise<any>,
   ) {
+    console.log('saveImageDimensionsFromMarkdownText')
     const newImageSrcSet = new Set(pickImagesFromMarkdown(text))
     const newImages = [...newImageSrcSet]
 

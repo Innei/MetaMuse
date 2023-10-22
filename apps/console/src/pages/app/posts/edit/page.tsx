@@ -36,6 +36,7 @@ const createInitialEditingData = (): PostModel => {
     title: '',
     allowComment: true,
     copyright: true,
+
     tagIds: [],
     categoryId: '',
     id: '',
