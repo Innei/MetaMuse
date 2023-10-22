@@ -193,7 +193,7 @@ export const ImageDetailSection: FC<ImageDetailSectionProps> = (props) => {
             return (
               <AccordionItem
                 classNames={{
-                  title: 'text-xs font-normal',
+                  title: 'text-sm font-normal',
                 }}
                 key={image.src}
                 title={<div className="break-all">{image.src}</div>}
