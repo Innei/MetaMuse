@@ -203,7 +203,7 @@ export const ListTable = <Data extends DataBaseType>({
   const viewStyle = useAtomValue(ctxValue.viewStyleAtom)
   if (!data) {
     return (
-      <Spinner className="w-full flex items-center justify-center h-[300px]" />
+      <Spinner className="w-full flex items-center justify-center h-[300px] flex-grow" />
     )
   }
   const { data: listData, pagination } = Array.isArray(data)
@@ -240,7 +240,7 @@ export const ListTable = <Data extends DataBaseType>({
       {!!pagination && pagination.totalPage > 1 && (
         <motion.div
           layout="position"
-          className="mt-8 flex w-full items-center justify-end gap-4"
+          className="mt-8 flex w-full items-center justify-end gap-4 flex-shrink-0"
         >
           <Pagination
             showControls
@@ -325,7 +325,7 @@ const TableRender = <T extends DataBaseType>({
   return (
     <Table
       className={clsxm(
-        'min-h-[32.8rem] overflow-auto bg-transparent [&_table]:min-w-[1000px] relative',
+        'min-h-[32.8rem] flex-grow overflow-auto bg-transparent [&_table]:min-w-[1000px] relative',
         className,
       )}
       removeWrapper
@@ -400,7 +400,7 @@ const CardsRender = <T extends DataBaseType>({
   }))
   return (
     <ResponsiveMasonry
-      className="min-h-[32.8rem] relative"
+      className="min-h-[32.8rem] relative flex-grow"
       columnsCountBreakPoints={columnsCountBreakPoints}
     >
       <Masonry gutter="16px">
