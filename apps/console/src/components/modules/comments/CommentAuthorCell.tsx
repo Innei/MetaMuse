@@ -1,6 +1,6 @@
 import { Avatar, Link } from '@nextui-org/react'
 
-import { IpInfoPopover } from '~/components/biz/ip/IpInfoPopover'
+import { IpInfoPopover } from '~/components/biz/ip'
 import { OouiUserAnonymous } from '~/components/icons'
 
 import { UrlRender } from './CommentDesktopTable'

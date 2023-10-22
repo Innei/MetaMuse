@@ -36,7 +36,7 @@ describe('ROUTE /posts', () => {
       {
         "data": [],
         "pagination": {
-          "current_page": 0,
+          "current_page": 1,
           "has_next_page": false,
           "has_prev_page": false,
           "size": 10,
