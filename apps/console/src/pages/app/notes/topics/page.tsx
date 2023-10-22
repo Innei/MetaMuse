@@ -116,15 +116,13 @@ const useCurrentSelectedTopic = () => {
 }
 const TopicDetail = () => {
   const topic = useCurrentSelectedTopic()
-  const t = useI18n()
+
   const { mutateAsync: deleteTopic } = trpc.topic.delete.useMutation()
   const utils = trpc.useUtils()
   if (!topic) return <Empty />
   return (
     <main className="h-full overflow-auto flex flex-col">
-      <div className="h-0 flex-grow flex flex-col">
-        <h2 className="font-medium text-lg">{t('module.topic.detail')}</h2>
-
+      <div className="h-0 flex-grow flex flex-col mt-0">
         <div className="grid grid-cols-[auto,1fr] my-4 gap-4">
           <Avatar
             src={topic.icon || ''}

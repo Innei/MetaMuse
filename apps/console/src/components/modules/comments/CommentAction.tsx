@@ -45,7 +45,7 @@ export const CommentAction = (props: NormalizedComment) => {
   const { present } = useModalStack()
 
   return (
-    <div className="flex space-x-4 items-center justify-end md:justify-start">
+    <div className="flex space-x-4 items-center justify-end lg:justify-start">
       {currentState === CommentState.UNREAD && (
         <Button
           size="sm"

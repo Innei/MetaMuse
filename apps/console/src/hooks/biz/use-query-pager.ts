@@ -1,10 +1,10 @@
 import { createContext, createElement, useContext, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
 import { atom, useAtom } from 'jotai'
 import type { PrimitiveAtom } from 'jotai'
 import type { FC } from 'react'
 
 import { useBeforeMounted } from '../common/use-before-mounted'
+import { useStableSearchParams } from '../patch/use-stable-saerch-params'
 
 const ctx = createContext<{
   pageAtom: PrimitiveAtom<number>
@@ -18,7 +18,7 @@ export const useQueryPager = () => {
   const [page, setPage] = useAtom(pageAtom)
   const [size, setSize] = useAtom(sizeAtom)
 
-  const [search, setSearch] = useSearchParams()
+  const [search, setSearch] = useStableSearchParams()
 
   useBeforeMounted(() => {
     if (!search.get('page')) setSearch((p) => ({ ...p, page: 1 }))

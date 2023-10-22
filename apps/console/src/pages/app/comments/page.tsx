@@ -100,6 +100,7 @@ const CommentTable = (props: { state: CommentState }) => {
   }, [])
 
   const [page, setPage] = useRouterQueryState('page', 1)
+
   const { data, isLoading } = trpc.comment.list.useQuery(
     {
       state: props.state,

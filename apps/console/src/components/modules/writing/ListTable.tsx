@@ -32,6 +32,7 @@ import type { PaginationResult } from '~/models/paginator'
 import type { FC, PropsWithChildren, ReactNode } from 'react'
 
 import { useIsMobile } from '~/atoms'
+import { Empty } from '~/components/common/Empty'
 import { AddCircleLine } from '~/components/icons'
 import { RelativeTime } from '~/components/ui/date-time'
 import { MotionDivToBottom } from '~/components/ui/motion'
@@ -320,7 +321,7 @@ const TableRender = <T extends DataBaseType>({
   return (
     <Table
       className={clsxm(
-        'min-h-[32.8rem] overflow-auto bg-transparent [&_table]:min-w-[1000px]',
+        'min-h-[32.8rem] overflow-auto bg-transparent [&_table]:min-w-[1000px] relative',
         className,
       )}
       removeWrapper
@@ -344,9 +345,11 @@ const TableRender = <T extends DataBaseType>({
         ))}
       </TableHeader>
       <TableBody
-        loadingContent={<Spinner />}
         loadingState={isLoading ? 'loading' : 'idle'}
-        emptyContent="这里空空如也"
+        loadingContent={
+          <Spinner className="absolute inset-0 flex items-center justify-center" />
+        }
+        emptyContent={<Empty />}
         items={data || []}
       >
         {(item) => (

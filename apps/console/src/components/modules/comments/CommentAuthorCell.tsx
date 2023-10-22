@@ -9,7 +9,7 @@ export const CommentAuthorCell = (props: NormalizedComment) => {
   const { author, avatar, url, mail, ip, isWhispers } = props
   return (
     <div className="flex space-x-8">
-      <div className="self-center md:self-start">
+      <div className="self-center lg:self-start">
         <Avatar size="md" src={avatar || ''} name={author[0]} />
       </div>
       <div className="flex text-sm flex-col gap-1">

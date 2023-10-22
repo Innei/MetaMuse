@@ -5,13 +5,15 @@ import type { CommentState } from '~/components/modules/comments/constants'
 import type { Paginator } from '~/models/paginator'
 
 export const CommentStateContext = createContext<CommentState>(null!)
-export const CommentDataSourceContext = createContext<{
+interface CommentDataSourceContextType {
   isLoading: boolean
   data?: NormalizedComment[]
   pagination?: Paginator
-
   setPage: (page: number) => void
-}>(null!)
+}
+
+export const CommentDataSourceContext =
+  createContext<CommentDataSourceContextType>(null!)
 export const CommentDataContext = createContext<{
   refModelMap: Map<string, NormalizedPostModel | NormalizedNoteModel>
   relationCommentMap: Record<string, Comment>

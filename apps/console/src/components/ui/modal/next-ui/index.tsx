@@ -18,6 +18,7 @@ export const NextUIModal: FC<PropsWithChildren<ModalProps>> = ({
           classNames?.closeButton,
         ),
         header: clsxm('w-[calc(100%-2rem)]', classNames?.header),
+        backdrop: 'bg-slate-50/80 dark:bg-neutral-900/80',
         ...classNames,
       }}
       {...props}

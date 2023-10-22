@@ -22,12 +22,16 @@ import { CommentContentCell } from './CommentContentCell'
 
 export const CommentDesktopTable = () => {
   const t = useI18n()
-  const { isLoading, data } = useCommentDataSource()
+  const { data, isLoading } = useCommentDataSource()
+
   const selectionKeys = useCommentSelectionKeys()
   const setSelectionKeys = useSetCommentSelectionKeys()
   return (
     // <ScrollArea.ScrollArea rootClassName="mt-4 flex-shrink h-0 flex-grow">
-    <div className="flex-shrink h-0 flex-grow overflow-auto">
+    <div className="flex-shrink h-0 flex-grow overflow-auto relative">
+      {isLoading && (
+        <Spinner className="absolute z-[10] inset-0 flex items-center justify-center" />
+      )}
       <Table
         selectedKeys={selectionKeys}
         onSelectionChange={(key) => {
@@ -47,9 +51,7 @@ export const CommentDesktopTable = () => {
           <TableColumn key="content">{t('common.content')}</TableColumn>
         </TableHeader>
         <TableBody
-          loadingContent={<Spinner />}
-          loadingState={isLoading ? 'loading' : 'idle'}
-          isLoading={isLoading}
+          className={isLoading ? 'opacity-80 pointer-events-none' : ''}
           items={data || []}
         >
           {(item) => {

@@ -40,7 +40,7 @@ export const ReplyModal = (props: NormalizedComment) => {
     dismiss()
   })
   const KaomojiContentEl = (
-    <ScrollArea.Root className="w-auto h-[50vh] md:w-[400px] md:h-[200px] pointer-events-auto overflow-scroll">
+    <ScrollArea.Root className="w-auto h-[50vh] lg:w-[400px] lg:h-[200px] pointer-events-auto overflow-scroll">
       <ScrollArea.Viewport>
         <div className="grid grid-cols-4 gap-4">
           {KAOMOJI_LIST.map((kamoji) => {

@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useCallback, useEffect, useState } from 'react'
+
+import { useStableSearchParams } from '../patch/use-stable-saerch-params'
 
 type LiteralToBroad<T> = T extends number
   ? number
@@ -10,21 +11,11 @@ type LiteralToBroad<T> = T extends number
   : T // Default case
 export const useRouterQueryState = <T extends string | number>(
   queryKey: string,
-  initialState: LiteralToBroad<T>,
+  fallbackState: LiteralToBroad<T>,
 ) => {
-  const [state, setState] = useState<LiteralToBroad<T>>(initialState)
+  const [state, setState] = useState<LiteralToBroad<T>>(fallbackState)
 
-  const [searchParams, setSearchParams] = useSearchParams()
-
-  useLayoutEffect(() => {
-    const queryValue = searchParams.get(queryKey)
-    if (queryValue === null) {
-      setSearchParams((prev) => {
-        prev.set(queryKey, String(initialState))
-        return prev
-      })
-    }
-  }, [])
+  const [searchParams, setSearchParams] = useStableSearchParams()
 
   const stateFromQuery = searchParams.get(queryKey)
   useEffect(() => {
@@ -32,12 +23,12 @@ export const useRouterQueryState = <T extends string | number>(
   }, [stateFromQuery])
 
   return [
-    state,
+    state ?? fallbackState,
     useCallback(
       (state: LiteralToBroad<T>) => {
         setSearchParams((prev) => {
           prev.set(queryKey, String(state))
-          return prev
+          return new URLSearchParams(prev)
         })
       },
       [queryKey, setSearchParams],

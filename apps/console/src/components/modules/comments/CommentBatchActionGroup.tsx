@@ -42,7 +42,7 @@ export const CommentBatchActionGroup = () => {
 
   if (!selectionKeys.size) return null
   return (
-    <div className="absolute top-0 right-0 hidden md:flex gap-4">
+    <div className="absolute top-0 right-0 hidden lg:flex gap-4">
       {tab !== CommentState.READ && (
         <FloatPopover
           type="tooltip"
