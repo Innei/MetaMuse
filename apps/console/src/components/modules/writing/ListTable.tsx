@@ -17,11 +17,13 @@ import {
 } from '@nextui-org/react'
 import {
   createContext,
+  memo,
   useCallback,
   useContext,
   useMemo,
   useState,
 } from 'react'
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 import { motion } from 'framer-motion'
 import { atom, useAtom, useAtomValue, useStore } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
@@ -37,6 +39,7 @@ import { AddCircleLine } from '~/components/icons'
 import { RelativeTime } from '~/components/ui/date-time'
 import { MotionDivToBottom } from '~/components/ui/motion'
 import { useQueryPager } from '~/hooks/biz/use-query-pager'
+import { useRefValue } from '~/hooks/common/use-ref-value'
 import { useI18n } from '~/i18n/hooks'
 import { clsxm } from '~/lib/helper'
 import { buildNSKey } from '~/lib/key'
@@ -162,6 +165,7 @@ type DataBaseType = {
   id: string
   title: string
   isPublished?: boolean
+  created?: string | Date
 }
 
 type ListTableWrapperProps<
@@ -386,46 +390,79 @@ const CardsRender = <T extends DataBaseType>({
   renderCardFooter,
   isLoading,
 }: CardsRenderProps<T>) => {
+  const columnsCountBreakPoints = useRefValue(() => ({
+    640: 1,
+    768: 2,
+    1024: 3,
+    1280: 4,
+    1536: 5,
+    1920: 6,
+  }))
+  return (
+    <ResponsiveMasonry
+      className="min-h-[32.8rem] relative"
+      columnsCountBreakPoints={columnsCountBreakPoints}
+    >
+      <Masonry gutter="16px">
+        {data.map((item) => (
+          <MemoedCard
+            item={item}
+            renderCardBody={renderCardBody}
+            renderCardFooter={renderCardFooter}
+            key={item.id}
+          />
+        ))}
+      </Masonry>
+    </ResponsiveMasonry>
+  )
+}
+
+const MemoedCardImpl = <T extends DataBaseType>({
+  item,
+
+  renderCardBody,
+  renderCardFooter,
+}: {
+  item: T
+} & Pick<CardsRenderProps<T>, 'renderCardBody' | 'renderCardFooter'>) => {
   const { selectionAtom } = useContext(ListTableContext)
   const store = useStore()
   return (
-    <div className="min-h-[32.8rem] grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6 4k:grid-cols-8 gap-4 mb-8">
-      {data.map((item) => {
-        if (!item) return null
-        return (
-          <Card
-            as={MotionDivToBottom}
-            shadow="sm"
-            className="ring-1 ring-zinc-200/60 dark:ring-neutral-800/70 h-[250px]"
-            key={item.id}
-          >
-            <CardHeader className="flex gap-2">
-              <Checkbox
-                size="sm"
-                defaultSelected={store.get(selectionAtom).has(item.id)}
-                onValueChange={(value) => {
-                  store.set(selectionAtom, (prev) => {
-                    if (value) {
-                      prev.add(item.id)
-                    } else {
-                      prev.delete(item.id)
-                    }
-                    return new Set(prev)
-                  })
-                }}
-              />
-              <TitleExtra data={item} />
-            </CardHeader>
-            <Divider />
-            <CardBody className="text-small flex flex-col gap-2">
-              {renderCardBody(item)}
-            </CardBody>
-            <CardFooter className="flex justify-end">
-              {renderCardFooter(item)}
-            </CardFooter>
-          </Card>
-        )
-      })}
-    </div>
+    <Card
+      as={MotionDivToBottom}
+      shadow="none"
+      className="ring-1 ring-zinc-200/60 dark:ring-neutral-800/70"
+      key={item.id}
+    >
+      <CardHeader className="flex gap-2 px-5 justify-between">
+        <TitleExtra className="font-medium text-lg" data={item} />
+
+        <span className="opacity-60 flex-shrink-0">
+          {item.created ? <RelativeTime time={item.created} /> : null}
+        </span>
+      </CardHeader>
+      <Divider />
+      <CardBody className="px-5 text-small flex flex-col gap-2">
+        {renderCardBody(item)}
+      </CardBody>
+      <CardFooter className="!py-1 flex justify-between bg-foreground-100/50">
+        <Checkbox
+          size="sm"
+          defaultSelected={store.get(selectionAtom).has(item.id)}
+          onValueChange={(value) => {
+            store.set(selectionAtom, (prev) => {
+              if (value) {
+                prev.add(item.id)
+              } else {
+                prev.delete(item.id)
+              }
+              return new Set(prev)
+            })
+          }}
+        />
+        {renderCardFooter(item)}
+      </CardFooter>
+    </Card>
   )
 }
+const MemoedCard = memo(MemoedCardImpl) as typeof MemoedCardImpl

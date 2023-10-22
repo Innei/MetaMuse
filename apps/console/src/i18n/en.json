@@ -72,7 +72,8 @@
     "author": "Author",
     "content": "Content",
     "loading": "Loading",
-    "reply": "Reply"
+    "reply": "Reply",
+    "no_content": "There is no knowledge on this planet yet, go explore elsewhere."
   },
   "module": {
     "writing": {

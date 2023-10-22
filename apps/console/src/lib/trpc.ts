@@ -1,4 +1,4 @@
-import { createTRPCReact, httpBatchLink } from '@trpc/react-query'
+import { createTRPCReact, httpLink } from '@trpc/react-query'
 import type {
   AppRouter,
   RouterInputs,
@@ -14,7 +14,7 @@ export const trpc = createTRPCReact<AppRouter>()
 
 export const tRpcClient = trpc.createClient({
   links: [
-    httpBatchLink({
+    httpLink({
       url: `${API_URL}/trpc`,
       // You can pass any HTTP headers you wish here
       async headers() {
@@ -23,6 +23,15 @@ export const tRpcClient = trpc.createClient({
         }
       },
     }),
+    // httpBatchLink({
+    //   url: `${API_URL}/trpc`,
+    //   // You can pass any HTTP headers you wish here
+    //   async headers() {
+    //     return {
+    //       authorization: getToken()!,
+    //     }
+    //   },
+    // }),
   ],
 })
 

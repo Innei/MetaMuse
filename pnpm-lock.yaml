@@ -218,6 +218,9 @@ importers:
       react-i18next:
         specifier: 13.3.1
         version: 13.3.1(i18next@23.6.0)(react-dom@18.2.0)(react@18.2.0)
+      react-responsive-masonry:
+        specifier: 2.1.7
+        version: 2.1.7
       react-router-dom:
         specifier: 6.17.0
         version: 6.17.0(react-dom@18.2.0)(react@18.2.0)
@@ -227,6 +230,9 @@ importers:
       react-virtuoso:
         specifier: 4.6.2
         version: 4.6.2(react-dom@18.2.0)(react@18.2.0)
+      remove-markdown:
+        specifier: 0.5.0
+        version: 0.5.0
       sonner:
         specifier: 1.0.3
         version: 1.0.3(react-dom@18.2.0)(react@18.2.0)
@@ -276,6 +282,12 @@ importers:
       '@types/react-dom':
         specifier: 18.2.14
         version: 18.2.14
+      '@types/react-responsive-masonry':
+        specifier: 2.1.2
+        version: 2.1.2
+      '@types/remove-markdown':
+        specifier: 0.3.3
+        version: 0.3.3
       '@vitejs/plugin-react':
         specifier: 4.1.0
         version: 4.1.0(vite@4.5.0)
@@ -5262,12 +5274,22 @@ packages:
     dependencies:
       '@types/react': 18.2.31
 
+  /@types/react-responsive-masonry@2.1.2:
+    resolution: {integrity: sha512-07EA4WJ5AleQbw2J/5Wf2OFmwx1VlEgAMux5qNXOQKqdDGLK41iIvXoeLJfdqOIqZT4HBJIR0xUdBMy9+gmYIQ==}
+    dependencies:
+      '@types/react': 18.2.31
+    dev: true
+
   /@types/react@18.2.31:
     resolution: {integrity: sha512-c2UnPv548q+5DFh03y8lEDeMfDwBn9G3dRwfkrxQMo/dOtRHUUO57k6pHvBIfH/VF4Nh+98mZ5aaSe+2echD5g==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.3
       csstype: 3.1.2
+
+  /@types/remove-markdown@0.3.3:
+    resolution: {integrity: sha512-Ga6BahW66yyp6QyxDOrHdsSLVTwyM1or4rfeTt/2DpC20R8aClQcflvVWR0Z9FU3cv5tUykc9GZ3Tns7Khlgvg==}
+    dev: true
 
   /@types/responselike@1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
@@ -11917,6 +11939,10 @@ packages:
       use-sidecar: 1.1.2(@types/react@18.2.31)(react@18.2.0)
     dev: false
 
+  /react-responsive-masonry@2.1.7:
+    resolution: {integrity: sha512-/jOqnTVNtO8zRJMTl6ZXBex7EFYEIFBLVlkIFjiCT7omfm0CgNF2z4ST8RIr0v2ut15NWAQs7Q3kJJPhMoe3Ew==}
+    dev: false
+
   /react-router-dom@6.17.0(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-qWHkkbXQX+6li0COUUPKAUkxjNNqPJuiBd27dVwQGDNsuFBdMbrS6UZ0CLYc4CsbdLYTckn4oB4tGDuPZpPhaQ==}
     engines: {node: '>=14.0.0'}
@@ -12222,6 +12248,10 @@ packages:
       unified: 10.1.2
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /remove-markdown@0.5.0:
+    resolution: {integrity: sha512-x917M80K97K5IN1L8lUvFehsfhR8cYjGQ/yAMRI9E7JIKivtl5Emo5iD13DhMr+VojzMCiYk8V2byNPwT/oapg==}
     dev: false
 
   /repeat-string@1.6.1:

@@ -2,6 +2,7 @@ import { Button } from '@nextui-org/react'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { atom, useAtomValue } from 'jotai'
+import RemoveMarkdown from 'remove-markdown'
 import { toast } from 'sonner'
 import { useEventCallback } from 'usehooks-ts'
 import type { ListColumn } from '~/components/modules/writing/ListTable'
@@ -20,12 +21,15 @@ import { routeBuilder, Routes } from '~/lib/route-builder'
 import { trpc } from '~/lib/trpc'
 import { router } from '~/router'
 
-import { RelativeTime } from '../../../../components/ui/date-time'
-
 export const NoteTableColumns: ListColumn<
   StringifyNestedDates<NormalizedNoteModel>,
   string
 >[] = [
+  {
+    key: 'nid',
+    label: 'ID',
+    type: 'number',
+  },
   {
     key: 'title',
     label: '标题',
@@ -152,15 +156,13 @@ export default withQueryPager(function Page() {
         renderCardBody={useCallback(
           (item: StringifyNestedDates<NormalizedNoteModel>) => (
             <>
-              <p className="flex items-center text-foreground/80">
+              <p>{RemoveMarkdown(item.text)}</p>
+              <p className="flex mt-2 items-center text-foreground/80">
                 <i className="icon-[mingcute--book-6-line]" />
                 <span className="ml-1">{item.count.read}</span>
                 <span className="w-5" />
                 <i className="icon-[mingcute--heart-line] ml-2" />
                 <span className="ml-1">{item.count.like}</span>
-              </p>
-              <p className="text-foreground/60">
-                <RelativeTime time={item.created} />
               </p>
             </>
           ),

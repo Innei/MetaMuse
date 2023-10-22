@@ -2,6 +2,7 @@ import { Button, Chip } from '@nextui-org/react'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { atom, useAtomValue } from 'jotai'
+import RemoveMarkdown from 'remove-markdown'
 import { toast } from 'sonner'
 import { useEventCallback } from 'usehooks-ts'
 import type { PaginationResult } from '~/models/paginator'
@@ -16,8 +17,6 @@ import { useI18n } from '~/i18n/hooks'
 import { routeBuilder, Routes } from '~/lib/route-builder'
 import { trpc } from '~/lib/trpc'
 import { router } from '~/router'
-
-import { RelativeTime } from '../../../../components/ui/date-time'
 
 export default withQueryPager(function Page() {
   const [page, size] = useQueryPager()
@@ -65,15 +64,14 @@ export default withQueryPager(function Page() {
             {item.tags.map((tag) => tag.name).join(',')}
           </p>
         ) : null}
+
+        <p>{item.summary || RemoveMarkdown(item.text)}</p>
         <p className="flex items-center text-foreground/80">
           <i className="icon-[mingcute--book-6-line]" />
           <span className="ml-1">{item.count.read}</span>
           <span className="w-5" />
           <i className="icon-[mingcute--heart-line] ml-2" />
           <span className="ml-1">{item.count.like}</span>
-        </p>
-        <p className="text-foreground/60">
-          <RelativeTime time={item.created} />
         </p>
       </>
     ),

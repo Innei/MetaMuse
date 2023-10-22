@@ -10,6 +10,7 @@ import {
 } from '@nextui-org/react'
 import { omit } from 'lodash-es'
 
+import { Empty } from '~/components/common/Empty'
 import {
   useCommentDataSource,
   useCommentSelectionKeys,
@@ -28,7 +29,7 @@ export const CommentDesktopTable = () => {
   const setSelectionKeys = useSetCommentSelectionKeys()
   return (
     // <ScrollArea.ScrollArea rootClassName="mt-4 flex-shrink h-0 flex-grow">
-    <div className="flex-shrink h-0 flex-grow overflow-auto relative">
+    <div className="flex-shrink h-0 flex-grow overflow-auto flex flex-col relative">
       {isLoading && (
         <Spinner className="absolute z-[10] inset-0 flex items-center justify-center" />
       )}
@@ -44,7 +45,7 @@ export const CommentDesktopTable = () => {
         removeWrapper
         isHeaderSticky
         selectionMode="multiple"
-        className="mt-4 [&_tr:first-child_td]:border-t-[1rem] [&_tr:first-child_td]:border-t-transparent"
+        className="mt-4 [&_tr:first-child_td]:border-t-[1rem] [&_tr:first-child_td]:border-t-transparent flex-grow"
       >
         <TableHeader>
           <TableColumn key="author">{t('common.author')}</TableColumn>
@@ -53,6 +54,7 @@ export const CommentDesktopTable = () => {
         <TableBody
           className={isLoading ? 'opacity-80 pointer-events-none' : ''}
           items={data || []}
+          emptyContent={<Empty />}
         >
           {(item) => {
             const itemOmitRef = omit(item, 'ref') as NormalizedComment

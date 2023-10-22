@@ -80,13 +80,28 @@ export class PostTrpcRouter implements OnModuleInit {
           }
         }),
 
-      paginate: procedureAuth.input(PostPagerDto.schema).query(
-        async ({ input: query }) =>
-          await this.service.paginatePosts({
+      paginate: procedureAuth
+        .input(PostPagerDto.schema)
+        .query(async ({ input: query }) => {
+          const result = await this.service.paginatePosts({
             ...query,
-            exclude: ['text', ...(query.exclude ?? [])],
-          }),
-      ),
+            exclude: [...(query.exclude ?? [])],
+          })
+          const resultWithSummary = result.data.map((item) => {
+            if (!item?.text) return item
+            return {
+              ...item,
+              text:
+                item.text.length > 100
+                  ? `${item.text.slice(0, 100)}...`
+                  : item.text,
+            }
+          })
+          return {
+            ...result,
+            data: resultWithSummary,
+          }
+        }),
 
       createTag: procedureAuth
         .input(
