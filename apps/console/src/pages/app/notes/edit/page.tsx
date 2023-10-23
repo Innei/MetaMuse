@@ -2,6 +2,7 @@ import { Button, ButtonGroup } from '@nextui-org/react'
 import React, { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import dayjs from 'dayjs'
+import { t } from 'i18next'
 import { produce } from 'immer'
 import { atom } from 'jotai'
 import { cloneDeep, omit } from 'lodash-es'
@@ -29,13 +30,18 @@ import {
 } from '~/components/modules/note-editing/data-provider'
 import { EditorLayer } from '~/components/modules/writing/EditorLayer'
 import { useI18n } from '~/i18n/hooks'
+import { getDayOfYear } from '~/lib/datetime'
 import { routeBuilder, Routes } from '~/lib/route-builder'
 import { trpc } from '~/lib/trpc'
 import { router } from '~/router'
 
 const createInitialEditingData = (): NoteModel => {
+  const created = new Date()
   return {
-    title: '',
+    title: t('module.notes.title_label', {
+      year: created.getFullYear(),
+      day: getDayOfYear(created),
+    }),
     allowComment: true,
     location: null,
     hasMemory: false,
@@ -84,6 +90,7 @@ const EditPage: FC<{
   const t = useI18n()
 
   const editingAtom = useMemo(() => atom(editingData), [editingData])
+  const created = editingData.created ? new Date(editingData.created) : null
 
   return (
     <NoteModelDataAtomProvider overrideAtom={editingAtom}>
@@ -99,7 +106,17 @@ const EditPage: FC<{
             )}
           </>
           <ActionButtonGroup initialData={props.initialData} />
-          <Writing middleSlot={NoteEditorUrlPlaceholder} />
+          <Writing
+            middleSlot={NoteEditorUrlPlaceholder}
+            titleLabel={
+              created
+                ? t('module.notes.title_label', {
+                    year: created.getFullYear(),
+                    day: getDayOfYear(created),
+                  })
+                : undefined
+            }
+          />
           <NoteEditorSidebar />
         </EditorLayer>
       </BaseWritingProvider>

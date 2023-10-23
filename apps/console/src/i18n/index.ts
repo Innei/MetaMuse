@@ -40,6 +40,7 @@ export const init18n = () => {
         excludeCacheFor: ['cimode'],
       },
 
+      fallbackLng: 'en',
       debug: true,
       resources,
       // lng: 'en', // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources

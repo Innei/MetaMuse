@@ -13,14 +13,16 @@ import { useBaseWritingContext } from './provider'
 
 export const Writing: FC<{
   middleSlot?: React.ReactNode | React.FunctionComponent<any>
-}> = ({ middleSlot }) => {
+
+  titleLabel?: string
+}> = ({ middleSlot, titleLabel }) => {
   const middleSlotElement =
     typeof middleSlot === 'function'
       ? React.createElement(middleSlot)
       : middleSlot
   return (
     <>
-      <TitleInput />
+      <TitleInput label={titleLabel} />
 
       {middleSlotElement && (
         <div className="my-3 flex items-center pl-2 text-sm text-gray-500">

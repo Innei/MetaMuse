@@ -10,6 +10,7 @@ import type { MouseEventHandler, ReactNode } from 'react'
 import { useIsMobile } from '~/atoms'
 import { BreadcrumbDivider } from '~/components/icons'
 import { PresentDrawer } from '~/components/ui/drawer'
+import { preventDefault } from '~/lib/dom'
 import { clsxm } from '~/lib/helper'
 import { trpc } from '~/lib/trpc'
 import { router } from '~/router'
@@ -124,7 +125,7 @@ const HeaderMenu: Component = ({ className }) => {
           <li key={menu.path}>
             <Link
               to={`/${menu.path}`}
-              onClick={handleNav}
+              onClick={isActive ? preventDefault : handleNav}
               className={clsx(
                 'flex items-center relative space-x-1 rounded-xl p-2 duration-200 hover:bg-default-200',
               )}
@@ -179,6 +180,7 @@ const SecondaryLevelMenu = () => {
         return (
           <li key={route.path}>
             <Link
+              onClick={isActive ? preventDefault : undefined}
               to={`/${fullPath}`}
               className={clsx(
                 'flex items-center relative space-x-1 rounded-lg px-2 py-1 duration-200 hover:bg-default-200',

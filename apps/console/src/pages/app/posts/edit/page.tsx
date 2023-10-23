@@ -2,6 +2,7 @@ import { Button, ButtonGroup } from '@nextui-org/react'
 import React, { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import dayjs from 'dayjs'
+import { t } from 'i18next'
 import { produce } from 'immer'
 import { atom } from 'jotai'
 import { cloneDeep, omit } from 'lodash-es'
@@ -27,13 +28,18 @@ import {
 import { PostEditorSidebar } from '~/components/modules/post-editing/sidebar'
 import { EditorLayer } from '~/components/modules/writing/EditorLayer'
 import { useI18n } from '~/i18n/hooks'
+import { getDayOfYear } from '~/lib/datetime'
 import { routeBuilder, Routes } from '~/lib/route-builder'
 import { trpc } from '~/lib/trpc'
 import { router } from '~/router'
 
 const createInitialEditingData = (): PostModel => {
+  const created = new Date()
   return {
-    title: '',
+    title: t('module.notes.title_label', {
+      year: created.getFullYear(),
+      day: getDayOfYear(created),
+    }),
     allowComment: true,
     copyright: true,
 

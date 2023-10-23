@@ -96,7 +96,8 @@
       "location_permission_denied": "Location permission denied",
       "search_location": "Search location",
       "search_by_keyword": "Search by keyword",
-      "public_at": "Public at"
+      "public_at": "Public at",
+      "title_label": "记录 {{year}} 年第 {{day}} 天"
     },
     "summary": {
       "title": "Summary",
