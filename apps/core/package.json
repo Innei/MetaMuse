@@ -99,7 +99,7 @@
     "vitest": "0.34.6",
     "zod": "3.22.4",
     "zod-fixture": "2.5.0",
-    "zod-prisma-types": "2.7.13",
+    "zod-prisma-types": "2.8.1",
     "zx": "7.2.3"
   },
   "redisMemoryServer": {
