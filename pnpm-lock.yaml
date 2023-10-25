@@ -479,8 +479,8 @@ importers:
         specifier: 5.1.2
         version: 5.1.2
       workerpool:
-        specifier: 6.5.1
-        version: 6.5.1
+        specifier: 7.0.0
+        version: 7.0.0
       zod:
         specifier: 3.22.4
         version: 3.22.4
@@ -14204,8 +14204,8 @@ packages:
     resolution: {integrity: sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==}
     dev: true
 
-  /workerpool@6.5.1:
-    resolution: {integrity: sha512-Fs4dNYcsdpYSAfVxhnl1L5zTksjvOJxtC5hzMNl+1t9B8hTJTdKDyZ5ju7ztgPy+ft9tBFXoOlDNiOT9WUXZlA==}
+  /workerpool@7.0.0:
+    resolution: {integrity: sha512-i5vKqr+WAOFPk7nHOdFEi0fY6dfhtlJtorzWpzuF0anwGGJrSVIPvBdCGH+8E/H2s3C2W6klZWrf6Q4SwixFWA==}
     dev: false
 
   /wrap-ansi@6.2.0:
