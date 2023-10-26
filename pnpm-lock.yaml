@@ -34,8 +34,8 @@ importers:
         specifier: ^0.11.1
         version: 0.11.1
       '@nestjs/cli':
-        specifier: 10.1.18
-        version: 10.1.18
+        specifier: 10.2.0
+        version: 10.2.0
       '@nestjs/schematics':
         specifier: 10.0.2
         version: 10.0.2(chokidar@3.5.3)(typescript@5.2.2)
@@ -58,8 +58,8 @@ importers:
         specifier: 3.0.3
         version: 3.0.3
       prisma:
-        specifier: 5.4.2
-        version: 5.4.2
+        specifier: 5.5.2
+        version: 5.5.2
       rimraf:
         specifier: 5.0.5
         version: 5.0.5
@@ -130,17 +130,17 @@ importers:
         specifier: 4.36.1
         version: 4.36.1(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query-devtools':
-        specifier: 5.0.5
-        version: 5.0.5(@tanstack/react-query@4.36.1)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 5.4.2
+        version: 5.4.2(@tanstack/react-query@4.36.1)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query-persist-client':
         specifier: 4.36.1
         version: 4.36.1(@tanstack/react-query@4.36.1)
       '@trpc/client':
-        specifier: 10.41.0
-        version: 10.41.0(@trpc/server@10.41.0)
+        specifier: 10.42.0
+        version: 10.42.0(@trpc/server@10.42.0)
       '@trpc/react-query':
-        specifier: 10.41.0
-        version: 10.41.0(@tanstack/react-query@4.36.1)(@trpc/client@10.41.0)(@trpc/server@10.41.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.42.0
+        version: 10.42.0(@tanstack/react-query@4.36.1)(@trpc/client@10.42.0)(@trpc/server@10.42.0)(react-dom@18.2.0)(react@18.2.0)
       '@uiw/react-color':
         specifier: 1.4.3
         version: 1.4.3(@babel/runtime@7.23.2)(react-dom@18.2.0)(react@18.2.0)
@@ -176,10 +176,10 @@ importers:
         version: 10.0.3
       jojoo:
         specifier: 0.1.1
-        version: 0.1.1(immer@10.0.3)(jotai@2.4.3)(react@18.2.0)
+        version: 0.1.1(immer@10.0.3)(jotai@2.5.0)(react@18.2.0)
       jotai:
-        specifier: 2.4.3
-        version: 2.4.3(@types/react@18.2.31)(react@18.2.0)
+        specifier: 2.5.0
+        version: 2.5.0(@types/react@18.2.31)(react@18.2.0)
       js-cookie:
         specifier: 3.0.5
         version: 3.0.5
@@ -205,8 +205,8 @@ importers:
         specifier: 0.44.0
         version: 0.44.0
       openai:
-        specifier: 4.12.4
-        version: 4.12.4
+        specifier: 4.14.0
+        version: 4.14.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -389,8 +389,8 @@ importers:
         specifier: 5.0.5
         version: 5.0.5
       '@trpc/server':
-        specifier: 10.41.0
-        version: 10.41.0
+        specifier: 10.42.0
+        version: 10.42.0
       axios:
         specifier: 1.5.1
         version: 1.5.1
@@ -489,8 +489,8 @@ importers:
         version: 7.0.7-0
     devDependencies:
       '@nestjs/cli':
-        specifier: 10.1.18
-        version: 10.1.18(@swc/cli@0.1.62)(@swc/core@1.3.95)
+        specifier: 10.2.0
+        version: 10.2.0(@swc/cli@0.1.62)(@swc/core@1.3.95)
       '@nestjs/schematics':
         specifier: 10.0.2
         version: 10.0.2(chokidar@3.5.3)(typescript@5.2.2)
@@ -576,8 +576,8 @@ importers:
   prisma:
     dependencies:
       '@prisma/client':
-        specifier: 5.4.2
-        version: 5.4.2(prisma@5.4.2)
+        specifier: 5.5.2
+        version: 5.5.2(prisma@5.5.2)
       nestjs-zod:
         specifier: 3.0.0
         version: 3.0.0(@nestjs/common@10.2.7)(@nestjs/core@10.2.7)(zod@3.22.4)
@@ -589,11 +589,11 @@ importers:
         version: 2.8.1
     devDependencies:
       prisma:
-        specifier: 5.4.2
-        version: 5.4.2
+        specifier: 5.5.2
+        version: 5.5.2
       prisma-json-types-generator:
         specifier: 3.0.2
-        version: 3.0.2(prisma@5.4.2)(typescript@5.2.2)
+        version: 3.0.2(prisma@5.5.2)(typescript@5.2.2)
 
 packages:
 
@@ -631,8 +631,8 @@ packages:
       source-map: 0.7.4
     dev: true
 
-  /@angular-devkit/core@16.2.3(chokidar@3.5.3):
-    resolution: {integrity: sha512-oZLdg2XTx7likYAXRj1CU0XmrsCfe5f2grj3iwuI3OB1LXwwpdbHBztruj03y3yHES+TnO+dIbkvRnvMXs7uAA==}
+  /@angular-devkit/core@16.2.7(chokidar@3.5.3):
+    resolution: {integrity: sha512-XskObYrg7NRdEuHnSVZOM7OeinEL8HzugjmKnawAa+dAbFCCoGsVWjMliA/Q8sb1yfGkyL0WW7DZABZj7EGwWA==}
     engines: {node: ^16.14.0 || >=18.10.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     peerDependencies:
       chokidar: ^3.5.2
@@ -649,13 +649,13 @@ packages:
       source-map: 0.7.4
     dev: true
 
-  /@angular-devkit/schematics-cli@16.2.3(chokidar@3.5.3):
-    resolution: {integrity: sha512-5YQCbQmY9Kc03a9Io4XHOrxGXjnzcVveUuUO64R1m5x2aA5I+mVR8NVvxuoGRAeoI1FWusAKRe9hH8nRCLrelA==}
+  /@angular-devkit/schematics-cli@16.2.7(chokidar@3.5.3):
+    resolution: {integrity: sha512-K10EE3qtSv4AoI3gnCNT80BbDNMK6UmpM8w0sd08hlNC4SCfzp+OFszV0AW29A5VK3zkbDQLJ6PL4wnNN4iuDQ==}
     engines: {node: ^16.14.0 || >=18.10.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     hasBin: true
     dependencies:
-      '@angular-devkit/core': 16.2.3(chokidar@3.5.3)
-      '@angular-devkit/schematics': 16.2.3(chokidar@3.5.3)
+      '@angular-devkit/core': 16.2.7(chokidar@3.5.3)
+      '@angular-devkit/schematics': 16.2.7(chokidar@3.5.3)
       ansi-colors: 4.1.3
       inquirer: 8.2.4
       symbol-observable: 4.0.0
@@ -677,11 +677,11 @@ packages:
       - chokidar
     dev: true
 
-  /@angular-devkit/schematics@16.2.3(chokidar@3.5.3):
-    resolution: {integrity: sha512-+lBiHxi/C9HCfiCbtW25DldwvJDXXXv5oWw+Tg4s18BO/lYZLveGUEaZWu9ZJ5VIJ8GliUi2LohxhDxBkh4Oxg==}
+  /@angular-devkit/schematics@16.2.7(chokidar@3.5.3):
+    resolution: {integrity: sha512-zu3xHwA4w+kXHkyyjGl3i7uSU2/kKLPKuyyixw0WLcKUQCYd7TWmu8OC0qCDa42XkxP9gGL091dJFu56exgneA==}
     engines: {node: ^16.14.0 || >=18.10.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     dependencies:
-      '@angular-devkit/core': 16.2.3(chokidar@3.5.3)
+      '@angular-devkit/core': 16.2.7(chokidar@3.5.3)
       jsonc-parser: 3.2.0
       magic-string: 0.30.1
       ora: 5.4.1
@@ -1994,9 +1994,9 @@ packages:
       rxjs: 7.8.1
     dev: false
 
-  /@nestjs/cli@10.1.18:
-    resolution: {integrity: sha512-jQtG47keLsACt7b4YwJbTBYRm90n82gJpMaiR1HGAyQ9pccbctjSYu592eT4bxqkUWxPgBE3mpNynXj7dWAfrw==}
-    engines: {node: '>= 16'}
+  /@nestjs/cli@10.2.0:
+    resolution: {integrity: sha512-OMbn6A/YNu7QSk1nM8VucrtUwocaa0XEa9uoqRpw5Acvh/KIetvMHCn8L6yIBxiK7yvYiKa8q9U+RpLsKpKfgw==}
+    engines: {node: '>= 16.14'}
     hasBin: true
     peerDependencies:
       '@swc/cli': ^0.1.62
@@ -2007,15 +2007,16 @@ packages:
       '@swc/core':
         optional: true
     dependencies:
-      '@angular-devkit/core': 16.2.3(chokidar@3.5.3)
-      '@angular-devkit/schematics': 16.2.3(chokidar@3.5.3)
-      '@angular-devkit/schematics-cli': 16.2.3(chokidar@3.5.3)
+      '@angular-devkit/core': 16.2.7(chokidar@3.5.3)
+      '@angular-devkit/schematics': 16.2.7(chokidar@3.5.3)
+      '@angular-devkit/schematics-cli': 16.2.7(chokidar@3.5.3)
       '@nestjs/schematics': 10.0.2(chokidar@3.5.3)(typescript@5.2.2)
       chalk: 4.1.2
       chokidar: 3.5.3
       cli-table3: 0.6.3
       commander: 4.1.1
-      fork-ts-checker-webpack-plugin: 8.0.0(typescript@5.2.2)(webpack@5.88.2)
+      fork-ts-checker-webpack-plugin: 9.0.0(typescript@5.2.2)(webpack@5.89.0)
+      glob: 10.3.4
       inquirer: 8.2.6
       node-emoji: 1.11.0
       ora: 5.4.1
@@ -2027,7 +2028,7 @@ packages:
       tsconfig-paths: 4.2.0
       tsconfig-paths-webpack-plugin: 4.1.0
       typescript: 5.2.2
-      webpack: 5.88.2
+      webpack: 5.89.0
       webpack-node-externals: 3.0.0
     transitivePeerDependencies:
       - esbuild
@@ -2035,9 +2036,9 @@ packages:
       - webpack-cli
     dev: true
 
-  /@nestjs/cli@10.1.18(@swc/cli@0.1.62)(@swc/core@1.3.95):
-    resolution: {integrity: sha512-jQtG47keLsACt7b4YwJbTBYRm90n82gJpMaiR1HGAyQ9pccbctjSYu592eT4bxqkUWxPgBE3mpNynXj7dWAfrw==}
-    engines: {node: '>= 16'}
+  /@nestjs/cli@10.2.0(@swc/cli@0.1.62)(@swc/core@1.3.95):
+    resolution: {integrity: sha512-OMbn6A/YNu7QSk1nM8VucrtUwocaa0XEa9uoqRpw5Acvh/KIetvMHCn8L6yIBxiK7yvYiKa8q9U+RpLsKpKfgw==}
+    engines: {node: '>= 16.14'}
     hasBin: true
     peerDependencies:
       '@swc/cli': ^0.1.62
@@ -2048,9 +2049,9 @@ packages:
       '@swc/core':
         optional: true
     dependencies:
-      '@angular-devkit/core': 16.2.3(chokidar@3.5.3)
-      '@angular-devkit/schematics': 16.2.3(chokidar@3.5.3)
-      '@angular-devkit/schematics-cli': 16.2.3(chokidar@3.5.3)
+      '@angular-devkit/core': 16.2.7(chokidar@3.5.3)
+      '@angular-devkit/schematics': 16.2.7(chokidar@3.5.3)
+      '@angular-devkit/schematics-cli': 16.2.7(chokidar@3.5.3)
       '@nestjs/schematics': 10.0.2(chokidar@3.5.3)(typescript@5.2.2)
       '@swc/cli': 0.1.62(@swc/core@1.3.95)
       '@swc/core': 1.3.95
@@ -2058,7 +2059,8 @@ packages:
       chokidar: 3.5.3
       cli-table3: 0.6.3
       commander: 4.1.1
-      fork-ts-checker-webpack-plugin: 8.0.0(typescript@5.2.2)(webpack@5.88.2)
+      fork-ts-checker-webpack-plugin: 9.0.0(typescript@5.2.2)(webpack@5.89.0)
+      glob: 10.3.4
       inquirer: 8.2.6
       node-emoji: 1.11.0
       ora: 5.4.1
@@ -2070,7 +2072,7 @@ packages:
       tsconfig-paths: 4.2.0
       tsconfig-paths-webpack-plugin: 4.1.0
       typescript: 5.2.2
-      webpack: 5.88.2(@swc/core@1.3.95)
+      webpack: 5.89.0(@swc/core@1.3.95)
       webpack-node-externals: 3.0.0
     transitivePeerDependencies:
       - esbuild
@@ -3428,8 +3430,8 @@ packages:
     dev: true
     optional: true
 
-  /@prisma/client@5.4.2(prisma@5.4.2):
-    resolution: {integrity: sha512-2xsPaz4EaMKj1WS9iW6MlPhmbqtBsXAOeVttSePp8vTFTtvzh2hZbDgswwBdSCgPzmmwF+tLB259QzggvCmJqA==}
+  /@prisma/client@5.5.2(prisma@5.5.2):
+    resolution: {integrity: sha512-54XkqR8M+fxbzYqe+bIXimYnkkcGqgOh0dn0yWtIk6CQT4IUCAvNFNcQZwk2KqaLU+/1PHTSWrcHtx4XjluR5w==}
     engines: {node: '>=16.13'}
     requiresBuild: true
     peerDependencies:
@@ -3438,8 +3440,8 @@ packages:
       prisma:
         optional: true
     dependencies:
-      '@prisma/engines-version': 5.4.1-2.ac9d7041ed77bcc8a8dbd2ab6616b39013829574
-      prisma: 5.4.2
+      '@prisma/engines-version': 5.5.1-1.aebc046ce8b88ebbcb45efe31cbe7d06fd6abc0a
+      prisma: 5.5.2
     dev: false
 
   /@prisma/debug@5.4.1:
@@ -3461,12 +3463,12 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@prisma/engines-version@5.4.1-2.ac9d7041ed77bcc8a8dbd2ab6616b39013829574:
-    resolution: {integrity: sha512-wvupDL4AA1vf4TQNANg7kR7y98ITqPsk6aacfBxZKtrJKRIsWjURHkZCGcQliHdqCiW/hGreO6d6ZuSv9MhdAA==}
+  /@prisma/engines-version@5.5.1-1.aebc046ce8b88ebbcb45efe31cbe7d06fd6abc0a:
+    resolution: {integrity: sha512-O+qHFnZvAyOFk1tUco2/VdiqS0ym42a3+6CYLScllmnpbyiTplgyLt2rK/B9BTjYkSHjrgMhkG47S0oqzdIckA==}
     dev: false
 
-  /@prisma/engines@5.4.2:
-    resolution: {integrity: sha512-fqeucJ3LH0e1eyFdT0zRx+oETLancu5+n4lhiYECyEz6H2RDskPJHJYHkVc0LhkU4Uv7fuEnppKU3nVKNzMh8g==}
+  /@prisma/engines@5.5.2:
+    resolution: {integrity: sha512-Be5hoNF8k+lkB3uEMiCHbhbfF6aj1GnrTBnn5iYFT7GEr3TsOEp1soviEcBR0tYCgHbxjcIxJMhdbvxALJhAqg==}
     requiresBuild: true
 
   /@prisma/generator-helper@5.4.1:
@@ -4878,8 +4880,8 @@ packages:
     resolution: {integrity: sha512-MThCETMkHDHTnFZHp71L+SqTtD5d6XHftFCVR1xRJdWM3qGrlQ2VCXaj0SKVcyJej2e1Opa2c7iknu1llxCDNQ==}
     dev: false
 
-  /@tanstack/query-devtools@5.0.5:
-    resolution: {integrity: sha512-xjuOhOrrO50sPoJ4WG9yPe3imQ0Ds/nutnmwdTqjM2ZTIkflh//p7q2iB6IxFBY9sB106h+PULlma8sgTuOKAQ==}
+  /@tanstack/query-devtools@5.4.2:
+    resolution: {integrity: sha512-EXdaMXi8CxZuMp97J5mq6wy1RduOfoWFv5vtA1U+hyqb8Wst6M8kkkjDSdFvGZIRpYY4K8mKLlEFHNUZDG5dtw==}
     dev: false
 
   /@tanstack/query-persist-client-core@4.36.1:
@@ -4888,14 +4890,14 @@ packages:
       '@tanstack/query-core': 4.36.1
     dev: false
 
-  /@tanstack/react-query-devtools@5.0.5(@tanstack/react-query@4.36.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-vJyS7HXx2zw43TQjm3m4uyaNUgGizOpK2SZL9Lc+DZSuhFbuZ55UEYJTz8yudCbHdLXlkuVZwo6TWWOhXWJFeA==}
+  /@tanstack/react-query-devtools@5.4.2(@tanstack/react-query@4.36.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-bdJvnoKqHlh7sBTHC9O88WaqLu1D8wDrP0IstOhDODaPJfxW26yJOKK1/1uPQpZXFoOtFFYHpCqKoM58DBrWSQ==}
     peerDependencies:
       '@tanstack/react-query': ^5.0.5
       react: ^18.0.0
       react-dom: ^18.0.0
     dependencies:
-      '@tanstack/query-devtools': 5.0.5
+      '@tanstack/query-devtools': 5.4.2
       '@tanstack/react-query': 4.36.1(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -4932,32 +4934,32 @@ packages:
     resolution: {integrity: sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==}
     dev: true
 
-  /@trpc/client@10.41.0(@trpc/server@10.41.0):
-    resolution: {integrity: sha512-W4lYULb7//2yXkULCKim49slXsBwiBq48rfge1yOWXdq0Ed8VxzXvZt8+uWOkxmHbQAw4lq8G5fCNYFB+Za6vQ==}
+  /@trpc/client@10.42.0(@trpc/server@10.42.0):
+    resolution: {integrity: sha512-iHPBVUAvn4VTKE75KLZ2fUQL8wpRY5hiRLyRE8QhGUSDc/RW5Pym9wotryZqz47DHjs2J5Qd16MSGt3tNlclFA==}
     peerDependencies:
-      '@trpc/server': 10.41.0
+      '@trpc/server': 10.42.0
     dependencies:
-      '@trpc/server': 10.41.0
+      '@trpc/server': 10.42.0
     dev: false
 
-  /@trpc/react-query@10.41.0(@tanstack/react-query@4.36.1)(@trpc/client@10.41.0)(@trpc/server@10.41.0)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-pCLZfIgcnneq1AocPLvstALawZYWS/sbhujd4mwUwA3UXFBWC/D31ysPlbz7R1dhjxhhPaIM+C6pz8vmr2ctpw==}
+  /@trpc/react-query@10.42.0(@tanstack/react-query@4.36.1)(@trpc/client@10.42.0)(@trpc/server@10.42.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Yzpg/WMrLo9HwWQtpgNutEFB6V/OHvMJf7nziKGPGrHrWJFkRtpQvc9ruDlJUFik+YxXwFRvtGBXbstlNsyhcQ==}
     peerDependencies:
       '@tanstack/react-query': ^4.18.0
-      '@trpc/client': 10.41.0
-      '@trpc/server': 10.41.0
+      '@trpc/client': 10.42.0
+      '@trpc/server': 10.42.0
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
       '@tanstack/react-query': 4.36.1(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/client': 10.41.0(@trpc/server@10.41.0)
-      '@trpc/server': 10.41.0
+      '@trpc/client': 10.42.0(@trpc/server@10.42.0)
+      '@trpc/server': 10.42.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@trpc/server@10.41.0:
-    resolution: {integrity: sha512-uC0xLelzOuoFwxbBQ3GzX4DaWNucO9lW2vlGPdKu8ycXu2ObSa739oQ/lNF6qWDNUKXS0tQvGnDCAxEd178EzQ==}
+  /@trpc/server@10.42.0:
+    resolution: {integrity: sha512-s0QuK72orW+pYce60sd4I36N3xJKzypS2k+8GJ7phH4KqO4XjBXezOFmGMcXTznsVqEiX5zs5ujLfQdJ9X3Y2g==}
     dev: false
 
   /@types/babel__core@7.20.2:
@@ -5066,25 +5068,11 @@ packages:
     resolution: {integrity: sha512-fnM/NjByiWdSRJRrmGxgqOSAnmOnsvX1QcNYk5TVyIIj+7ZqOKMb9gQa4OIl/lil2w/8TiTWV+nz3q8yqxez/w==}
     dev: true
 
-  /@types/eslint-scope@3.7.4:
-    resolution: {integrity: sha512-9K4zoImiZc3HlIp6AVUDE4CWYx22a+lhSZMYNpbjW04+YF0KWj4pJXnEMjdnFTiQibFFmElcsasJXDbdI/EPhA==}
-    dependencies:
-      '@types/eslint': 8.44.2
-      '@types/estree': 1.0.1
-    dev: true
-
   /@types/eslint-scope@3.7.6:
     resolution: {integrity: sha512-zfM4ipmxVKWdxtDaJ3MP3pBurDXOCoyjvlpE3u6Qzrmw4BPbfm4/ambIeTk/r/J0iq/+2/xp0Fmt+gFvXJY2PQ==}
     dependencies:
       '@types/eslint': 8.44.6
       '@types/estree': 1.0.3
-    dev: true
-
-  /@types/eslint@8.44.2:
-    resolution: {integrity: sha512-sdPRb9K6iL5XZOmBubg8yiFp5yS/JdUDQsq5e6h95km91MCYMuvp7mh1fjPEYUhvHepKpZOjnEaMBR4PxjWDzg==}
-    dependencies:
-      '@types/estree': 1.0.1
-      '@types/json-schema': 7.0.14
     dev: true
 
   /@types/eslint@8.44.6:
@@ -5096,6 +5084,7 @@ packages:
 
   /@types/estree@1.0.1:
     resolution: {integrity: sha512-LG4opVs2ANWZ1TJoKc937iMmNstM/d0ae1vNbnBvBhqCSezgVUOzcLCqbI5elV8Vy6WKwKjaqR+zO9VKirBBCA==}
+    dev: false
 
   /@types/estree@1.0.3:
     resolution: {integrity: sha512-CS2rOaoQ/eAgAfcTfq6amKG7bsN+EMcgGY4FAFQdvSj2y1ixvOZTUA9mOtCai7E1SYu283XNw7urKK30nP3wkQ==}
@@ -6478,10 +6467,10 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001538
-      electron-to-chromium: 1.4.523
+      caniuse-lite: 1.0.30001551
+      electron-to-chromium: 1.4.559
       node-releases: 2.0.13
-      update-browserslist-db: 1.0.11(browserslist@4.21.10)
+      update-browserslist-db: 1.0.13(browserslist@4.21.10)
     dev: true
 
   /browserslist@4.22.1:
@@ -7524,10 +7513,6 @@ packages:
       jake: 10.8.7
     dev: false
 
-  /electron-to-chromium@1.4.523:
-    resolution: {integrity: sha512-9AreocSUWnzNtvLcbpng6N+GkXnCcBR80IQkxRC9Dfdyg4gaWNUPBujAHUpKkiUkoSoR9UlhA4zD/IgBklmhzg==}
-    dev: true
-
   /electron-to-chromium@1.4.559:
     resolution: {integrity: sha512-iS7KhLYCSJbdo3rUSkhDTVuFNCV34RKs2UaB9Ecr7VlqzjjWW//0nfsFF5dtDmyXlZQaDYYtID5fjtC/6lpRug==}
     dev: true
@@ -7649,10 +7634,6 @@ packages:
       internal-slot: 1.0.5
       iterator.prototype: 1.1.2
       safe-array-concat: 1.0.1
-    dev: true
-
-  /es-module-lexer@1.3.0:
-    resolution: {integrity: sha512-vZK7T0N2CBmBOixhmjdqx2gWVbFZ4DXZ/NyRMZVlJXPa7CyFS+/a4QQsDGDQy9ZfEzxFuNEsMLeQJnKP2p5/JA==}
     dev: true
 
   /es-module-lexer@1.3.1:
@@ -8404,8 +8385,8 @@ packages:
       signal-exit: 4.0.1
     dev: true
 
-  /fork-ts-checker-webpack-plugin@8.0.0(typescript@5.2.2)(webpack@5.88.2):
-    resolution: {integrity: sha512-mX3qW3idpueT2klaQXBzrIM/pHw+T0B/V9KHEvNrqijTq9NFnMZU6oreVxDYcf33P8a5cW+67PjodNHthGnNVg==}
+  /fork-ts-checker-webpack-plugin@9.0.0(typescript@5.2.2)(webpack@5.89.0):
+    resolution: {integrity: sha512-Kw3JjsfGs0piB0V2Em8gCuo51O3p4KyCOK0Tn8X57oq2mSNBrMmONALRBw5frcmWsOVU7iELXXsJ+FVxJeQuhA==}
     engines: {node: '>=12.13.0', yarn: '>=1.0.0'}
     peerDependencies:
       typescript: '>3.6.0'
@@ -8424,7 +8405,7 @@ packages:
       semver: 7.5.4
       tapable: 2.2.1
       typescript: 5.2.2
-      webpack: 5.88.2
+      webpack: 5.89.0
     dev: true
 
   /form-data-encoder@1.7.2:
@@ -8753,6 +8734,18 @@ packages:
 
   /glob-to-regexp@0.4.1:
     resolution: {integrity: sha512-lkX1HJXwyMcprw/5YUZc2s7DrpAiHB21/V+E1rHUrVNokkvB6bqMzT0VfV6/86ZNabt1k14YOIaT7nDvOX3Iiw==}
+    dev: true
+
+  /glob@10.3.4:
+    resolution: {integrity: sha512-6LFElP3A+i/Q8XQKEvZjkEWEOTgAIALR9AO2rwT8bgPhDd1anmqDJDZ6lLddI4ehxxxR1S5RIqKe1uapMQfYaQ==}
+    engines: {node: '>=16 || 14 >=14.17'}
+    hasBin: true
+    dependencies:
+      foreground-child: 3.1.1
+      jackspeak: 2.1.0
+      minimatch: 9.0.1
+      minipass: 7.0.3
+      path-scurry: 1.10.1
     dev: true
 
   /glob@10.3.7:
@@ -9592,7 +9585,7 @@ packages:
     resolution: {integrity: sha512-3TV69ZbrvV6U5DfQimop50jE9Dl6J8O1ja1dvBbMba/sZ3YBEQqJ2VZRoQPVnhlzjNtU1vaXRZVrVjU4qtm8yA==}
     hasBin: true
 
-  /jojoo@0.1.1(immer@10.0.3)(jotai@2.4.3)(react@18.2.0):
+  /jojoo@0.1.1(immer@10.0.3)(jotai@2.5.0)(react@18.2.0):
     resolution: {integrity: sha512-tN+32dy/qezPSu1GPCKRmdMUJdrMZm9Bw+b1nmiRvMw5KW/giz+7aiF4vxicTT44AkLcFAdod1XgIZsQDlb8Tg==}
     peerDependencies:
       immer: ^10.0.0
@@ -9600,12 +9593,12 @@ packages:
       react: ^18.0.0
     dependencies:
       immer: 10.0.3
-      jotai: 2.4.3(@types/react@18.2.31)(react@18.2.0)
+      jotai: 2.5.0(@types/react@18.2.31)(react@18.2.0)
       react: 18.2.0
     dev: false
 
-  /jotai@2.4.3(@types/react@18.2.31)(react@18.2.0):
-    resolution: {integrity: sha512-CSAHX9LqWG5WCrU8OgBoZbBJ+Bo9rQU0mPusEF4e0CZ/SNFgurG26vb3UpgvCSJZgYVcUQNiUBM5q86PA8rstQ==}
+  /jotai@2.5.0(@types/react@18.2.31)(react@18.2.0):
+    resolution: {integrity: sha512-iPJDFrhNw3KU4o4SSAESeZoW+nM1L/76VULXZWF23qmivBEcbAQjiF5n1W4Hn5dXAol4tmtEYe4HH7d9emEz0Q==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
       '@types/react': '>=17.0.0'
@@ -10939,8 +10932,8 @@ packages:
       mimic-fn: 4.0.0
     dev: true
 
-  /openai@4.12.4:
-    resolution: {integrity: sha512-oPNVJkpgxDUKF6WGGdHEZh5m/kjmYxS2Y1q7YVFCkvKUGthb8OGYRGCFBRPq5CQJezifzABTZRlVYnXLd6L4vQ==}
+  /openai@4.14.0:
+    resolution: {integrity: sha512-pWQYkFWdeudR1yLyS/rFfIv/MTXqFEtlN4EKVm0F6KKKGjhuthznPOCC4hxfAFmjlgbpJJXhQQ/oBeB9bxFmUw==}
     hasBin: true
     dependencies:
       '@types/node': 18.18.6
@@ -11469,7 +11462,7 @@ packages:
       react-is: 18.2.0
     dev: true
 
-  /prisma-json-types-generator@3.0.2(prisma@5.4.2)(typescript@5.2.2):
+  /prisma-json-types-generator@3.0.2(prisma@5.5.2)(typescript@5.2.2):
     resolution: {integrity: sha512-nhpG3Cr2sbj8Rjhm1ea1vJvpqLxqL+jx9TmJzNaXyGe3RF/tdVWfvQ1KRFFwvVRvZbPWrqx+4wtS/MJ4U9hLxA==}
     engines: {node: '>=14.0'}
     hasBin: true
@@ -11478,20 +11471,20 @@ packages:
       typescript: ^5.1
     dependencies:
       '@prisma/generator-helper': 5.4.1
-      prisma: 5.4.2
+      prisma: 5.5.2
       tslib: 2.6.2
       typescript: 5.2.2
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /prisma@5.4.2:
-    resolution: {integrity: sha512-GDMZwZy7mysB2oXU+angQqJ90iaPFdD0rHaZNkn+dio5NRkGLmMqmXs31//tg/qXT3iB0cTQwnGGQNuirhSTZg==}
+  /prisma@5.5.2:
+    resolution: {integrity: sha512-WQtG6fevOL053yoPl6dbHV+IWgKo25IRN4/pwAGqcWmg7CrtoCzvbDbN9fXUc7QS2KK0LimHIqLsaCOX/vHl8w==}
     engines: {node: '>=16.13'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@prisma/engines': 5.4.2
+      '@prisma/engines': 5.5.2
 
   /prismjs@1.27.0:
     resolution: {integrity: sha512-t13BGPUlFDR7wRB5kQDG4jjl7XeuH6jbJGt11JHPL96qwsEHNX2+68tFXqc1/k+/jALsbSWJKUOT/hcYAZ5LkA==}
@@ -12951,7 +12944,7 @@ packages:
       mkdirp: 1.0.4
       yallist: 4.0.0
 
-  /terser-webpack-plugin@5.3.9(@swc/core@1.3.95)(webpack@5.88.2):
+  /terser-webpack-plugin@5.3.9(@swc/core@1.3.95)(webpack@5.89.0):
     resolution: {integrity: sha512-ZuXsqE07EcggTWQjXUj+Aot/OMcD0bMKGgF63f7UxYcu5/AJF53aIpK1YoP5xR9l6s/Hy2b+t1AM0bLNPRuhwA==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -12973,31 +12966,7 @@ packages:
       schema-utils: 3.3.0
       serialize-javascript: 6.0.1
       terser: 5.19.3
-      webpack: 5.88.2(@swc/core@1.3.95)
-    dev: true
-
-  /terser-webpack-plugin@5.3.9(webpack@5.88.2):
-    resolution: {integrity: sha512-ZuXsqE07EcggTWQjXUj+Aot/OMcD0bMKGgF63f7UxYcu5/AJF53aIpK1YoP5xR9l6s/Hy2b+t1AM0bLNPRuhwA==}
-    engines: {node: '>= 10.13.0'}
-    peerDependencies:
-      '@swc/core': '*'
-      esbuild: '*'
-      uglify-js: '*'
-      webpack: ^5.1.0
-    peerDependenciesMeta:
-      '@swc/core':
-        optional: true
-      esbuild:
-        optional: true
-      uglify-js:
-        optional: true
-    dependencies:
-      '@jridgewell/trace-mapping': 0.3.19
-      jest-worker: 27.5.1
-      schema-utils: 3.3.0
-      serialize-javascript: 6.0.1
-      terser: 5.19.3
-      webpack: 5.88.2
+      webpack: 5.89.0(@swc/core@1.3.95)
     dev: true
 
   /terser-webpack-plugin@5.3.9(webpack@5.89.0):
@@ -13497,8 +13466,8 @@ packages:
       webpack-virtual-modules: 0.5.0
     dev: false
 
-  /update-browserslist-db@1.0.11(browserslist@4.21.10):
-    resolution: {integrity: sha512-dCwEFf0/oT85M1fHBg4F0jtLwJrutGoHSQXCh7u4o2t1drG+c0a9Flnqww6XUKSfQMPpJBRjU8d4RXB09qtvaA==}
+  /update-browserslist-db@1.0.13(browserslist@4.21.10):
+    resolution: {integrity: sha512-xebP81SNcPuNpPP3uzeW1NYXxI3rxyJzF3pD6sH4jE7o/IX+WtSpwnVU+qIsDPyk0d3hmFQ7mjqc6AtV604hbg==}
     hasBin: true
     peerDependencies:
       browserslist: '>= 4.21.0'
@@ -13960,86 +13929,6 @@ packages:
     resolution: {integrity: sha512-kyDivFZ7ZM0BVOUteVbDFhlRt7Ah/CSPwJdi8hBpkK7QLumUqdLtVfm/PX/hkcnrvr0i77fO5+TjZ94Pe+C9iw==}
     dev: false
 
-  /webpack@5.88.2:
-    resolution: {integrity: sha512-JmcgNZ1iKj+aiR0OvTYtWQqJwq37Pf683dY9bVORwVbUrDhLhdn/PlO2sHsFHPkj7sHNQF3JwaAkp49V+Sq1tQ==}
-    engines: {node: '>=10.13.0'}
-    hasBin: true
-    peerDependencies:
-      webpack-cli: '*'
-    peerDependenciesMeta:
-      webpack-cli:
-        optional: true
-    dependencies:
-      '@types/eslint-scope': 3.7.4
-      '@types/estree': 1.0.1
-      '@webassemblyjs/ast': 1.11.6
-      '@webassemblyjs/wasm-edit': 1.11.6
-      '@webassemblyjs/wasm-parser': 1.11.6
-      acorn: 8.10.0
-      acorn-import-assertions: 1.9.0(acorn@8.10.0)
-      browserslist: 4.21.10
-      chrome-trace-event: 1.0.3
-      enhanced-resolve: 5.15.0
-      es-module-lexer: 1.3.0
-      eslint-scope: 5.1.1
-      events: 3.3.0
-      glob-to-regexp: 0.4.1
-      graceful-fs: 4.2.11
-      json-parse-even-better-errors: 2.3.1
-      loader-runner: 4.3.0
-      mime-types: 2.1.35
-      neo-async: 2.6.2
-      schema-utils: 3.3.0
-      tapable: 2.2.1
-      terser-webpack-plugin: 5.3.9(webpack@5.88.2)
-      watchpack: 2.4.0
-      webpack-sources: 3.2.3
-    transitivePeerDependencies:
-      - '@swc/core'
-      - esbuild
-      - uglify-js
-    dev: true
-
-  /webpack@5.88.2(@swc/core@1.3.95):
-    resolution: {integrity: sha512-JmcgNZ1iKj+aiR0OvTYtWQqJwq37Pf683dY9bVORwVbUrDhLhdn/PlO2sHsFHPkj7sHNQF3JwaAkp49V+Sq1tQ==}
-    engines: {node: '>=10.13.0'}
-    hasBin: true
-    peerDependencies:
-      webpack-cli: '*'
-    peerDependenciesMeta:
-      webpack-cli:
-        optional: true
-    dependencies:
-      '@types/eslint-scope': 3.7.4
-      '@types/estree': 1.0.1
-      '@webassemblyjs/ast': 1.11.6
-      '@webassemblyjs/wasm-edit': 1.11.6
-      '@webassemblyjs/wasm-parser': 1.11.6
-      acorn: 8.10.0
-      acorn-import-assertions: 1.9.0(acorn@8.10.0)
-      browserslist: 4.21.10
-      chrome-trace-event: 1.0.3
-      enhanced-resolve: 5.15.0
-      es-module-lexer: 1.3.0
-      eslint-scope: 5.1.1
-      events: 3.3.0
-      glob-to-regexp: 0.4.1
-      graceful-fs: 4.2.11
-      json-parse-even-better-errors: 2.3.1
-      loader-runner: 4.3.0
-      mime-types: 2.1.35
-      neo-async: 2.6.2
-      schema-utils: 3.3.0
-      tapable: 2.2.1
-      terser-webpack-plugin: 5.3.9(@swc/core@1.3.95)(webpack@5.88.2)
-      watchpack: 2.4.0
-      webpack-sources: 3.2.3
-    transitivePeerDependencies:
-      - '@swc/core'
-      - esbuild
-      - uglify-js
-    dev: true
-
   /webpack@5.89.0:
     resolution: {integrity: sha512-qyfIC10pOr70V+jkmud8tMfajraGCZMBWJtrmuBymQKCrLTRejBI8STDp1MCyZu/QTdZSeacCQYpYNQVOzX5kw==}
     engines: {node: '>=10.13.0'}
@@ -14072,6 +13961,46 @@ packages:
       schema-utils: 3.3.0
       tapable: 2.2.1
       terser-webpack-plugin: 5.3.9(webpack@5.89.0)
+      watchpack: 2.4.0
+      webpack-sources: 3.2.3
+    transitivePeerDependencies:
+      - '@swc/core'
+      - esbuild
+      - uglify-js
+    dev: true
+
+  /webpack@5.89.0(@swc/core@1.3.95):
+    resolution: {integrity: sha512-qyfIC10pOr70V+jkmud8tMfajraGCZMBWJtrmuBymQKCrLTRejBI8STDp1MCyZu/QTdZSeacCQYpYNQVOzX5kw==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    peerDependencies:
+      webpack-cli: '*'
+    peerDependenciesMeta:
+      webpack-cli:
+        optional: true
+    dependencies:
+      '@types/eslint-scope': 3.7.6
+      '@types/estree': 1.0.3
+      '@webassemblyjs/ast': 1.11.6
+      '@webassemblyjs/wasm-edit': 1.11.6
+      '@webassemblyjs/wasm-parser': 1.11.6
+      acorn: 8.10.0
+      acorn-import-assertions: 1.9.0(acorn@8.10.0)
+      browserslist: 4.22.1
+      chrome-trace-event: 1.0.3
+      enhanced-resolve: 5.15.0
+      es-module-lexer: 1.3.1
+      eslint-scope: 5.1.1
+      events: 3.3.0
+      glob-to-regexp: 0.4.1
+      graceful-fs: 4.2.11
+      json-parse-even-better-errors: 2.3.1
+      loader-runner: 4.3.0
+      mime-types: 2.1.35
+      neo-async: 2.6.2
+      schema-utils: 3.3.0
+      tapable: 2.2.1
+      terser-webpack-plugin: 5.3.9(@swc/core@1.3.95)(webpack@5.89.0)
       watchpack: 2.4.0
       webpack-sources: 3.2.3
     transitivePeerDependencies:
