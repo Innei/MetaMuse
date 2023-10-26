@@ -152,7 +152,7 @@ const CommentTable = (props: { state: CommentState }) => {
         >
           <div className="flex flex-col flex-grow h-0 overflow-hidden">
             {isMobile ? <CommentMobileList /> : <CommentDesktopTable />}
-            <CommentPagination />
+            {!!data?.pagination.total && <CommentPagination />}
           </div>
         </CommentDataSourceContext.Provider>
       </CommentDataContext.Provider>

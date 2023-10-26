@@ -6,12 +6,12 @@ export const Empty: Component = ({ className }) => {
   return (
     <div
       className={clsxm(
-        'absolute inset-0 flex flex-col space-y-6 center',
+        'absolute inset-0 flex flex-col space-y-6 center pointer-events-none',
         className,
       )}
     >
       <$404SVG className="h-[400px] w-[400px]" />
-      <p>{t('common.no_content')}</p>
+      <p className="pointer-events-auto">{t('common.no_content')}</p>
     </div>
   )
 }
