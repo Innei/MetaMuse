@@ -39,7 +39,7 @@
     "dayjs": "1.11.10",
     "foxact": "0.2.22",
     "framer-motion": "10.16.4",
-    "fuse.js": "6.6.2",
+    "fuse.js": "7.0.0",
     "i18next": "23.6.0",
     "i18next-browser-languagedetector": "7.1.0",
     "idb-keyval": "6.2.1",
