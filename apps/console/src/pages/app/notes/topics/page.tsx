@@ -122,7 +122,7 @@ const TopicDetail = () => {
   if (!topic) return <Empty />
   return (
     <main className="h-full overflow-auto flex flex-col">
-      <div className="h-0 flex-grow flex flex-col mt-0">
+      <div className="lg:h-0 flex-grow flex flex-col mt-0">
         <div className="grid grid-cols-[auto,1fr] my-4 gap-4">
           <Avatar
             src={topic.icon || ''}
@@ -199,7 +199,7 @@ const NoteTopicTable = withQueryPager(() => {
             toast.error(e.message)
           })
       }}
-      tableClassName="min-h-0 !h-0 flex-grow overflow-auto"
+      tableClassName="min-h-0 !lg:h-0 flex-grow overflow-auto"
     />
   )
 })

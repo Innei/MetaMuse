@@ -1,8 +1,9 @@
 import { Avatar, Button } from '@nextui-org/react'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
+import { atom, useAtom, useSetAtom } from 'jotai'
 import type { SeoDto } from '@core/modules/configs/configs.dto'
 import type { RouteExtendObject } from '~/router/interface'
 import type { MouseEventHandler, ReactNode } from 'react'
@@ -65,14 +66,20 @@ const RightBar = () => {
   )
 }
 
+const headerDrawerAtom = atom(false)
+
 const MobileMenuDrawerButton = () => {
   const isMobile = useIsMobile()
 
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isDrawerOpen, setIsDrawerOpen] = useAtom(headerDrawerAtom)
   if (!isMobile) return null
 
   return (
-    <PresentDrawer content={HeaderMenu}>
+    <PresentDrawer
+      open={isDrawerOpen}
+      onOpenChange={setIsDrawerOpen}
+      content={HeaderMenu}
+    >
       <Button
         variant="light"
         className="rounded-full !mr-2"
@@ -88,6 +95,7 @@ const MobileMenuDrawerButton = () => {
 }
 
 const HeaderMenu: Component = ({ className }) => {
+  const setHeaderDrawer = useSetAtom(headerDrawerAtom)
   const extractTitle = useExtractTitleFunction()
   const firstLevelMenu = appRoutes
     .map((route) => {
@@ -107,6 +115,7 @@ const HeaderMenu: Component = ({ className }) => {
   const handleNav: MouseEventHandler<HTMLAnchorElement> = useCallback((e) => {
     e.preventDefault()
 
+    setHeaderDrawer(false)
     const href = new URL((e.currentTarget as HTMLAnchorElement).href).pathname
 
     if (href.startsWith(location.pathname)) return
@@ -126,9 +135,7 @@ const HeaderMenu: Component = ({ className }) => {
             <Link
               to={`/${menu.path}`}
               onClick={isActive ? preventDefault : handleNav}
-              className={clsx(
-                'flex items-center relative space-x-1 rounded-xl p-2 duration-200 hover:bg-default-200',
-              )}
+              className="flex items-center relative space-x-1 rounded-xl p-2 duration-200 hover:bg-default-200"
             >
               {isActive && (
                 <motion.span
