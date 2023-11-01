@@ -18,3 +18,20 @@ export class AggregateInfoQueryKeyDto extends createZodDto(
     key: z.enum(infoQueryAllowedKeys),
   }),
 ) {}
+
+export enum ReadAndLikeCountDocumentType {
+  Post,
+  Note,
+  All,
+}
+
+export class ReadAndLikeCountTypeDto extends createZodDto(
+  z.object({
+    type: z
+      .preprocess(
+        (val: any) => parseInt(val),
+        z.nativeEnum(ReadAndLikeCountDocumentType).optional(),
+      )
+      .optional(),
+  }),
+) {}

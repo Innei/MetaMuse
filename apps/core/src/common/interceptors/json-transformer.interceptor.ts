@@ -52,3 +52,8 @@ export class JSONTransformerInterceptor implements NestInterceptor {
     return snakecaseKeys(obj, { deep: true })
   }
 }
+
+// @ts-expect-error
+BigInt.prototype.toJSON = function () {
+  return this.toString()
+}

@@ -15,10 +15,15 @@ import {
   AggregateInfoQueryKeyDto,
   AggregateQueryDto,
   infoQueryAllowedKeys,
+  ReadAndLikeCountDocumentType,
+  ReadAndLikeCountTypeDto,
 } from './aggregate.dto'
+import { AggregateService } from './aggregate.service'
 
 @ApiController('aggregate')
 export class AggregateController {
+  @Inject(AggregateService)
+  aggregateService: AggregateService
   @Inject(UserService)
   userService: UserService
 
@@ -76,5 +81,26 @@ export class AggregateController {
 
       return finalResult
     })
+  }
+
+  @Get('/count_read_and_like')
+  async getAllReadAndLikeCount(@Query() query: ReadAndLikeCountTypeDto) {
+    const { type = ReadAndLikeCountDocumentType.All } = query
+    return await this.aggregateService
+      .getAllReadAndLikeCount(type)
+      .then((c) => {
+        // bigInt to number
+        return Object.keys(c).reduce((acc, cur) => {
+          acc[cur] = Number(c[cur])
+          return acc
+        }, {})
+      })
+  }
+
+  @Get('/count_site_words')
+  async getSiteWords() {
+    return {
+      length: await this.aggregateService.getAllSiteWordsCount(),
+    }
   }
 }

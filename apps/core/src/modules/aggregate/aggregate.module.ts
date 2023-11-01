@@ -5,12 +5,13 @@ import { NoteModule } from '../note/note.module'
 import { PageModule } from '../page/page.module'
 import { PostModule } from '../post/post.module'
 import { AggregateController } from './aggregate.controller'
+import { AggregateService } from './aggregate.service'
 import { AggregateTrpcRouter } from './aggregate.trpc'
 
 @Module({
   controllers: [AggregateController],
-  providers: [AggregateTrpcRouter],
-  exports: [AggregateTrpcRouter],
+  providers: [AggregateTrpcRouter, AggregateService],
+  exports: [AggregateTrpcRouter, AggregateService],
   imports: [
     forwardRef(() => CategoryModule),
     forwardRef(() => PostModule),
