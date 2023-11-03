@@ -1,4 +1,3 @@
-import { Button } from '@nextui-org/react'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { atom, useAtomValue } from 'jotai'
@@ -13,6 +12,7 @@ import { DeleteConfirmButton } from '~/components/biz/special-button/DeleteConfi
 import { ListSortAndFilterProvider } from '~/components/modules/writing/ListSortAndFilter'
 import { ListTable } from '~/components/modules/writing/ListTable'
 import { TitleExtra } from '~/components/modules/writing/TitleExtra'
+import { Button } from '~/components/ui/button'
 import { FloatPopover } from '~/components/ui/float-popover'
 import { EllipsisHorizontalTextWithTooltip } from '~/components/ui/typography'
 import { useQueryPager, withQueryPager } from '~/hooks/biz/use-query-pager'
@@ -202,8 +202,8 @@ const Actions: FC<{ data: StringifyNestedDates<NormalizedNoteModel> }> = ({
           )
         }}
         color="primary"
-        size="sm"
-        variant="light"
+        size="xs"
+        variant="text"
       >
         {t('common.edit')}
       </Button>

@@ -1,12 +1,8 @@
-import {
-  Button,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@nextui-org/react'
 import { toast } from 'sonner'
 import type { FC, PropsWithChildren } from 'react'
 
+import { Button } from '~/components/ui/button'
+import { FloatPopover } from '~/components/ui/float-popover'
 import { useI18n } from '~/i18n/hooks'
 
 export const DeleteConfirmButton: FC<
@@ -21,9 +17,8 @@ export const DeleteConfirmButton: FC<
 
   const defaultButton = (
     <Button
-      size="sm"
-      variant="light"
-      color="danger"
+      size="xs"
+      variant="destructive"
       onClick={() => {
         onDelete().then(() => {
           toast.success(t('common.delete-success'))
@@ -35,23 +30,23 @@ export const DeleteConfirmButton: FC<
   )
 
   return (
-    <Popover>
-      <PopoverTrigger>
-        <Button size="sm" variant="light" color="danger">
+    <FloatPopover
+      trigger="click"
+      triggerElement={
+        <Button size="xs" variant="text" color="destructive">
           {t('common.delete')}
         </Button>
-      </PopoverTrigger>
-      <PopoverContent>
-        <div className="p-4">
-          <p className="text-center text-red-500 text-base font-bold">
-            {confirmText ??
-              (deleteItemText
-                ? t('common.confirm-delete-item', { item: deleteItemText })
-                : t('common.confirm-delete'))}
-          </p>
-        </div>
-        {props.children || defaultButton}
-      </PopoverContent>
-    </Popover>
+      }
+    >
+      <div className="p-4 flex">
+        <p className="text-center text-red-500 text-base font-bold">
+          {confirmText ??
+            (deleteItemText
+              ? t('common.confirm-delete-item', { item: deleteItemText })
+              : t('common.confirm-delete'))}
+        </p>
+      </div>
+      <div className="text-right">{props.children || defaultButton}</div>
+    </FloatPopover>
   )
 }

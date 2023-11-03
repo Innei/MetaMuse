@@ -1,4 +1,3 @@
-import { Button } from '@nextui-org/react'
 import { useContext } from 'react'
 
 import { DeleteConfirmButton } from '~/components/biz/special-button/DeleteConfirmButton'
@@ -7,6 +6,7 @@ import {
   useSetCommentSelectionKeys,
 } from '~/components/modules/comments/CommentContext'
 import { ReplyModal } from '~/components/modules/comments/ReplyModal'
+import { Button } from '~/components/ui'
 import { useModalStack } from '~/components/ui/modal/stacked/provider'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
@@ -48,8 +48,8 @@ export const CommentAction = (props: NormalizedComment) => {
     <div className="flex space-x-4 items-center justify-end lg:justify-start">
       {currentState === CommentState.UNREAD && (
         <Button
-          size="sm"
-          variant="light"
+          size="xs"
+          variant="text"
           color="primary"
           onClick={() => {
             updateState({
@@ -62,8 +62,8 @@ export const CommentAction = (props: NormalizedComment) => {
         </Button>
       )}
       <Button
-        size="sm"
-        variant="light"
+        size="xs"
+        variant="text"
         color="secondary"
         onClick={() => {
           present({

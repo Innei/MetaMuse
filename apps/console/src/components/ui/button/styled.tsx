@@ -1,6 +1,5 @@
 import { Slot } from '@radix-ui/react-slot'
 import * as React from 'react'
-import { flushSync } from 'react-dom'
 import { cva } from 'class-variance-authority'
 import type { VariantProps } from 'class-variance-authority'
 
@@ -17,23 +16,31 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        default: '',
         destructive:
           'bg-destructive text-destructive-foreground hover:bg-destructive/90',
         outline:
           'border border-foreground-700/30 bg-background hover:bg-muted hover:text-accent-foreground',
         secondary:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        ghost: 'hover:bg-foreground-700/10 hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
+        text: 'p-2',
       },
       size: {
         default: 'h-10 px-4 py-2',
-        sm: 'h-9 rounded-md px-3',
-        lg: 'h-11 rounded-md px-8',
+        xs: 'h-8 rounded-md px-2 text-xs',
+        sm: 'h-9 rounded-md px-3 text-sm',
+        lg: 'h-11 rounded-md px-8 text-lg',
         icon: 'h-10 w-10',
       },
 
+      color: {
+        primary: 'text-primary-foreground',
+        destructive: 'text-destructive-foreground',
+        secondary: 'text-secondary-foreground',
+        accent: 'text-accent-foreground',
+      },
       group: {
         normal: '',
         left: 'border-r-0 rounded-r-none',
@@ -49,9 +56,50 @@ const buttonVariants = cva(
     defaultVariants: {
       variant: 'default',
       size: 'default',
+      color: 'primary',
       group: 'normal',
     },
     compoundVariants: [
+      {
+        color: 'primary',
+        variant: 'default',
+        className: 'bg-primary text-primary-foreground hover:bg-primary/90',
+      },
+
+      {
+        color: 'secondary',
+        variant: 'default',
+        className: 'bg-secondary text-primary-foreground hover:bg-secondary/90',
+      },
+
+      {
+        color: 'accent',
+        variant: 'default',
+        className: 'bg-accent text-primary-foreground hover:bg-accent/90',
+      },
+      {
+        color: 'destructive',
+        variant: 'default',
+        className: 'bg-red-500 text-primary-foreground hover:bg-red-500/90',
+      },
+
+      {
+        color: 'destructive',
+        variant: 'text',
+        className: 'text-red-500 hover:text-red-500/90',
+      },
+
+      {
+        color: 'primary',
+        variant: 'text',
+        className: 'text-primary hover:text-primary/90',
+      },
+      {
+        color: 'secondary',
+        variant: 'text',
+        className: 'text-secondary hover:text-secondary/90',
+      },
+
       // {
       //   group: 'center',
       //   variant: 'outline',
@@ -62,12 +110,15 @@ const buttonVariants = cva(
 )
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'color'>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
 
   icon?: React.ReactNode | React.FC<{ className?: string }>
   isLoading?: boolean
+
+  rounded?: boolean
+  iconOnly?: boolean
 }
 
 export type ButtonVariant = VariantProps<typeof buttonVariants>
@@ -82,6 +133,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       icon,
       isLoading,
       children,
+      color,
+      rounded,
+      iconOnly,
       ...props
     },
     ref,
@@ -117,9 +171,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
         $parent = $parent.parentElement
       }
-      flushSync(() => {
-        setIsInButtonGroup(isInButtonGroup)
-      })
+
+      setIsInButtonGroup(isInButtonGroup)
+
       if (!isInButtonGroup) return
 
       if (!ctx) return
@@ -162,8 +216,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           buttonVariants({
             variant,
             group: groupVariant,
-            size,
-            className,
+            size: iconOnly ? 'icon' : size,
+            className: clsxm(rounded && 'rounded-full', className),
+            color,
             state: isLoading
               ? 'loading'
               : props.disabled

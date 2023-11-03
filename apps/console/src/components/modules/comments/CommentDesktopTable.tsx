@@ -1,6 +1,4 @@
 import {
-  Link,
-  Spinner,
   Table,
   TableBody,
   TableCell,
@@ -16,6 +14,7 @@ import {
   useCommentSelectionKeys,
   useSetCommentSelectionKeys,
 } from '~/components/modules/comments/CommentContext'
+import { Spinner } from '~/components/ui/spinner'
 import { useI18n } from '~/i18n/hooks'
 
 import { CommentAuthorCell } from './CommentAuthorCell'
@@ -85,9 +84,9 @@ export const UrlRender = ({
   author: string
 }) => {
   return url ? (
-    <Link size="sm" href={url}>
+    <a className="text-sm text-primary" href={url}>
       {author}
-    </Link>
+    </a>
   ) : (
     <span>{author}</span>
   )

@@ -1,4 +1,3 @@
-import { Avatar, Button } from '@nextui-org/react'
 import { useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
@@ -10,6 +9,8 @@ import type { MouseEventHandler, ReactNode } from 'react'
 
 import { useIsMobile } from '~/atoms'
 import { BreadcrumbDivider } from '~/components/icons'
+import { Avatar } from '~/components/ui/avatar'
+import { Button } from '~/components/ui/button'
 import { PresentDrawer } from '~/components/ui/drawer'
 import { preventDefault } from '~/lib/dom'
 import { clsxm } from '~/lib/helper'
@@ -56,11 +57,8 @@ const RightBar = () => {
       <ThemeToggle />
       <MobileMenuDrawerButton />
       <Avatar
-        size="sm"
         src={user?.avatar || ''}
-        isBordered
-        showFallback
-        name={user?.name}
+        fallbackName={user?.name[0].toUpperCase()}
       />
     </div>
   )
@@ -81,9 +79,9 @@ const MobileMenuDrawerButton = () => {
       content={HeaderMenu}
     >
       <Button
-        variant="light"
+        variant="ghost"
         className="rounded-full !mr-2"
-        isIconOnly
+        iconOnly
         onClick={() => {
           setIsDrawerOpen(!isDrawerOpen)
         }}

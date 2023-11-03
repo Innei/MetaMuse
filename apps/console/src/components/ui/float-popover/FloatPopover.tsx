@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion as m } from 'framer-motion'
 import { useEventCallback } from 'usehooks-ts'
 import type { OffsetOptions, UseFloatingOptions } from '@floating-ui/react-dom'
-import type { FC, PropsWithChildren } from 'react'
+import type { FC, PropsWithChildren, ReactNode } from 'react'
 
 import { microReboundPreset } from '~/constants/spring'
 import useClickAway from '~/hooks/common/use-click-away'
@@ -11,8 +11,10 @@ import { clsxm } from '~/lib/helper'
 
 import { RootPortal } from '../portal'
 
+type Nullable<T> = T | null
 type FloatPopoverProps<T> = PropsWithChildren<{
-  TriggerComponent: FC<T>
+  TriggerComponent?: FC<Nullable<T>>
+  triggerElement?: ReactNode
   headless?: boolean
   wrapperClassName?: string
   trigger?: 'click' | 'hover' | 'both'
@@ -48,6 +50,7 @@ export const FloatPopover = function FloatPopover<T extends {}>(
   const {
     headless = false,
     wrapperClassName: wrapperClassNames,
+    triggerElement,
     TriggerComponent,
     trigger = 'hover',
     padding,
@@ -136,10 +139,15 @@ export const FloatPopover = function FloatPopover<T extends {}>(
       ref={refs.setReference}
       {...listener}
     >
-      {/* @ts-expect-error */}
-      {React.cloneElement(<TriggerComponent {...triggerComponentProps} />, {
-        tabIndex: 0,
-      })}
+      {triggerElement}
+      {TriggerComponent
+        ? React.cloneElement(
+            <TriggerComponent {...(triggerComponentProps as T)} />,
+            {
+              tabIndex: 0,
+            },
+          )
+        : null}
     </As>
   )
 

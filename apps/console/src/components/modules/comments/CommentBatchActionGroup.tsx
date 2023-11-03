@@ -1,6 +1,6 @@
-import { Button } from '@nextui-org/react'
 import { useSearchParams } from 'react-router-dom'
 
+import { Button } from '~/components/ui/button'
 import { FloatPopover } from '~/components/ui/float-popover'
 import { useModalStack } from '~/components/ui/modal/stacked/provider'
 import { useI18n } from '~/i18n/hooks'
@@ -55,10 +55,8 @@ export const CommentBatchActionGroup = () => {
                   state: CommentState.READ,
                 })
               }}
-              isIconOnly
-              radius="full"
               color="primary"
-              variant="shadow"
+              variant="default"
             >
               <i className="icon-[mingcute--check-fill]" />
             </Button>
@@ -73,16 +71,14 @@ export const CommentBatchActionGroup = () => {
         placement="bottom"
         TriggerComponent={() => (
           <Button
+            iconOnly
+            rounded
             onClick={() => {
               batchChangeState({
                 ids: Array.from(selectionKeys),
                 state: CommentState.SPAM,
               })
             }}
-            isIconOnly
-            radius="full"
-            color="warning"
-            variant="faded"
           >
             <i className="icon-[mingcute--delete-2-line]" />
           </Button>
@@ -96,6 +92,9 @@ export const CommentBatchActionGroup = () => {
         placement="bottom"
         TriggerComponent={() => (
           <Button
+            rounded
+            color="destructive"
+            iconOnly
             onClick={() => {
               present({
                 title: t('common.confirm-delete-items', {
@@ -105,7 +104,7 @@ export const CommentBatchActionGroup = () => {
                   return (
                     <div className="w-[400px] text-right">
                       <Button
-                        color="danger"
+                        color="destructive"
                         onClick={() => {
                           batchDelete({
                             ids: Array.from(selectionKeys),
@@ -120,10 +119,6 @@ export const CommentBatchActionGroup = () => {
                 },
               })
             }}
-            isIconOnly
-            radius="full"
-            color="danger"
-            variant="faded"
           >
             <i className="icon-[mingcute--close-line]" />
           </Button>

@@ -1,8 +1,8 @@
-import { Divider, Spinner } from '@nextui-org/react'
 import { isUndefined } from 'lodash-es'
 
 import { Empty } from '~/components/common/Empty'
 import { OffsetMainLayout } from '~/components/layout/root/main'
+import { AbsoluteCenterSpinner, Spinner } from '~/components/ui/spinner'
 import { clsxm } from '~/lib/helper'
 
 import { CommentAuthorCell } from './CommentAuthorCell'
@@ -25,11 +25,7 @@ export const CommentMobileList = () => {
 
   return (
     <OffsetMainLayout className="mt-4 flex-shrink h-0 flex-grow overflow-auto relative">
-      {isLoading && (
-        <div className="absolute z-[10] inset-0 flex items-center justify-center">
-          <Spinner />
-        </div>
-      )}
+      {isLoading && <AbsoluteCenterSpinner />}
       <ul
         className={clsxm(
           'flex flex-col duration-200',
@@ -42,7 +38,7 @@ export const CommentMobileList = () => {
               <CommentAuthorCell {...item} />
               <CommentContentCell {...item} />
 
-              {i !== data.length - 1 && <Divider className="mt-4 mb-8" />}
+              {i !== data.length - 1 && <div className="divide-x mt-4 mb-8" />}
             </li>
           )
         })}
