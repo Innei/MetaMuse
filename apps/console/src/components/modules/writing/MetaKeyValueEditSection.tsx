@@ -6,9 +6,9 @@ import { toast } from 'sonner'
 import { useEventCallback } from 'usehooks-ts'
 import type { FC } from 'react'
 
+import { useModalStack } from '~/components/ui/modal/stacked/provider'
 import { useAsyncMonaco } from '~/hooks/biz/use-async-monaco'
 import { useI18n } from '~/i18n/hooks'
-import { useModalStack } from '~/providers/modal-stack-provider'
 
 import { styles } from './styles'
 

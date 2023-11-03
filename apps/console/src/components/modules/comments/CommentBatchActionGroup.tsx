@@ -2,9 +2,9 @@ import { Button } from '@nextui-org/react'
 import { useSearchParams } from 'react-router-dom'
 
 import { FloatPopover } from '~/components/ui/float-popover'
+import { useModalStack } from '~/components/ui/modal/stacked/provider'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
-import { useModalStack } from '~/providers/modal-stack-provider'
 
 import {
   useCommentSelectionKeys,

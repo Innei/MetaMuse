@@ -6,11 +6,9 @@ import { useEventCallback } from 'usehooks-ts'
 import { input } from '@nextui-org/theme'
 
 import { Autocomplete } from '~/components/ui/auto-completion'
+import { useCurrentModal } from '~/components/ui/modal/stacked/context'
+import { useModalStack } from '~/components/ui/modal/stacked/provider'
 import { useI18n } from '~/i18n/hooks'
-import {
-  useCurrentModal,
-  useModalStack,
-} from '~/providers/modal-stack-provider'
 
 import { useNoteModelSingleFieldAtom } from '../data-provider'
 

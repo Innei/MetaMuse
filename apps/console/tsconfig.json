@@ -5,7 +5,11 @@
     "strictNullChecks": true,
     "removeComments": true,
     "noImplicitAny": false,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -19,12 +23,25 @@
     "noEmit": true,
     "jsx": "preserve",
     "paths": {
-      "~": ["./src"],
-      "~/*": ["./src/*"],
-      "@core/*": ["../core/src/*"],
-      "@constants": ["../../packages/constants/index.ts"],
-      "@model": ["../../prisma/client/index.d.ts"]
+      "~": [
+        "./src"
+      ],
+      "~/*": [
+        "./src/*"
+      ],
+      "@core/*": [
+        "../core/src/*"
+      ],
+      "@constants": [
+        "../../packages/constants/index.ts"
+      ],
+      "@model": [
+        "../../prisma/client/index.d.ts"
+      ],
     }
   },
-  "include": ["src", "../core/src/**/*.d.ts"]
+  "include": [
+    "src",
+    "../core/src/**/*.d.ts"
+  ]
 }

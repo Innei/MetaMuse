@@ -1,25 +1,22 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import {
-  createContext,
   createElement,
   memo,
   useCallback,
-  useContext,
   useEffect,
-  useId,
   useMemo,
   useRef,
 } from 'react'
-import { useLocation } from 'react-router-dom'
-import {
-  AnimatePresence,
-  motion as m,
-  useAnimationControls,
-} from 'framer-motion'
-import { atom, useAtomValue, useSetAtom } from 'jotai'
+import { motion as m, useAnimationControls } from 'framer-motion'
+import { useSetAtom } from 'jotai'
 import { useEventCallback } from 'usehooks-ts'
 import type { Target, Transition } from 'framer-motion'
-import type { FC, PropsWithChildren, RefObject, SyntheticEvent } from 'react'
+import type { SyntheticEvent } from 'react'
+import type {
+  CurrentModalContentProps,
+  ModalContentPropsInternal,
+} from './context'
+import type { ModalProps } from './types'
 
 import { useIsMobile } from '~/atoms'
 import { CloseIcon } from '~/components/icons'
@@ -31,123 +28,26 @@ import { stopPropagation } from '~/lib/dom'
 import { clsxm } from '~/lib/helper'
 import { jotaiStore } from '~/lib/store'
 
-const modalIdToPropsMap = {} as Record<string, ModalProps>
-
-type CurrentModalContentProps = ModalContentPropsInternal & {
-  ref: RefObject<HTMLElement>
-}
-
-const CurrentModalContext = createContext<CurrentModalContentProps>(null as any)
-
-export const useCurrentModal = () => {
-  return useContext(CurrentModalContext)
-}
-
-export type ModalContentComponent<T> = FC<ModalContentPropsInternal & T>
-type ModalContentPropsInternal = {
-  dismiss: () => void
-}
-
-interface ModalProps {
-  title: string
-  content: FC<ModalContentPropsInternal>
-  CustomModalComponent?: FC<PropsWithChildren>
-  clickOutsideToDismiss?: boolean
-  modalClassName?: string
-  modalContainerClassName?: string
-}
-
-const modalStackAtom = atom([] as (ModalProps & { id: string })[])
-
-const useDismissAllWhenRouterChange = () => {
-  const pathname = useLocation().pathname
-  useEffect(() => {
-    actions.dismissAll()
-  }, [pathname])
-}
-
-export const useModalStack = () => {
-  const id = useId()
-  const currentCount = useRef(0)
-  return {
-    present(props: ModalProps & { id?: string }) {
-      const modalId = `${id}-${currentCount.current++}`
-      jotaiStore.set(modalStackAtom, (p) => {
-        const modalProps = {
-          ...props,
-          id: props.id ?? modalId,
-        }
-        modalIdToPropsMap[modalProps.id] = modalProps
-        return p.concat(modalProps)
-      })
-
-      return () => {
-        jotaiStore.set(modalStackAtom, (p) => {
-          return p.filter((item) => item.id !== modalId)
-        })
-      }
-    },
-
-    ...actions,
-  }
-}
-
-const actions = {
-  dismiss(id: string) {
-    jotaiStore.set(modalStackAtom, (p) => {
-      return p.filter((item) => item.id !== id)
-    })
-  },
-  dismissTop() {
-    jotaiStore.set(modalStackAtom, (p) => {
-      return p.slice(0, -1)
-    })
-  },
-  dismissAll() {
-    jotaiStore.set(modalStackAtom, [])
-  },
-}
-export const ModalStackProvider: FC<PropsWithChildren> = ({ children }) => {
-  return (
-    <>
-      {children}
-      <ModalStack />
-    </>
-  )
-}
-
-const ModalStack = () => {
-  const stack = useAtomValue(modalStackAtom)
-
-  useDismissAllWhenRouterChange()
-
-  return (
-    <AnimatePresence>
-      {stack.map((item, index) => {
-        return <Modal key={item.id} item={item} index={index} />
-      })}
-    </AnimatePresence>
-  )
-}
+import { CurrentModalContext, modalStackAtom } from './context'
 
 const enterStyle: Target = {
   scale: 1,
   opacity: 1,
 }
-
 const initialStyle: Target = {
   scale: 0.96,
   opacity: 0,
 }
-
 const modalTransition: Transition = {
   ...microReboundPreset,
 }
 
-const Modal: Component<{
-  item: ModalProps & { id: string }
+export const Modal: Component<{
   index: number
-}> = memo(function Modal({ item, index }) {
+  item: ModalProps & { id: string }
+
+  onClose?: (open: boolean) => void
+}> = memo(function Modal({ index, item, onClose: onPropsClose, children }) {
   const setStack = useSetAtom(modalStackAtom)
   const close = useEventCallback(() => {
     setStack((p) => {
@@ -160,13 +60,19 @@ const Modal: Component<{
       if (!open) {
         close()
       }
+      onPropsClose?.(open)
     },
     [close],
   )
   const animateController = useAnimationControls()
+
+  const isMobile = useIsMobile()
+
   useEffect(() => {
+    if (isMobile) return
     animateController.start(enterStyle)
-  }, [])
+  }, [isMobile])
+
   const {
     CustomModalComponent,
     modalClassName,
@@ -211,7 +117,10 @@ const Modal: Component<{
     }),
     [ModalProps],
   )
-  const isMobile = useIsMobile()
+
+  const finailChildren = children
+    ? children
+    : createElement(content, ModalProps)
 
   if (isMobile) {
     const drawerLength = jotaiStore.get(drawerStackAtom).length
@@ -224,7 +133,7 @@ const Modal: Component<{
         // title={title}
         content={
           <CurrentModalContext.Provider value={ModalContextProps}>
-            {createElement(content, ModalProps)}
+            {finailChildren}
           </CurrentModalContext.Provider>
         }
       />
@@ -248,7 +157,7 @@ const Modal: Component<{
               <div className="contents" onClick={stopPropagation}>
                 <CustomModalComponent>
                   <CurrentModalContext.Provider value={ModalContextProps}>
-                    {createElement(content, ModalProps)}
+                    {finailChildren}
                   </CurrentModalContext.Provider>
                 </CustomModalComponent>
               </div>
@@ -294,7 +203,7 @@ const Modal: Component<{
 
               <div className="min-h-0 flex-shrink flex-grow overflow-auto px-4 py-2">
                 <CurrentModalContext.Provider value={ModalContextProps}>
-                  {createElement(content, ModalProps)}
+                  {finailChildren}
                 </CurrentModalContext.Provider>
               </div>
 

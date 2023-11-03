@@ -7,13 +7,13 @@ import { useIsMobile } from '~/atoms'
 import { MotionButtonBase } from '~/components/ui/button'
 import { PresentDrawer } from '~/components/ui/drawer'
 import { FloatPopover } from '~/components/ui/float-popover'
+import { useCurrentModal } from '~/components/ui/modal/stacked/context'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { KAOMOJI_LIST } from '~/constants/kaomoji'
 import { useUncontrolledInput } from '~/hooks/common/use-uncontrolled-input'
 import { useI18n } from '~/i18n/hooks'
 import { $axios } from '~/lib/request'
 import { trpc } from '~/lib/trpc'
-import { useCurrentModal } from '~/providers/modal-stack-provider'
 
 export const ReplyModal = (props: NormalizedComment) => {
   const { author, id, text } = props

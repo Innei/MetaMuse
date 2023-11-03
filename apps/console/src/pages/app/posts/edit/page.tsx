@@ -15,7 +15,7 @@ import type { FC } from 'react'
 import {
   ImportMarkdownButton,
   PreviewButton,
-} from '~/components/biz/logic-button'
+} from '~/components/biz/special-button'
 import { BaseWritingProvider } from '~/components/biz/writing/provider'
 import { useEditorRef, Writing } from '~/components/biz/writing/Writing'
 import { PageLoading } from '~/components/common/PageLoading'

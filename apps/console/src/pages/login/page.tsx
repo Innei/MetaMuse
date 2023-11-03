@@ -1,8 +1,8 @@
-import { Avatar } from '@nextui-org/react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
+import { Avatar } from '~/components/ui/avatar'
 import { BizError } from '~/lib/biz-error'
 import { clsxm } from '~/lib/helper'
 import { useLogin, useUser } from '~/store/user'
@@ -61,16 +61,19 @@ export default function LoginPage() {
         }}
       >
         <Avatar
-          className="ring-primary"
-          isBordered
+          className="ring-primary ring-[2px] h-[60px] w-[60px] border-3 border-transparent rounded-full"
           src={user?.avatar || ''}
-          size="lg"
+          fallback={
+            <span className="text-2xl text-foreground-500">
+              {user?.name.slice(0, 2).toUpperCase()}
+            </span>
+          }
         />
 
         <div className="relative flex h-[35px] space-x-2 rounded-full bg-slate-50/40 px-3 py-2 backdrop-blur-xl dark:bg-slate-900/40">
           <input
             ref={ref}
-            className="h-full flex-grow appearance-none border-0 bg-transparent outline-none ring-0"
+            className="h-full flex-grow appearance-none px-2 border-0 bg-transparent outline-none ring-0 font-mono"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"

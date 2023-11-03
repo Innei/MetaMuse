@@ -7,11 +7,11 @@ import type { FC } from 'react'
 
 import { OpenAIIcon } from '~/components/icons'
 import { MotionButtonBase } from '~/components/ui/button'
+import { useModalStack } from '~/components/ui/modal/stacked/provider'
 import { APP_SCOPE } from '~/constants/app'
 import { useUncontrolledInput } from '~/hooks/common/use-uncontrolled-input'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
-import { useModalStack } from '~/providers/modal-stack-provider'
 
 import {
   usePostModelGetModelData,

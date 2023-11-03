@@ -1,15 +1,15 @@
 import { Button } from '@nextui-org/react'
 import { useContext } from 'react'
 
+import { DeleteConfirmButton } from '~/components/biz/special-button/DeleteConfirmButton'
 import {
   CommentStateContext,
   useSetCommentSelectionKeys,
 } from '~/components/modules/comments/CommentContext'
 import { ReplyModal } from '~/components/modules/comments/ReplyModal'
-import { DeleteConfirmButton } from '~/components/ui/button/DeleteConfirmButton'
+import { useModalStack } from '~/components/ui/modal/stacked/provider'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
-import { useModalStack } from '~/providers/modal-stack-provider'
 
 import { CommentState } from '../../../components/modules/comments/constants'
 
