@@ -1,4 +1,4 @@
-import { Button, Chip } from '@nextui-org/react'
+import { Chip } from '@nextui-org/react'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { atom, useAtomValue } from 'jotai'
@@ -12,6 +12,7 @@ import { DeleteConfirmButton } from '~/components/biz/special-button/DeleteConfi
 import { ListSortAndFilterProvider } from '~/components/modules/writing/ListSortAndFilter'
 import { ListTable } from '~/components/modules/writing/ListTable'
 import { TitleExtra } from '~/components/modules/writing/TitleExtra'
+import { Button } from '~/components/ui'
 import { useQueryPager, withQueryPager } from '~/hooks/biz/use-query-pager'
 import { useI18n } from '~/i18n/hooks'
 import { routeBuilder, Routes } from '~/lib/route-builder'
@@ -187,8 +188,8 @@ const Actions: FC<{ data: StringifyNestedDates<NormalizedPostModel> }> = ({
           )
         }}
         color="primary"
-        size="sm"
-        variant="light"
+        size="xs"
+        variant="text"
       >
         {t('common.edit')}
       </Button>

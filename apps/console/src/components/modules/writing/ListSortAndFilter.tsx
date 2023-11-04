@@ -1,17 +1,11 @@
-import {
-  Button,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Select,
-  SelectItem,
-} from '@nextui-org/react'
+import { Select, SelectItem } from '@nextui-org/react'
 import { createContext, useContext, useMemo } from 'react'
 import { produce } from 'immer'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import type { FC, PropsWithChildren } from 'react'
 
 import { FilterLineIcon } from '~/components/icons'
+import { Button, FloatPopover } from '~/components/ui'
 
 const filterAtom = atom([] as string[])
 const sortingAtom = atom({ key: 'created', order: 'desc' } as {
@@ -165,26 +159,22 @@ export const SortAndFilterButton = () => {
   }, [sorting.key, sorting.order, sortingKeyMap, sortingOrderList])
 
   return (
-    <Popover
-      classNames={{
-        base: 'p-0',
-      }}
-    >
-      <PopoverTrigger>
+    <FloatPopover
+      headless
+      triggerElement={
         <Button
-          isIconOnly
-          variant={isHasSorting ? 'solid' : 'flat'}
-          color={isHasSorting ? 'primary' : 'default'}
+          iconOnly
+          variant={isHasSorting ? 'default' : 'outline'}
+          color={isHasSorting ? 'secondary' : 'primary'}
         >
           <FilterLineIcon />
         </Button>
-      </PopoverTrigger>
-      <PopoverContent>
-        <div className="w-52">
-          <Filter />
-          <Sorting />
-        </div>
-      </PopoverContent>
-    </Popover>
+      }
+    >
+      <div className="w-52 bg-background rounded-md p-2 shadow-md shadow-foreground-100">
+        <Filter />
+        <Sorting />
+      </div>
+    </FloatPopover>
   )
 }

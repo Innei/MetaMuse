@@ -1,4 +1,3 @@
-import { Button } from '@nextui-org/react'
 import { forwardRef, useEffect, useImperativeHandle, useMemo } from 'react'
 import { produce } from 'immer'
 import { atom } from 'jotai'
@@ -15,6 +14,7 @@ import { useRefValue } from '~/hooks/common/use-ref-value'
 import { useI18n } from '~/i18n/hooks'
 import { jotaiStore } from '~/lib/store'
 
+import { Button } from '../button'
 import { FormConfigContext, FormContext, useForm } from './FormContext'
 
 interface FormExtendProps {
@@ -162,12 +162,7 @@ const FormInternal = (props: FormProps) => {
 export const FormSubmit: FC<{}> = () => {
   const t = useI18n()
   return (
-    <Button
-      type="submit"
-      className="inline-block !rounded-lg"
-      color="primary"
-      variant="shadow"
-    >
+    <Button type="submit" className="inline-block !rounded-lg" color="primary">
       {t('common.submit')}
     </Button>
   )

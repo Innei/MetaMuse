@@ -1,18 +1,26 @@
-export const Spinner: Component<{
-  size?: number
-}> = ({ className, size }) => {
+import { forwardRef } from 'react'
+
+export const Spinner = forwardRef<
+  HTMLDivElement,
+  {
+    size?: number
+    className?: string
+  }
+>(({ className, size }, ref) => {
   return (
-    <div className={className}>
+    <div className={className} ref={ref}>
       <div
-        className="loading loading-spinner text-primary"
+        className="loading loading-dots"
         style={{
-          width: size || '3rem',
-          height: size || '3rem',
+          width: size || '2rem',
+          height: size || '2rem',
         }}
       />
     </div>
   )
-}
+})
+
+Spinner.displayName = 'Spinner'
 
 export const AbsoluteCenterSpinner = () => {
   return (

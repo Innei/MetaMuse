@@ -1,10 +1,10 @@
-import { Button, ButtonGroup } from '@nextui-org/react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { useEventCallback } from 'usehooks-ts'
 
 import { input } from '@nextui-org/theme'
 
+import { Button, ButtonGroup } from '~/components/ui'
 import { Autocomplete } from '~/components/ui/auto-completion'
 import { useCurrentModal } from '~/components/ui/modal/stacked/context'
 import { useModalStack } from '~/components/ui/modal/stacked/provider'
@@ -80,13 +80,9 @@ export const GetLocation = () => {
       >
         {t('module.notes.get_current_location')}
       </label>
-      <ButtonGroup
-        size="sm"
-        radius="full"
-        className="flex-shrink-0"
-        variant="ghost"
-      >
+      <ButtonGroup className="flex-shrink-0" variant="outline">
         <Button
+          rounded
           isLoading={loading}
           className="flex items-center"
           onClick={handleGetGeo}
@@ -94,14 +90,19 @@ export const GetLocation = () => {
           <i className="icon-[mingcute--location-line] mr-1" />
           {t('module.notes.location')}
         </Button>
-        <Button isIconOnly isLoading={loading} onClick={handleCustomSearch}>
+        <Button
+          rounded
+          iconOnly
+          isLoading={loading}
+          onClick={handleCustomSearch}
+        >
           <i className="icon-[mingcute--search-2-line]" />
         </Button>
         <Button
-          isIconOnly
+          rounded
+          iconOnly
           isLoading={loading}
-          // variant="light"
-          color="danger"
+          color="destructive"
           onClick={() => {
             setLocation(null)
             setCoordinates(null)

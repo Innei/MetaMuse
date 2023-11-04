@@ -53,6 +53,8 @@ export const Modal: Component<{
     setStack((p) => {
       return p.filter((modal) => modal.id !== item.id)
     })
+
+    onPropsClose?.(false)
   })
 
   const onClose = useCallback(
@@ -60,7 +62,6 @@ export const Modal: Component<{
       if (!open) {
         close()
       }
-      onPropsClose?.(open)
     },
     [close],
   )

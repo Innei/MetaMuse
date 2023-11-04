@@ -1,13 +1,10 @@
 import {
-  Button,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
   Checkbox,
-  Divider,
   Pagination,
-  Spinner,
   Table,
   TableBody,
   TableCell,
@@ -36,6 +33,12 @@ import type { FC, PropsWithChildren, ReactNode } from 'react'
 import { useIsMobile } from '~/atoms'
 import { Empty } from '~/components/common/Empty'
 import { AddCircleLine } from '~/components/icons'
+import {
+  AbsoluteCenterSpinner,
+  Button,
+  Divider,
+  Spinner,
+} from '~/components/ui'
 import { RelativeTime } from '~/components/ui/date-time'
 import { useModalStack } from '~/components/ui/modal/stacked/provider'
 import { MotionDivToBottom } from '~/components/ui/motion'
@@ -95,8 +98,7 @@ const Header: FC<HeaderProps> = ({
             </span>
             <div className="flex w-full justify-end">
               <Button
-                variant="light"
-                color="danger"
+                color="destructive"
                 onClick={() => {
                   onBatchDeleteClick?.(Array.from(selection))
                   setSelection(new Set())
@@ -118,8 +120,9 @@ const Header: FC<HeaderProps> = ({
     <div className="mb-6 flex h-12 justify-between space-x-2">
       {!isMobile && canDisplayCardView ? (
         <Button
-          variant="flat"
-          isIconOnly
+          iconOnly
+          variant="outline"
+          color="muted"
           onClick={() => {
             setViewStyle((prev) => {
               if (prev === ViewStyle.Table) {
@@ -145,14 +148,15 @@ const Header: FC<HeaderProps> = ({
         {(onNewClick || onBatchDeleteClick) && (
           <Button
             onClick={actionButtonClick}
-            variant="shadow"
-            color={hasSelection ? 'danger' : 'primary'}
+            color={hasSelection ? 'destructive' : 'primary'}
+            icon={
+              hasSelection ? (
+                <i className="icon-[mingcute--delete-2-line]" />
+              ) : (
+                <AddCircleLine />
+              )
+            }
           >
-            {hasSelection ? (
-              <i className="icon-[mingcute--delete-2-line]" />
-            ) : (
-              <AddCircleLine />
-            )}
             {hasSelection ? t('common.delete') : t('common.new')}
           </Button>
         )}
@@ -201,10 +205,9 @@ export const ListTable = <Data extends DataBaseType>({
   const [page, , setPage] = useQueryPager()
   const isMobile = useIsMobile()
   const viewStyle = useAtomValue(ctxValue.viewStyleAtom)
+
   if (!data) {
-    return (
-      <Spinner className="w-full flex items-center justify-center h-[300px] flex-grow" />
-    )
+    return <AbsoluteCenterSpinner />
   }
   const { data: listData, pagination } = Array.isArray(data)
     ? { data, pagination: null }

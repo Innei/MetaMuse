@@ -1,20 +1,17 @@
-import {
-  Button,
-  Input,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  useModalContext,
-} from '@nextui-org/react'
+import { Input } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 import clsx from 'clsx'
+import { toast } from 'sonner'
+import { z } from 'zod'
 
 import { useUncontrolledInput } from '~/hooks/common/use-uncontrolled-input'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
 import { isLogged, useIsLogged } from '~/store/user'
 
-import { NextUIModal } from '../modal'
+import { Button } from '../button'
+import { useCurrentModal } from '../modal'
+import { DeclarativeModal } from '../modal/stacked/declarative-modal'
 import styles from './index.module.css'
 
 const KV_KEY = 'login-background'
@@ -65,8 +62,8 @@ export const Background = () => {
       {isLogged && (
         <Button
           className="rounded-full fixed bottom-4 right-4"
-          variant="light"
-          isIconOnly
+          iconOnly
+          color="muted"
           onClick={() => {
             setIsModalOpen(true)
           }}
@@ -74,14 +71,15 @@ export const Background = () => {
           <i className="icon-[mingcute--settings-5-line]" />
         </Button>
       )}
-      <NextUIModal
-        isOpen={isModalOpen}
-        onClose={() => {
+      <DeclarativeModal
+        title="Background Setting"
+        open={isModalOpen}
+        onOpenChange={() => {
           setIsModalOpen(false)
         }}
       >
         <BackgroundModal />
-      </NextUIModal>
+      </DeclarativeModal>
     </div>
   )
 }
@@ -91,47 +89,50 @@ const BackgroundModal = () => {
   const { data: bg } = trpc.configs.kv.getPublic.useQuery({
     key: KV_KEY,
   })
-  const { onClose } = useModalContext()
 
   const [, getValue, ref] = useUncontrolledInput(bg)
   const t = useI18n()
   const utils = trpc.useUtils()
 
+  const { dismiss } = useCurrentModal()
   return (
-    <ModalContent>
-      <ModalHeader>Background Setting</ModalHeader>
-      <div className="flex flex-col space-y-4 px-4">
+    <div className="lg:w-[500px]">
+      <div className="flex flex-col space-y-4">
         <Input label="Background URL" placeholder=" " ref={ref} size="sm" />
       </div>
-      <ModalFooter>
-        <div className="flex flex-end">
-          <Button
-            size="sm"
-            variant="shadow"
-            onClick={() => {
-              if (!isLogged()) return
-              mutateAsync({
-                key: KV_KEY,
-                value: getValue(),
-              })
-              onClose()
-              utils.configs.kv.getPublic.setData(
-                {
-                  key: KV_KEY,
-                },
-                () => JSON.stringify(getValue()),
-              )
+      <DeclarativeModal.FooterAction>
+        <Button
+          size="sm"
+          onClick={async () => {
+            if (!isLogged()) return
 
-              utils.configs.kv.getPublic.invalidate({
+            const result = await z.string().url().safeParseAsync(getValue())
+            if (!result.success) {
+              toast.error('Invalid URL')
+              return
+            }
+            const value = result.data
+            mutateAsync({
+              key: KV_KEY,
+              value,
+            })
+            dismiss()
+            utils.configs.kv.getPublic.setData(
+              {
                 key: KV_KEY,
-              })
-            }}
-            color="primary"
-          >
-            {t('common.save')}
-          </Button>
-        </div>
-      </ModalFooter>
-    </ModalContent>
+              },
+              () => JSON.stringify(value),
+            )
+
+            utils.configs.kv.getPublic.invalidate({
+              key: KV_KEY,
+            })
+          }}
+          color="primary"
+        >
+          {t('common.save')}
+        </Button>
+      </DeclarativeModal.FooterAction>
+    </div>
   )
 }
