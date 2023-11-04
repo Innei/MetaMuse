@@ -121,7 +121,9 @@ const HeaderMenu: Component = ({ className }) => {
   }, [])
 
   return (
-    <ul className={clsxm('ml-2 items-center gap-2', className)}>
+    <ul
+      className={clsxm('ml-2 items-center gap-2 [&_*]:text-[14px]', className)}
+    >
       {firstLevelMenu.map((menu) => {
         const isActive =
           menu.path === routeObject.path ||
