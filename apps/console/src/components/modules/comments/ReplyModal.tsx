@@ -1,9 +1,9 @@
-import { Textarea } from '@nextui-org/react'
 import markdownEscape from 'markdown-escape'
 import { toast } from 'sonner'
 import { useEventCallback } from 'usehooks-ts'
 
 import { useIsMobile } from '~/atoms'
+import { Textarea } from '~/components/ui'
 import { Button, MotionButtonBase } from '~/components/ui/button'
 import { PresentDrawer } from '~/components/ui/drawer'
 import { FloatPopover } from '~/components/ui/float-popover'
@@ -18,7 +18,7 @@ import { trpc } from '~/lib/trpc'
 export const ReplyModal = (props: NormalizedComment) => {
   const { author, id, text } = props
   const t = useI18n()
-  const [, getValue, ref] = useUncontrolledInput()
+  const [, getValue, ref] = useUncontrolledInput<HTMLTextAreaElement>()
   const handleSubmit = useEventCallback((e: any) => {
     e.preventDefault()
   })
@@ -93,16 +93,14 @@ export const ReplyModal = (props: NormalizedComment) => {
       className="flex flex-col w-[500px] max-w-full"
       onSubmit={handleSubmit}
     >
-      <div>{author} 说：</div>
       <Textarea
+        label={`${author} 说：`}
         className="[&_*]:!cursor-not-allowed"
-        size="lg"
-        variant="faded"
         readOnly
         value={text}
       />
-      <div className="mt-4">回复内容：</div>
-      <Textarea size="lg" maxRows={5} ref={ref} />
+
+      <Textarea label="回复内容：" className="mt-4" ref={ref} />
 
       <div className="flex justify-between mt-4 gap-2">
         {isMobile ? (

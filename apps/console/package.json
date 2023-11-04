@@ -26,6 +26,7 @@
     "@nextui-org/theme": "2.1.9",
     "@nextui-org/use-infinite-scroll": "2.1.1",
     "@radix-ui/react-avatar": "1.0.4",
+    "@radix-ui/react-collapsible": "1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-label": "2.0.2",
     "@radix-ui/react-scroll-area": "1.0.5",
