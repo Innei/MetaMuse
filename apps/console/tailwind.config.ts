@@ -1,21 +1,26 @@
 import { nextui } from '@nextui-org/react'
 import daisyui from 'daisyui'
-import { withTV } from 'tailwind-variants/transformer'
-import type { Config } from 'tailwindcss'
 import type { PluginAPI } from 'tailwindcss/types/config'
 
 import { addDynamicIconSelectors } from '@iconify/tailwind'
 import typography from '@tailwindcss/typography'
 
-const twConfig: Config = {
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: ['class', '[data-theme="dark"]'],
   content: [
     './src/**/*.{js,jsx,ts,tsx}',
     './index.html',
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
-  darkMode: ['class', '[data-theme="dark"]'],
-  safelist: [],
   theme: {
+    container: {
+      center: true,
+      padding: '2rem',
+      screens: {
+        '2xl': '1400px',
+      },
+    },
     extend: {
       screens: {
         'light-mode': { raw: '(prefers-color-scheme: light)' },
@@ -37,18 +42,58 @@ const twConfig: Config = {
       maxHeight: {
         screen: '100vh',
       },
+      colors: {
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      keyframes: {
+        'accordion-down': {
+          from: { height: 0 },
+          to: { height: 'var(--radix-accordion-content-height)' },
+        },
+        'accordion-up': {
+          from: { height: 'var(--radix-accordion-content-height)' },
+          to: { height: 0 },
+        },
+      },
+      animation: {
+        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-up': 'accordion-up 0.2s ease-out',
+      },
     },
   },
-
   daisyui: {
     themes: ['cmyk', 'night'],
     darkTheme: 'night',
   },
-
   plugins: [
     addDynamicIconSelectors(),
     addShortcutPlugin,
-
+    require('tailwindcss-animate'),
     typography,
     daisyui,
     nextui({
@@ -94,5 +139,3 @@ function addShortcutPlugin({ addUtilities }: PluginAPI) {
   }
   addUtilities(styles)
 }
-
-export default withTV(twConfig)

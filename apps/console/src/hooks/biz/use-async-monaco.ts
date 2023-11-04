@@ -1,4 +1,3 @@
-import { Spinner } from '@nextui-org/react'
 import { createElement, useEffect, useRef, useState } from 'react'
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
@@ -10,6 +9,7 @@ import type { editor, IKeyboardEvent } from 'monaco-editor'
 
 import Dark from '~/assets/monaco/theme/dark.json'
 import Light from '~/assets/monaco/theme/light.json'
+import { Spinner } from '~/components/ui/spinner'
 
 import { useTheme } from '../common/use-theme'
 

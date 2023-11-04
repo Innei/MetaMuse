@@ -1,12 +1,4 @@
 import {
-  Avatar,
-  Button,
-  ButtonGroup,
-  Divider,
-  ModalContent,
-  ModalHeader,
-  ScrollShadow,
-  Spinner,
   Table,
   TableBody,
   TableCell,
@@ -25,17 +17,19 @@ import type { FC } from 'react'
 import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll'
 
 import { useIsMobile } from '~/atoms'
+import { DeleteConfirmButton } from '~/components/biz/special-button/DeleteConfirmButton'
 import { Empty } from '~/components/common/Empty'
 import { PageLoading } from '~/components/common/PageLoading'
 import { EditorLayer } from '~/components/modules/writing/EditorLayer'
 import { ListTable } from '~/components/modules/writing/ListTable'
 import { TitleExtra } from '~/components/modules/writing/TitleExtra'
-import { MotionButtonBase } from '~/components/ui/button'
-import { DeleteConfirmButton } from '~/components/ui/button/DeleteConfirmButton'
+import { Avatar, Divider, Spinner } from '~/components/ui'
+import { Button, ButtonGroup, MotionButtonBase } from '~/components/ui/button'
 import { PresentDrawer } from '~/components/ui/drawer'
 import { Form, FormInput, FormSubmit } from '~/components/ui/form'
 import { stringRuleMax, stringRuleUrl } from '~/components/ui/form/utils'
-import { NextUIModal } from '~/components/ui/modal'
+import { DeclarativeModal } from '~/components/ui/modal/stacked/declarative-modal'
+import { useModalStack } from '~/components/ui/modal/stacked/provider'
 import { Uploader } from '~/components/ui/uploader'
 import { withQueryPager } from '~/hooks/biz/use-query-pager'
 import { useI18n } from '~/i18n/hooks'
@@ -43,7 +37,6 @@ import { diffSets } from '~/lib/diff'
 import { buildNSKey } from '~/lib/key'
 import { jotaiStore } from '~/lib/store'
 import { trpc } from '~/lib/trpc'
-import { useModalStack } from '~/providers/modal-stack-provider'
 
 import { NoteTableColumns } from '../list/page'
 
@@ -126,8 +119,7 @@ const TopicDetail = () => {
         <div className="grid grid-cols-[auto,1fr] my-4 gap-4">
           <Avatar
             src={topic.icon || ''}
-            name={topic.name.slice(0, 1)}
-            size="lg"
+            fallbackName={topic.name.slice(0, 1)}
           />
           <div className="flex flex-col gap-2">
             <span className="font-medium text-xl">{topic?.name}</span>
@@ -310,6 +302,7 @@ const AddNotesToTopicModal = ({ topicId }: { topicId: string }) => {
       bottomContent={
         hasNextPage ? (
           <div className="flex w-full justify-center">
+            {/* @ts-ignore */}
             <Spinner ref={loaderRef} />
           </div>
         ) : null
@@ -348,7 +341,7 @@ const Topics = () => {
 
   if (topics?.length === 0) return <Empty />
   return (
-    <ScrollShadow className="h-0 overflow-auto flex-grow">
+    <div className="h-0 overflow-auto flex-grow">
       <div className="p-0 gap-0 dark:divide-default-100/80 max-w-full lg:max-w-[300px]">
         <div className="gap-1 flex flex-col">
           {(topics || []).map((topic) => (
@@ -365,7 +358,7 @@ const Topics = () => {
           ))}
         </div>
       </div>
-    </ScrollShadow>
+    </div>
   )
 }
 
@@ -388,38 +381,31 @@ const NewButton = () => {
         onClick={() => {
           setNewModalOpen(true)
         }}
-        variant="shadow"
         color="primary"
       >
         {t('common.new')}
       </Button>
-      <NextUIModal
-        size="lg"
-        isOpen={newModalOpen}
-        onClose={() => {
+      <DeclarativeModal
+        title={`${t('common.new')} - ${t('navigator.topic')}`}
+        open={newModalOpen}
+        onOpenChange={() => {
           setNewModalOpen(false)
         }}
       >
-        <ModalContent>
-          <ModalHeader>
-            {t('common.new')} - {t('navigator.topic')}
-          </ModalHeader>
-
-          <EditingForm
-            onSubmit={(res) => {
-              create(res)
-                .then(() => {
-                  setNewModalOpen(false)
-                  toast.success(t('common.create-success'))
-                  utils.topic.invalidate()
-                })
-                .catch((e) => {
-                  toast.error(e.message)
-                })
-            }}
-          />
-        </ModalContent>
-      </NextUIModal>
+        <EditingForm
+          onSubmit={(res) => {
+            create(res)
+              .then(() => {
+                setNewModalOpen(false)
+                toast.success(t('common.create-success'))
+                utils.topic.invalidate()
+              })
+              .catch((e) => {
+                toast.error(e.message)
+              })
+          }}
+        />
+      </DeclarativeModal>
     </>
   )
 }
@@ -440,37 +426,31 @@ const EditButton = () => {
       >
         {t('common.edit')}
       </Button>
-      <NextUIModal
-        size="lg"
-        isOpen={modalOpen}
-        onClose={() => {
+      <DeclarativeModal
+        title={`${t('common.edit')} - ${t('navigator.topic')}`}
+        open={modalOpen}
+        onOpenChange={() => {
           setModalOpen(false)
         }}
       >
-        <ModalContent>
-          <ModalHeader>
-            {t('common.edit')} - {t('navigator.topic')}
-          </ModalHeader>
-
-          <EditingForm
-            initialValues={topic}
-            onSubmit={(res) => {
-              update({
-                ...res,
-                id: topic!.id,
+        <EditingForm
+          initialValues={topic}
+          onSubmit={(res) => {
+            update({
+              ...res,
+              id: topic!.id,
+            })
+              .then(() => {
+                setModalOpen(false)
+                toast.success(t('common.save-success'))
+                utils.topic.invalidate()
               })
-                .then(() => {
-                  setModalOpen(false)
-                  toast.success(t('common.save-success'))
-                  utils.topic.invalidate()
-                })
-                .catch((e) => {
-                  toast.error(e.message)
-                })
-            }}
-          />
-        </ModalContent>
-      </NextUIModal>
+              .catch((e) => {
+                toast.error(e.message)
+              })
+          }}
+        />
+      </DeclarativeModal>
     </>
   )
 }
@@ -485,7 +465,7 @@ const EditingForm: FC<{
     <Form
       ref={formRef}
       initialValues={initialValues}
-      className="p-6 gap-4 flex flex-col"
+      className="gap-4 lg:w-[600px] flex flex-col"
       onSubmit={(e, res) => {
         onSubmit(res)
       }}

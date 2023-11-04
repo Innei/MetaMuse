@@ -1,4 +1,4 @@
-import { Button, Input, Textarea } from '@nextui-org/react'
+import { Input, Textarea } from '@nextui-org/react'
 import { useRef } from 'react'
 import OpenAI from 'openai'
 import { toast } from 'sonner'
@@ -6,12 +6,12 @@ import { useEventCallback } from 'usehooks-ts'
 import type { FC } from 'react'
 
 import { OpenAIIcon } from '~/components/icons'
-import { MotionButtonBase } from '~/components/ui/button'
+import { Button, MotionButtonBase } from '~/components/ui/button'
+import { useModalStack } from '~/components/ui/modal/stacked/provider'
 import { APP_SCOPE } from '~/constants/app'
 import { useUncontrolledInput } from '~/hooks/common/use-uncontrolled-input'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
-import { useModalStack } from '~/providers/modal-stack-provider'
 
 import {
   usePostModelGetModelData,
@@ -214,7 +214,7 @@ CONCISE SUMMARY:`
 
       <div className="flex justify-end space-x-4 mt-4">
         <Button
-          isDisabled={isLoadingRef.current || !tokenValue}
+          disabled={isLoadingRef.current || !tokenValue}
           color="primary"
           onClick={() => {
             handleAskAI().then(() => {

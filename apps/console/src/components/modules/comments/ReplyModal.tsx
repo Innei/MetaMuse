@@ -1,19 +1,19 @@
-import { Button, Textarea } from '@nextui-org/react'
+import { Textarea } from '@nextui-org/react'
 import markdownEscape from 'markdown-escape'
 import { toast } from 'sonner'
 import { useEventCallback } from 'usehooks-ts'
 
 import { useIsMobile } from '~/atoms'
-import { MotionButtonBase } from '~/components/ui/button'
+import { Button, MotionButtonBase } from '~/components/ui/button'
 import { PresentDrawer } from '~/components/ui/drawer'
 import { FloatPopover } from '~/components/ui/float-popover'
+import { useCurrentModal } from '~/components/ui/modal/stacked/context'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { KAOMOJI_LIST } from '~/constants/kaomoji'
 import { useUncontrolledInput } from '~/hooks/common/use-uncontrolled-input'
 import { useI18n } from '~/i18n/hooks'
 import { $axios } from '~/lib/request'
 import { trpc } from '~/lib/trpc'
-import { useCurrentModal } from '~/providers/modal-stack-provider'
 
 export const ReplyModal = (props: NormalizedComment) => {
   const { author, id, text } = props
@@ -119,13 +119,7 @@ export const ReplyModal = (props: NormalizedComment) => {
           </FloatPopover>
         )}
 
-        <Button
-          variant="solid"
-          color="primary"
-          size="sm"
-          onClick={handleReply}
-          type="submit"
-        >
+        <Button color="primary" size="sm" onClick={handleReply} type="submit">
           {t('common.submit')}
         </Button>
       </div>

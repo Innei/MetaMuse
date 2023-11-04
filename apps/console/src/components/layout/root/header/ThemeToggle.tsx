@@ -1,6 +1,6 @@
-import { Button } from '@nextui-org/react'
 import { useMemo } from 'react'
 
+import { Button } from '~/components/ui'
 import { useTheme } from '~/hooks/common/use-theme'
 
 export const ThemeToggle = () => {
@@ -18,9 +18,10 @@ export const ThemeToggle = () => {
 
   return (
     <Button
-      variant="light"
-      className="rounded-full"
-      isIconOnly
+      variant="ghost"
+      iconOnly
+      rounded
+      tooltip="Switch Theme"
       onClick={() => {
         switch (theme) {
           case 'light':

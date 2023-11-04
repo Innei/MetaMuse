@@ -1,11 +1,3 @@
-import {
-  Button,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  useDisclosure,
-} from '@nextui-org/react'
 import { useMemo, useState } from 'react'
 import { load } from 'js-yaml'
 import { useEventCallback } from 'usehooks-ts'
@@ -13,11 +5,12 @@ import type { FC } from 'react'
 
 import { input } from '@nextui-org/theme'
 
+import { Button } from '~/components/ui/button'
+import { DeclarativeModal } from '~/components/ui/modal/stacked/declarative-modal'
+import { useDisclosure } from '~/hooks/common/use-disclosure'
 import { usePreventComposition } from '~/hooks/common/use-prevent-composition'
 import { useUncontrolledInput } from '~/hooks/common/use-uncontrolled-input'
 import { useI18n } from '~/i18n/hooks'
-
-import { NextUIModal } from '../../ui/modal'
 
 type ParsedValue = {
   title?: string
@@ -79,42 +72,40 @@ export const ImportMarkdownButton: FC<{
   usePreventComposition(textareaEl!)
   return (
     <>
-      <Button onClick={onOpen}>{t('common.import')}</Button>
-      <NextUIModal isOpen={isOpen} size="3xl" onOpenChange={onOpenChange}>
-        <ModalContent>
-          <ModalHeader>{t('common.import')}</ModalHeader>
-          <ModalBody>
-            <p className="-mb-4 -translate-y-4 text-xs opacity-60">
-              {t('module.parse_md_yaml.title')}
-            </p>
-            <div
-              className={inputTv.inputWrapper({
-                className: 'h-[calc(100vh-10rem)] max-h-[600px]',
+      <Button variant="outline" onClick={onOpen}>
+        {t('common.import')}
+      </Button>
+      <DeclarativeModal
+        open={isOpen}
+        onOpenChange={onOpenChange}
+        title={t('common.import')}
+      >
+        <div className="lg:w-[800px] max-w-full">
+          <p className="opacity-60">{t('module.parse_md_yaml.title')}</p>
+          <div
+            className={inputTv.inputWrapper({
+              className: 'h-[calc(70vh-15rem)] max-h-[600px] mt-5 flex-grow',
+            })}
+          >
+            <textarea
+              ref={(el) => {
+                // @ts-expect-error
+                ref.current = el
+                setTextAreaEl(el)
+              }}
+              className={inputTv.input({
+                className: 'h-0 flex-grow w-full resize-none',
               })}
-            >
-              <textarea
-                ref={(el) => {
-                  // @ts-expect-error
-                  ref.current = el
-                  setTextAreaEl(el)
-                }}
-                className={inputTv.input({
-                  className: 'h-full w-full resize-none',
-                })}
-              />
-            </div>
-          </ModalBody>
-          <ModalFooter className="flex justify-end space-x-2">
-            <Button
-              variant="shadow"
-              color="primary"
-              onClick={handleParseContent}
-            >
+            />
+          </div>
+
+          <DeclarativeModal.FooterAction>
+            <Button variant="default" onClick={handleParseContent}>
               {t('common.ok')}
             </Button>
-          </ModalFooter>
-        </ModalContent>
-      </NextUIModal>
+          </DeclarativeModal.FooterAction>
+        </div>
+      </DeclarativeModal>
     </>
   )
 }

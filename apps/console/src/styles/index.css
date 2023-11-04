@@ -1,3 +1,4 @@
+@import './ui.css';
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;700&display=swap');
 
 @tailwind base;
@@ -30,7 +31,7 @@ html {
 }
 
 html {
-  font-size: 14px;
+  font-size: 15px;
 }
 
 * {

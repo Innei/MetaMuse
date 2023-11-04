@@ -1,4 +1,3 @@
-import { Button } from '@nextui-org/react'
 import { useMemo, useRef } from 'react'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs'
@@ -6,9 +5,10 @@ import { toast } from 'sonner'
 import { useEventCallback } from 'usehooks-ts'
 import type { FC } from 'react'
 
+import { Button } from '~/components/ui'
+import { useModalStack } from '~/components/ui/modal/stacked/provider'
 import { useAsyncMonaco } from '~/hooks/biz/use-async-monaco'
 import { useI18n } from '~/i18n/hooks'
-import { useModalStack } from '~/providers/modal-stack-provider'
 
 import { styles } from './styles'
 
@@ -55,7 +55,7 @@ export const MetaKeyValueEditSection: FC<MetaKeyValueEditSectionProps> = (
       <div className="flex justify-between items-center">
         <label className={styles.slots.label}>Meta</label>
 
-        <Button size="sm" variant="flat" onClick={handlePresentModal}>
+        <Button size="xs" onClick={handlePresentModal}>
           {t('common.edit')}
         </Button>
       </div>
@@ -110,7 +110,7 @@ const EditorModal: FC<{
     <div className="flex flex-col w-full lg:w-[600px] flex-grow relative">
       <div ref={editorWrapperRef} className="h-[400px]" />
       <div className="flex justify-end flex-shrink-0">
-        <Button size="sm" onClick={handleSave} variant="shadow" color="primary">
+        <Button size="sm" onClick={handleSave} color="primary">
           {t('common.save')}
         </Button>
       </div>

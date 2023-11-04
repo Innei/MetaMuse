@@ -1,5 +1,4 @@
-import { Switch } from '@nextui-org/react'
-
+import { LabelSwitch } from '~/components/ui'
 import { useI18n } from '~/i18n/hooks'
 
 import { useNoteModelSingleFieldAtom } from '../data-provider'
@@ -16,35 +15,29 @@ export const NoteCombinedSwitch = () => {
   const t = useI18n()
   return (
     <>
-      <div className="flex items-center justify-between">
+      <LabelSwitch
+        className="flex-shrink-0"
+        checked={isPublished}
+        onCheckedChange={setIsPublished}
+      >
         <span>{t('common.should-published')}</span>
-        <Switch
-          className="flex-shrink-0"
-          size="sm"
-          isSelected={isPublished}
-          onValueChange={setIsPublished}
-        />
-      </div>
+      </LabelSwitch>
 
-      <div className="flex items-center justify-between">
+      <LabelSwitch
+        className="flex-shrink-0"
+        checked={allowComment}
+        onCheckedChange={setAllowComment}
+      >
         <span>{t('common.allow-comment')}</span>
-        <Switch
-          className="flex-shrink-0"
-          size="sm"
-          isSelected={allowComment}
-          onValueChange={setAllowComment}
-        />
-      </div>
+      </LabelSwitch>
 
-      <div className="flex items-center justify-between">
+      <LabelSwitch
+        className="flex-shrink-0"
+        checked={hasMemory}
+        onCheckedChange={setHasMemory}
+      >
         <span>{t('module.notes.mark_as_memory')}</span>
-        <Switch
-          className="flex-shrink-0"
-          size="sm"
-          isSelected={hasMemory}
-          onValueChange={setHasMemory}
-        />
-      </div>
+      </LabelSwitch>
     </>
   )
 }

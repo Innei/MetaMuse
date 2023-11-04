@@ -1,9 +1,10 @@
-import { Button, Input } from '@nextui-org/react'
+import { Input } from '@nextui-org/react'
 import { useMutation } from '@tanstack/react-query'
 import { useForceUpdate } from 'framer-motion'
 import { toast } from 'sonner'
 import type { UserRegisterDto } from '@core/modules/user/dtos/register.dto'
 
+import { Button } from '~/components/ui'
 import { useUncontrolledInput } from '~/hooks/common/use-uncontrolled-input'
 import { $axios } from '~/lib/request'
 import { router } from '~/router'
@@ -87,7 +88,7 @@ const RegisterStep = () => {
         <button type="submit" className="hidden" />
       </form>
       <div className="mt-8 flex items-center justify-center">
-        <Button variant="shadow" color="primary" onClick={handleRegister}>
+        <Button color="primary" onClick={handleRegister}>
           登录
         </Button>
       </div>

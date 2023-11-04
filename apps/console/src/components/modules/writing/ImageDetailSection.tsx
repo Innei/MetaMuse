@@ -1,14 +1,4 @@
-import {
-  Accordion,
-  AccordionItem,
-  Button,
-  ButtonGroup,
-  Divider,
-  Input,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@nextui-org/react'
+import { Accordion, AccordionItem, Input } from '@nextui-org/react'
 import { Colorful } from '@uiw/react-color'
 import { memo, useEffect, useMemo, useState } from 'react'
 import uniqBy from 'lodash-es/uniqBy'
@@ -17,7 +7,8 @@ import { useEventCallback } from 'usehooks-ts'
 import type { ArticleImage, ArticleImagesDto } from '@core/shared/dto/image.dto'
 import type { FC } from 'react'
 
-import { MotionButtonBase } from '~/components/ui/button'
+import { Divider, FloatPopover } from '~/components/ui'
+import { Button, ButtonGroup, MotionButtonBase } from '~/components/ui/button'
 import { useI18n } from '~/i18n/hooks'
 import { getDominantColor } from '~/lib/color'
 import { pickImagesFromMarkdown } from '~/lib/markdown'
@@ -180,8 +171,7 @@ export const ImageDetailSection: FC<ImageDetailSectionProps> = (props) => {
           <Button
             isLoading={loading}
             className="self-end"
-            size="sm"
-            variant="flat"
+            size="xs"
             onClick={handleCorrectImageDimensions}
           >
             {t('module.writing.image-adjust.button')}
@@ -276,12 +266,11 @@ const Item: FC<
 
       <div className="flex items-center gap-1">
         <label className={styles.slots.label}>{t('common.action')}</label>
-        <ButtonGroup size="sm">
+        <ButtonGroup variant="outline" size="xs">
           <Button
             onClick={() => {
               window.open(image.src)
             }}
-            variant="flat"
             color="primary"
           >
             {t('common.visit')}
@@ -290,8 +279,7 @@ const Item: FC<
             onClick={() => {
               handleOnChange(image.src, 'src', '')
             }}
-            variant="bordered"
-            color="danger"
+            color="destructive"
           >
             {t('common.delete')}
           </Button>
@@ -313,8 +301,8 @@ const ColorPicker: FC<{
   }, [accent])
 
   return (
-    <Popover>
-      <PopoverTrigger>
+    <FloatPopover
+      triggerElement={
         <MotionButtonBase
           id="color-picker"
           className="ring-default-200 h-6 w-6 rounded-full bg-current ring"
@@ -322,19 +310,18 @@ const ColorPicker: FC<{
             backgroundColor: currentColor || '',
           }}
         />
-      </PopoverTrigger>
-      <PopoverContent>
-        <ColorPickerContent
-          accent={currentColor || '#fff'}
-          onChange={useEventCallback((hex) => {
-            setCurrentColor(hex)
-          })}
-          onDestroy={useEventCallback(() => {
-            onChange(currentColor)
-          })}
-        />
-      </PopoverContent>
-    </Popover>
+      }
+    >
+      <ColorPickerContent
+        accent={currentColor || '#fff'}
+        onChange={useEventCallback((hex) => {
+          setCurrentColor(hex)
+        })}
+        onDestroy={useEventCallback(() => {
+          onChange(currentColor)
+        })}
+      />
+    </FloatPopover>
   )
 }
 

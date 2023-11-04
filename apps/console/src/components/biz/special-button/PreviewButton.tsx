@@ -1,9 +1,9 @@
-import { Button } from '@nextui-org/react'
 import { useEffect, useRef } from 'react'
 import debounce from 'lodash-es/debounce'
 import { toast } from 'sonner'
 import type { UrlDto } from '@core/modules/configs/configs.dto'
 
+import { Button } from '~/components/ui/button'
 import { EmitKeyMap } from '~/constants/keys'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
@@ -97,5 +97,9 @@ export const PreviewButton = <T extends { id: string }>(props: {
   })
 
   const t = useI18n()
-  return <Button onClick={handlePreview}>{t('common.preview')}</Button>
+  return (
+    <Button variant="outline" onClick={handlePreview}>
+      {t('common.preview')}
+    </Button>
+  )
 }

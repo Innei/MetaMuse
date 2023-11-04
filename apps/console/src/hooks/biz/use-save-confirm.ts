@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { useModalStack } from '~/providers/modal-stack-provider'
+import { useModalStack } from '~/components/ui/modal/stacked/provider'
 
 import { usePrompt } from './use-prompt'
 

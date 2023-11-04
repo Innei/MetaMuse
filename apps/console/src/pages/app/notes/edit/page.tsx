@@ -1,4 +1,3 @@
-import { Button, ButtonGroup } from '@nextui-org/react'
 import React, { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import dayjs from 'dayjs'
@@ -15,7 +14,7 @@ import type { FC } from 'react'
 import {
   ImportMarkdownButton,
   PreviewButton,
-} from '~/components/biz/logic-button'
+} from '~/components/biz/special-button'
 import { BaseWritingProvider } from '~/components/biz/writing/provider'
 import { useEditorRef, Writing } from '~/components/biz/writing/Writing'
 import { PageLoading } from '~/components/common/PageLoading'
@@ -29,6 +28,8 @@ import {
   useNoteModelSetModelData,
 } from '~/components/modules/note-editing/data-provider'
 import { EditorLayer } from '~/components/modules/writing/EditorLayer'
+import { Button } from '~/components/ui/button'
+import { ButtonGroup } from '~/components/ui/button/button-group'
 import { useI18n } from '~/i18n/hooks'
 import { getDayOfYear } from '~/lib/datetime'
 import { routeBuilder, Routes } from '~/lib/route-builder'
@@ -168,13 +169,13 @@ const ActionButtonGroup = ({ initialData }: { initialData?: NoteModel }) => {
   )
   return (
     <>
-      <ButtonGroup variant="ghost">
+      <ButtonGroup variant="outline">
         <PreviewButton getData={getData} />
         <ImportMarkdownButton onParsedValue={handleParsed} />
       </ButtonGroup>
+
       <Button
-        color="primary"
-        variant="shadow"
+        variant="default"
         onClick={() => {
           const currentData = {
             ...getData(),

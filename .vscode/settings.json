@@ -17,8 +17,12 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "tailwindCSS.experimental.classRegex": [
     [
-      "/\\*tw\\*/ ([^;]*);",
-      "'([^']*)'"
+      "cva\\(([^)]*)\\)",
+      "[\"'`]([^\"'`]*).*?[\"'`]"
+    ],
+    [
+      "cx\\(([^)]*)\\)",
+      "(?:'|\"|`)([^']*)(?:'|\"|`)"
     ],
     [
       "[a-zA-Z]*className='([^']+)'"
@@ -26,5 +30,5 @@
     [
       "classNames='([^']+)'"
     ]
-  ]
+  ],
 }
