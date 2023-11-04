@@ -1,18 +1,15 @@
-import { Chip } from '@nextui-org/react'
-import React, { useEffect, useMemo } from 'react'
-import { atom, useAtom, useSetAtom } from 'jotai'
+import React from 'react'
+import { atom } from 'jotai'
 import type { PostTag } from '@model'
-import type { Suggestion } from '../../../ui/auto-completion'
 
 import { select } from '@nextui-org/theme'
 
+import { AddTag, Tag } from '~/components/ui'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
 
-import { Autocomplete } from '../../../ui/auto-completion'
 import {
   usePostModelDataSelector,
-  usePostModelGetModelData,
   usePostModelSetModelData,
 } from '../data-provider'
 
@@ -38,13 +35,6 @@ export const TagsInput = () => {
     })
   }
 
-  const [newTag, setNewTag] = useAtom(tagInputAtom)
-
-  useEffect(() => {
-    setNewTag(false)
-    return () => setNewTag(false)
-  }, [])
-
   return (
     <div>
       <label
@@ -57,28 +47,12 @@ export const TagsInput = () => {
 
       <div className="mt-2 flex flex-wrap gap-2">
         {tags?.map((tag) => (
-          <Chip
-            size="md"
-            key={tag.id}
-            onClose={() => handleClose(tag)}
-            variant="bordered"
-          >
+          <Tag canClose key={tag.id} onClose={() => handleClose(tag)}>
             {tag.name}
-          </Chip>
+          </Tag>
         ))}
 
-        {!newTag ? (
-          <div
-            className="border-foreground-400/80 rounded-full border border-dashed h-6 w-6 flex items-center justify-center"
-            onClick={() => {
-              setNewTag(true)
-            }}
-          >
-            <i className="icon-[mingcute--add-line] h-3 w-3" />
-          </div>
-        ) : (
-          <TagCompletion />
-        )}
+        <TagCompletion />
       </div>
     </div>
   )
@@ -92,25 +66,16 @@ const TagCompletion = () => {
   const { mutateAsync: createTag } = trpc.post.createTag.useMutation()
 
   const setter = usePostModelSetModelData()
-  const getModelData = usePostModelGetModelData()
 
-  const suggestions = useMemo<Suggestion[]>(() => {
-    if (!tags) return []
-    const currentTagIds = getModelData()?.tagIds ?? []
-    const tagIdSet = new Set(currentTagIds)
-    return tags
-      .filter((t) => !tagIdSet.has(t.id))
-      .map((tag) => ({
-        value: tag.id,
-        name: tag.name,
-      }))
-  }, [getModelData, tags])
-
-  const setInput = useSetAtom(tagInputAtom)
+  const existsTags = usePostModelDataSelector(
+    (data) => data?.tags.map((t) => ({ id: t.id })),
+  )
 
   return (
-    <Autocomplete
-      onSuggestionSelected={(suggestion) => {
+    <AddTag
+      allTags={tags}
+      existsTags={existsTags}
+      onSelected={(suggestion) => {
         setter((prev) => {
           if (prev.tagIds.find((id) => id === suggestion.value)) return prev
           return {
@@ -122,10 +87,8 @@ const TagCompletion = () => {
             tagIds: [...prev.tagIds, suggestion.value],
           }
         })
-        setInput(false)
       }}
-      suggestions={suggestions}
-      onConfirm={async (value) => {
+      onEnter={async (value) => {
         const data = await createTag({
           name: value,
         })
@@ -138,8 +101,6 @@ const TagCompletion = () => {
             tagIds: [...prev.tagIds, data.id],
           }
         })
-
-        setInput(false)
       }}
     />
   )

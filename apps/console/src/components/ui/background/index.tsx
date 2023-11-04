@@ -1,4 +1,3 @@
-import { Input } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { toast } from 'sonner'
@@ -10,6 +9,7 @@ import { trpc } from '~/lib/trpc'
 import { isLogged, useIsLogged } from '~/store/user'
 
 import { Button } from '../button'
+import { Input } from '../input'
 import { useCurrentModal } from '../modal'
 import { DeclarativeModal } from '../modal/stacked/declarative-modal'
 import styles from './index.module.css'
@@ -98,7 +98,7 @@ const BackgroundModal = () => {
   return (
     <div className="lg:w-[500px]">
       <div className="flex flex-col space-y-4">
-        <Input label="Background URL" placeholder=" " ref={ref} size="sm" />
+        <Input label="Background URL" ref={ref} />
       </div>
       <DeclarativeModal.FooterAction>
         <Button

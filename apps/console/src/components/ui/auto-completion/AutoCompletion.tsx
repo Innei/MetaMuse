@@ -1,4 +1,3 @@
-import { Input, Listbox, ListboxItem } from '@nextui-org/react'
 import {
   forwardRef,
   useEffect,
@@ -10,9 +9,10 @@ import { AnimatePresence } from 'framer-motion'
 import Fuse from 'fuse.js'
 import { throttle } from 'lodash-es'
 import { useEventCallback } from 'usehooks-ts'
-import type { InputProps } from '@nextui-org/react'
 import type { KeyboardEvent } from 'react'
+import type { InputProps } from '../input'
 
+import { Input } from '../input'
 import { MotionDivToBottom } from '../motion'
 
 export type Suggestion = {
@@ -49,7 +49,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       const fuse = new Fuse(suggestions, {
         keys: ['name', 'value'],
       })
-      const trimInputValue = inputValue.trim()
+      const trimInputValue = (inputValue as string).trim()
 
       if (!trimInputValue) return setFilterableSuggestions(suggestions)
 
@@ -96,7 +96,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
     })
 
     return (
-      <div className="relative">
+      <div className="relative pointer-events-auto">
         <Input
           ref={inputRef}
           onFocus={() => setIsOpen(true)}
@@ -107,15 +107,14 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
         />
         <AnimatePresence>
           {isOpen && !!filterableSuggestions.length && (
-            <Listbox
-              as={MotionDivToBottom}
-              ref={ref}
-              className="border-1 border-default-200 dark:border-default-100 bg-content1 absolute z-50 mt-1 max-h-48 overflow-auto rounded-xl"
+            <MotionDivToBottom
+              className="w-full border-1 border-default-200 dark:border-default-100 bg-content1 absolute z-50 mt-1 max-h-48 overflow-auto rounded-md"
               onScroll={handleScroll}
             >
               {filterableSuggestions.map((suggestion) => {
                 return (
-                  <ListboxItem
+                  <div
+                    className="px-4 py-3 hover:bg-default-200 dark:hover:bg-default-100 cursor-default"
                     key={suggestion.value}
                     onClick={() => {
                       onSuggestionSelected(suggestion)
@@ -125,10 +124,10 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
                     }}
                   >
                     {renderSuggestion(suggestion)}
-                  </ListboxItem>
+                  </div>
                 )
               })}
-            </Listbox>
+            </MotionDivToBottom>
           )}
         </AnimatePresence>
       </div>

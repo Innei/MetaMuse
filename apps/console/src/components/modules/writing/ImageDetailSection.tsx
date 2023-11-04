@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem, Input } from '@nextui-org/react'
+import { Accordion, AccordionItem } from '@nextui-org/react'
 import { Colorful } from '@uiw/react-color'
 import { memo, useEffect, useMemo, useState } from 'react'
 import uniqBy from 'lodash-es/uniqBy'
@@ -7,13 +7,18 @@ import { useEventCallback } from 'usehooks-ts'
 import type { ArticleImage, ArticleImagesDto } from '@core/shared/dto/image.dto'
 import type { FC } from 'react'
 
-import { Divider, FloatPopover } from '~/components/ui'
+import {
+  Divider,
+  FloatPopover,
+  Input,
+  InputProvider,
+  Label,
+  LabelProvider,
+} from '~/components/ui'
 import { Button, ButtonGroup, MotionButtonBase } from '~/components/ui/button'
 import { useI18n } from '~/i18n/hooks'
 import { getDominantColor } from '~/lib/color'
 import { pickImagesFromMarkdown } from '~/lib/markdown'
-
-import { styles } from './styles'
 
 export interface ImageDetailSectionProps {
   images: ArticleImagesDto
@@ -211,80 +216,67 @@ const Item: FC<
   const t = useI18n()
   return (
     <div className="my-6 flex flex-col space-y-3">
-      <Input
-        labelPlacement="outside-left"
-        classNames={{
-          label: styles.slots.label,
-        }}
-        label={t('common.height')}
-        value={image.height?.toString() || ''}
-        onChange={(e) => {
-          const validValue = parseInt(e.target.value)
-          if (Number.isNaN(validValue)) return
-          handleOnChange(image.src, 'height', validValue)
-        }}
-        size="sm"
-      />
-      <Input
-        labelPlacement="outside-left"
-        classNames={{
-          label: styles.slots.label,
-        }}
-        label={t('common.width')}
-        value={image.width?.toString() || ''}
-        size="sm"
-        onChange={(e) => {
-          const validValue = parseInt(e.target.value)
-          if (Number.isNaN(validValue)) return
-          handleOnChange(image.src, 'width', validValue)
-        }}
-      />
-      <Input
-        labelPlacement="outside-left"
-        classNames={{
-          label: styles.slots.label,
-        }}
-        label={t('common.type')}
-        value={image.type?.toString() || ''}
-        size="sm"
-        onChange={(e) => {
-          handleOnChange(image.src, 'type', e.target.value)
-        }}
-      />
-
-      <div className="flex items-center gap-1">
-        <label className={styles.slots.label} htmlFor="color-picker">
-          {t('common.accent')}
-        </label>
-        <ColorPicker
-          accent={image.accent || '#fff'}
-          onChange={(hex) => {
-            handleOnChange(image.src, 'accent', hex)
-          }}
-        />
-      </div>
-
-      <div className="flex items-center gap-1">
-        <label className={styles.slots.label}>{t('common.action')}</label>
-        <ButtonGroup variant="outline" size="xs">
-          <Button
-            onClick={() => {
-              window.open(image.src)
+      <LabelProvider className="w-20">
+        <InputProvider labelPlacement="left">
+          <Input
+            label={t('common.height')}
+            value={image.height?.toString() || ''}
+            onChange={(e) => {
+              const validValue = parseInt(e.target.value)
+              if (Number.isNaN(validValue)) return
+              handleOnChange(image.src, 'height', validValue)
             }}
-            color="primary"
-          >
-            {t('common.visit')}
-          </Button>
-          <Button
-            onClick={() => {
-              handleOnChange(image.src, 'src', '')
+          />
+          <Input
+            label={t('common.width')}
+            value={image.width?.toString() || ''}
+            onChange={(e) => {
+              const validValue = parseInt(e.target.value)
+              if (Number.isNaN(validValue)) return
+              handleOnChange(image.src, 'width', validValue)
             }}
-            color="destructive"
-          >
-            {t('common.delete')}
-          </Button>
-        </ButtonGroup>
-      </div>
+          />
+          <Input
+            label={t('common.type')}
+            value={image.type?.toString() || ''}
+            onChange={(e) => {
+              handleOnChange(image.src, 'type', e.target.value)
+            }}
+          />
+        </InputProvider>
+
+        <div className="flex items-center gap-1">
+          <Label htmlFor="color-picker">{t('common.accent')}</Label>
+          <ColorPicker
+            accent={image.accent || '#fff'}
+            onChange={(hex) => {
+              handleOnChange(image.src, 'accent', hex)
+            }}
+          />
+        </div>
+
+        <div className="flex items-center gap-1">
+          <Label>{t('common.action')}</Label>
+          <ButtonGroup variant="outline" size="xs">
+            <Button
+              onClick={() => {
+                window.open(image.src)
+              }}
+              color="primary"
+            >
+              {t('common.visit')}
+            </Button>
+            <Button
+              onClick={() => {
+                handleOnChange(image.src, 'src', '')
+              }}
+              color="destructive"
+            >
+              {t('common.delete')}
+            </Button>
+          </ButtonGroup>
+        </div>
+      </LabelProvider>
     </div>
   )
 })

@@ -1,4 +1,3 @@
-import { Input, Textarea } from '@nextui-org/react'
 import {
   forwardRef,
   useCallback,
@@ -7,12 +6,14 @@ import {
   useState,
 } from 'react'
 import { useEventCallback } from 'usehooks-ts'
-import type { InputProps } from '@nextui-org/react'
 import type { ForwardRefComponent } from 'framer-motion'
+import type { InputProps } from '../input'
 import type { FormFieldBaseProps } from './types'
 
 import { clsxm } from '~/lib/helper'
 
+import { Input } from '../input'
+import { Textarea } from '../textarea'
 import { useFormConfig } from './FormContext'
 import { useValidateInput } from './hooks'
 
@@ -61,15 +62,15 @@ export const FormInput: ForwardRefComponent<
     const As = textarea ? Textarea : Input
     return (
       <As
+        // @ts-ignore
         ref={inputRef}
         className={clsxm('w-full', className)}
-        size="sm"
-        labelPlacement="outside"
-        placeholder=" "
-        isInvalid={!!errorMessage}
+        // @ts-expect-error
         onBlur={handleBlur}
-        errorMessage={!!errorMessage && showErrorMessage && errorMessage}
+        errorMessage={errorMessage}
+        isInvalid={!!errorMessage && showErrorMessage}
         isRequired={rest.required}
+        // @ts-expect-error
         onKeyDown={handleKeyDown}
         {...rest}
       />

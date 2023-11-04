@@ -1,8 +1,8 @@
-import { Input } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import type { FC } from 'react'
 
+import { Input } from '~/components/ui'
 import { useI18n } from '~/i18n/hooks'
 import { isValidDate } from '~/lib/datetime'
 
@@ -32,11 +32,8 @@ export const SidebarDateInputField: FC<{
   return (
     <Input
       label={label || t('common.custom-created')}
-      size="sm"
       value={editingCreated}
       errorMessage={hasError ? t('common.invalid-date') : undefined}
-      color={hasError ? 'danger' : 'default'}
-      labelPlacement="outside"
       placeholder={created || ' '}
       onBlur={() => {
         if (!hasError) {

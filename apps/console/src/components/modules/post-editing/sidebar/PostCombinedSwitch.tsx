@@ -1,5 +1,4 @@
-import { Switch } from '@nextui-org/react'
-
+import { LabelSwitch } from '~/components/ui'
 import { useI18n } from '~/i18n/hooks'
 
 import { usePostModelSingleFieldAtom } from '../data-provider'
@@ -16,45 +15,23 @@ export const PostCombinedSwitch = () => {
   const t = useI18n()
   return (
     <>
-      <div className="flex items-center justify-between">
-        <span>{t('common.copyright')}</span>
-        <Switch
-          className="flex-shrink-0"
-          size="sm"
-          isSelected={copyright}
-          onValueChange={setCopyright}
-        />
-      </div>
+      <LabelSwitch
+        checked={copyright}
+        label={t('common.copyright')}
+        onCheckedChange={setCopyright}
+      />
 
-      <div className="flex items-center justify-between">
+      <LabelSwitch checked={isPublished} onCheckedChange={setIsPublished}>
         <span>{t('common.should-published')}</span>
-        <Switch
-          className="flex-shrink-0"
-          size="sm"
-          isSelected={isPublished}
-          onValueChange={setIsPublished}
-        />
-      </div>
+      </LabelSwitch>
 
-      <div className="flex items-center justify-between">
+      <LabelSwitch checked={pin} onCheckedChange={setPin}>
         <span>{t('common.pin')}</span>
-        <Switch
-          className="flex-shrink-0"
-          size="sm"
-          isSelected={pin}
-          onValueChange={setPin}
-        />
-      </div>
+      </LabelSwitch>
 
-      <div className="flex items-center justify-between">
+      <LabelSwitch checked={allowComment} onCheckedChange={setAllowComment}>
         <span>{t('common.allow-comment')}</span>
-        <Switch
-          className="flex-shrink-0"
-          size="sm"
-          isSelected={allowComment}
-          onValueChange={setAllowComment}
-        />
-      </div>
+      </LabelSwitch>
     </>
   )
 }

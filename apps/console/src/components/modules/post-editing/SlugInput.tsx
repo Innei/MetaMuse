@@ -1,4 +1,3 @@
-import { Input, Skeleton } from '@nextui-org/react'
 import { useEffect, useRef } from 'react'
 import type { UrlDto } from '@core/modules/configs/configs.dto'
 
@@ -31,27 +30,21 @@ export const SlugInput = () => {
   return (
     <>
       {isLoading ? (
-        <Skeleton className="h-2 w-[120px]" />
+        <div className="h-2 w-[120px] bg-default-200 animate-pulse" />
       ) : (
         <label>{`${urlConfig?.webUrl}/posts/${category?.slug}/`}</label>
       )}
 
       <div className="relative ml-1 inline-flex min-w-[2rem] items-center [&_*]:leading-4">
-        <Input
-          size="sm"
-          variant="faded"
-          color="primary"
-          classNames={{
-            inputWrapper: 'px-1',
-          }}
-          className="absolute w-full translate-y-[1px]"
+        <input
+          className="input input-xs absolute w-full translate-y-[1px]"
           value={slug}
           onChange={(e) => {
             setSlug(e.target.value)
           }}
         />
         <span className="pointer-events-none text-transparent">
-          {slug}&nbsp;&nbsp;&nbsp;
+          {slug}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         </span>
       </div>
     </>

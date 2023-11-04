@@ -5,12 +5,10 @@ import { toast } from 'sonner'
 import { useEventCallback } from 'usehooks-ts'
 import type { FC } from 'react'
 
-import { Button } from '~/components/ui'
+import { Button, Label } from '~/components/ui'
 import { useModalStack } from '~/components/ui/modal/stacked/provider'
 import { useAsyncMonaco } from '~/hooks/biz/use-async-monaco'
 import { useI18n } from '~/i18n/hooks'
-
-import { styles } from './styles'
 
 type KeyValueString = string
 interface MetaKeyValueEditSectionProps {
@@ -53,7 +51,7 @@ export const MetaKeyValueEditSection: FC<MetaKeyValueEditSectionProps> = (
   return (
     <div className="flex flex-col space-y-4 relative">
       <div className="flex justify-between items-center">
-        <label className={styles.slots.label}>Meta</label>
+        <Label>Meta</Label>
 
         <Button size="xs" onClick={handlePresentModal}>
           {t('common.edit')}

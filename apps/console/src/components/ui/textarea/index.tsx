@@ -3,7 +3,8 @@ import clsx from 'clsx'
 
 import { clsxm } from '~/lib/helper'
 
-import { Label } from '../label'
+import { ErrorLabelLine } from '../label'
+import { Label } from '../label/Label'
 
 export interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -11,11 +12,22 @@ export interface TextareaProps
   labelPlacement?: 'top' | 'left'
 
   textareaClassName?: string
+
+  errorMessage?: string
+  isInvalid?: boolean
 }
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   (
-    { className, label, labelPlacement = 'top', textareaClassName, ...props },
+    {
+      className,
+      label,
+      labelPlacement = 'top',
+      textareaClassName,
+      errorMessage,
+      isInvalid,
+      ...props
+    },
     ref,
   ) => {
     if (props.readOnly) {
@@ -23,38 +35,45 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     }
     const id = useId()
     return (
-      <div
-        className={clsxm(
-          {
-            'flex flex-col': labelPlacement === 'top',
-            'flex-row items-center': labelPlacement === 'left',
-          },
-          'peer',
-          className,
-        )}
-      >
-        {label && (
-          <Label
-            className={clsx('text-sm', {
-              'mr-4': labelPlacement === 'left',
-              'mb-2 ml-2 flex': labelPlacement === 'top',
-            })}
-            htmlFor={id}
-          >
-            {label}
-          </Label>
-        )}
-
-        <textarea
+      <div className="flex flex-col">
+        <div
           className={clsxm(
-            'flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50',
-            'read-only:bg-default-100',
-            textareaClassName,
+            {
+              'flex flex-col': labelPlacement === 'top',
+              'flex-row items-center': labelPlacement === 'left',
+            },
+            'peer',
+            className,
           )}
-          id={id}
-          ref={ref}
-          {...props}
-        />
+        >
+          {label && (
+            <Label
+              className={clsx('text-xs', {
+                'mr-4': labelPlacement === 'left',
+                'mb-2 flex': labelPlacement === 'top',
+              })}
+              htmlFor={id}
+            >
+              {label}
+            </Label>
+          )}
+
+          <textarea
+            className={clsxm(
+              'flex min-h-[80px] w-full rounded-md border border-default-200 bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50',
+              'read-only:bg-default-100',
+              isInvalid && '!border-error !bg-error/10',
+              textareaClassName,
+            )}
+            id={id}
+            ref={ref}
+            {...props}
+          />
+        </div>
+
+        {isInvalid && errorMessage && (
+          <ErrorLabelLine id={id} errorMessage={errorMessage} />
+        )}
       </div>
     )
   },

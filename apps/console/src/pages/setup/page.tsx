@@ -1,10 +1,9 @@
-import { Input } from '@nextui-org/react'
 import { useMutation } from '@tanstack/react-query'
 import { useForceUpdate } from 'framer-motion'
 import { toast } from 'sonner'
 import type { UserRegisterDto } from '@core/modules/user/dtos/register.dto'
 
-import { Button } from '~/components/ui'
+import { Button, Input } from '~/components/ui'
 import { useUncontrolledInput } from '~/hooks/common/use-uncontrolled-input'
 import { $axios } from '~/lib/request'
 import { router } from '~/router'
@@ -73,16 +72,15 @@ const RegisterStep = () => {
         }}
         className="flex flex-col space-y-4"
       >
-        <Input size="sm" label="你的名字 (登录凭证)" ref={usernameRef} />
-        <Input size="sm" label="昵称" ref={nicknameRef} />
-        <Input size="sm" label="邮箱" ref={emailRef} />
-        <Input size="sm" type="password" label="密码" ref={passwordRef} />
+        <Input label="你的名字 (登录凭证)" ref={usernameRef} />
+        <Input label="昵称" ref={nicknameRef} />
+        <Input label="邮箱" ref={emailRef} />
+        <Input type="password" label="密码" ref={passwordRef} />
         <Input
-          size="sm"
           type="password"
           label="确认密码"
           isInvalid={!isPasswordConfirmValid()}
-          errorMessage={isPasswordConfirmValid() ? '' : '两次输入的密码不一致'}
+          errorMessage="两次输入的密码不一致"
           ref={passwordConfirmRef}
         />
         <button type="submit" className="hidden" />

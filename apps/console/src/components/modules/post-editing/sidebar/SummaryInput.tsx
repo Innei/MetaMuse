@@ -1,4 +1,3 @@
-import { Input, Textarea } from '@nextui-org/react'
 import { useRef } from 'react'
 import OpenAI from 'openai'
 import { toast } from 'sonner'
@@ -6,6 +5,7 @@ import { useEventCallback } from 'usehooks-ts'
 import type { FC } from 'react'
 
 import { OpenAIIcon } from '~/components/icons'
+import { Input, Textarea } from '~/components/ui'
 import { Button, MotionButtonBase } from '~/components/ui/button'
 import { useModalStack } from '~/components/ui/modal/stacked/provider'
 import { APP_SCOPE } from '~/constants/app'
@@ -51,13 +51,8 @@ export const SummaryInput = () => {
       </MotionButtonBase>
 
       <Textarea
-        labelPlacement="outside"
-        size="sm"
         label={t('module.summary.title')}
         placeholder={t('module.summary.placeholder')}
-        classNames={{
-          input: 'pr-6',
-        }}
         value={summary}
         onChange={(e) => {
           setter((prev) => {
@@ -80,7 +75,8 @@ const AISummaryModal: FC<{
   const placeholder = `Summarize this in Chinese language:
 "{text}"
 CONCISE SUMMARY:`
-  const [, getPrompt, inputRef] = useUncontrolledInput(placeholder)
+  const [, getPrompt, inputRef] =
+    useUncontrolledInput<HTMLTextAreaElement>(placeholder)
 
   const isLoadingRef = useRef(false)
   const TokenStoreKey = 'openai-token'
@@ -166,21 +162,11 @@ CONCISE SUMMARY:`
   const { mutateAsync: updateKV } = trpc.configs.kv.set.useMutation()
   return (
     <div className="w-[500px] space-y-4">
-      <Textarea
-        size="sm"
-        labelPlacement="outside"
-        placeholder={placeholder}
-        label="Prompt"
-        maxRows={10}
-        minRows={6}
-        ref={inputRef}
-      />
+      <Textarea placeholder={placeholder} label="Prompt" ref={inputRef} />
 
       <Input
         type="password"
-        endContent={isLoading ? <div className="loading" /> : null}
-        labelPlacement="outside"
-        size="sm"
+        isLoading={isLoading}
         label="OpenAI Token"
         placeholder="Token is required"
         value={tokenValue || ''}
@@ -195,9 +181,7 @@ CONCISE SUMMARY:`
         }}
       />
       <Input
-        endContent={isLoading ? <div className="loading" /> : null}
-        labelPlacement="outside"
-        size="sm"
+        isLoading={isLoading}
         label="OpenAI EndPoint"
         placeholder="https://api.openai.com"
         value={urlValue || ''}
