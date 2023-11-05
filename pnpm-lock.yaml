@@ -109,14 +109,14 @@ importers:
         specifier: 2.1.13
         version: 2.1.13(@types/react@18.2.34)(framer-motion@10.16.4)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.5)
       '@nextui-org/system':
-        specifier: 2.0.10
-        version: 2.0.10(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.5)
+        specifier: 2.0.11
+        version: 2.0.11(@nextui-org/theme@2.1.12)(react-dom@18.2.0)(react@18.2.0)(tailwind-variants@0.1.18)
       '@nextui-org/theme':
-        specifier: 2.1.9
-        version: 2.1.9(tailwindcss@3.3.5)
+        specifier: 2.1.12
+        version: 2.1.12(tailwindcss@3.3.5)
       '@nextui-org/use-infinite-scroll':
-        specifier: 2.1.1
-        version: 2.1.1(react@18.2.0)
+        specifier: 2.1.2
+        version: 2.1.2(react@18.2.0)
       '@radix-ui/react-avatar':
         specifier: 1.0.4
         version: 1.0.4(@types/react-dom@18.2.14)(@types/react@18.2.34)(react-dom@18.2.0)(react@18.2.0)
@@ -486,7 +486,7 @@ importers:
         version: 5.5.0
       unplugin-swc:
         specifier: 1.4.3
-        version: 1.4.3(@swc/core@1.3.95)
+        version: 1.4.3(@swc/core@1.3.96)
       wildcard-match:
         specifier: 5.1.2
         version: 5.1.2
@@ -502,7 +502,7 @@ importers:
     devDependencies:
       '@nestjs/cli':
         specifier: 10.2.1
-        version: 10.2.1(@swc/cli@0.1.62)(@swc/core@1.3.95)
+        version: 10.2.1(@swc/cli@0.1.62)(@swc/core@1.3.96)
       '@nestjs/schematics':
         specifier: 10.0.3
         version: 10.0.3(chokidar@3.5.3)(typescript@5.2.2)
@@ -511,10 +511,10 @@ importers:
         version: 10.2.8(@nestjs/common@10.2.8)(@nestjs/core@10.2.8)
       '@swc/cli':
         specifier: 0.1.62
-        version: 0.1.62(@swc/core@1.3.95)
+        version: 0.1.62(@swc/core@1.3.96)
       '@swc/core':
-        specifier: 1.3.95
-        version: 1.3.95
+        specifier: 1.3.96
+        version: 1.3.96
       '@types/bcrypt':
         specifier: 5.0.1
         version: 5.0.1
@@ -1832,7 +1832,7 @@ packages:
       - webpack-cli
     dev: true
 
-  /@nestjs/cli@10.2.1(@swc/cli@0.1.62)(@swc/core@1.3.95):
+  /@nestjs/cli@10.2.1(@swc/cli@0.1.62)(@swc/core@1.3.96):
     resolution: {integrity: sha512-CAJAQwmxFZfB3RTvqz/eaXXWpyU+mZ4QSqfBYzjneTsPgF+uyOAW3yQpaLNn9Dfcv39R9UxSuAhayv6yuFd+Jg==}
     engines: {node: '>= 16.14'}
     hasBin: true
@@ -1849,8 +1849,8 @@ packages:
       '@angular-devkit/schematics': 16.2.8(chokidar@3.5.3)
       '@angular-devkit/schematics-cli': 16.2.8(chokidar@3.5.3)
       '@nestjs/schematics': 10.0.3(chokidar@3.5.3)(typescript@5.2.2)
-      '@swc/cli': 0.1.62(@swc/core@1.3.95)
-      '@swc/core': 1.3.95
+      '@swc/cli': 0.1.62(@swc/core@1.3.96)
+      '@swc/core': 1.3.96
       chalk: 4.1.2
       chokidar: 3.5.3
       cli-table3: 0.6.3
@@ -1868,7 +1868,7 @@ packages:
       tsconfig-paths: 4.2.0
       tsconfig-paths-webpack-plugin: 4.1.0
       typescript: 5.2.2
-      webpack: 5.89.0(@swc/core@1.3.95)
+      webpack: 5.89.0(@swc/core@1.3.96)
       webpack-node-externals: 3.0.0
     transitivePeerDependencies:
       - esbuild
@@ -2855,6 +2855,19 @@ packages:
       - tailwindcss
     dev: false
 
+  /@nextui-org/system-rsc@2.0.7(@nextui-org/theme@2.1.12)(react@18.2.0)(tailwind-variants@0.1.18):
+    resolution: {integrity: sha512-ZBmxsecE+CkS676MaS9aS5Yn9100qm1RV/8GI2oVj14LgUafCsB/61pI8nu2vb/sFrpjY7wSj2RI//XLKSss0A==}
+    peerDependencies:
+      '@nextui-org/theme': '>=2.1.10'
+      react: '>=18'
+      tailwind-variants: '>=0.1.13'
+    dependencies:
+      '@nextui-org/theme': 2.1.12(tailwindcss@3.3.5)
+      clsx: 1.2.1
+      react: 18.2.0
+      tailwind-variants: 0.1.18(tailwindcss@3.3.5)
+    dev: false
+
   /@nextui-org/system@2.0.10(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.5):
     resolution: {integrity: sha512-5F6739zMOYSYR5CM/N8FQsRlQn8yCKiU5VNNPFkk022P5cA2NZXrhZ08mQSmFw2BU7OWxa/ieLivjDptKcRozQ==}
     peerDependencies:
@@ -2867,6 +2880,24 @@ packages:
     transitivePeerDependencies:
       - react-dom
       - tailwindcss
+    dev: false
+
+  /@nextui-org/system@2.0.11(@nextui-org/theme@2.1.12)(react-dom@18.2.0)(react@18.2.0)(tailwind-variants@0.1.18):
+    resolution: {integrity: sha512-vP1lOi1AmfL01B1PDocze0/AnJsSQe0cK+5o/4GI24ZWMuE/t9ihREA+zIVg+oo9BiP0d9OWrDZQl1/WtXZtZQ==}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+    dependencies:
+      '@nextui-org/system-rsc': 2.0.7(@nextui-org/theme@2.1.12)(react@18.2.0)(tailwind-variants@0.1.18)
+      '@react-aria/i18n': 3.8.4(react@18.2.0)
+      '@react-aria/overlays': 3.18.1(react-dom@18.2.0)(react@18.2.0)
+      '@react-aria/utils': 3.21.1(react@18.2.0)
+      '@react-stately/utils': 3.8.0(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    transitivePeerDependencies:
+      - '@nextui-org/theme'
+      - tailwind-variants
     dev: false
 
   /@nextui-org/table@2.0.23(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.5):
@@ -2923,6 +2954,24 @@ packages:
     transitivePeerDependencies:
       - react-dom
       - tailwindcss
+    dev: false
+
+  /@nextui-org/theme@2.1.12(tailwindcss@3.3.5):
+    resolution: {integrity: sha512-eWzHWQ2c7r/rjgmlc9EckntT4FJgmZjZFxBqM0IYCoE06lVvBTvMhdfpJVLDz/3xgJ2Ga41bSMfs6g2jn+2z+Q==}
+    peerDependencies:
+      tailwindcss: '*'
+    dependencies:
+      color: 4.2.3
+      color2k: 2.0.2
+      deepmerge: 4.3.1
+      flat: 5.0.2
+      lodash.foreach: 4.5.0
+      lodash.get: 4.4.2
+      lodash.kebabcase: 4.1.1
+      lodash.mapkeys: 4.6.0
+      lodash.omit: 4.5.0
+      tailwind-variants: 0.1.18(tailwindcss@3.3.5)
+      tailwindcss: 3.3.5
     dev: false
 
   /@nextui-org/theme@2.1.9(tailwindcss@3.3.5):
@@ -3114,8 +3163,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@nextui-org/use-infinite-scroll@2.1.1(react@18.2.0):
-    resolution: {integrity: sha512-hp2Fnmc2RLZcQbgfm/9hJoIPa22RzK6HHQ581Pbphbh2oXO5k+4r6BwoBfjSY3BLOmAfpfixwmD+aU3BMFi+jQ==}
+  /@nextui-org/use-infinite-scroll@2.1.2(react@18.2.0):
+    resolution: {integrity: sha512-bZ4oIO9HYsMvISu/8HrDwb3ddn5d09rhQyS0+AwUVxi3vYnrWpdss4EEja+q/t3CTe/+3I9eE1njATJZkySyeA==}
     peerDependencies:
       react: '>=18'
     dependencies:
@@ -4616,7 +4665,7 @@ packages:
       - supports-color
     dev: false
 
-  /@swc/cli@0.1.62(@swc/core@1.3.95):
+  /@swc/cli@0.1.62(@swc/core@1.3.96):
     resolution: {integrity: sha512-kOFLjKY3XH1DWLfXL1/B5MizeNorHR8wHKEi92S/Zi9Md/AK17KSqR8MgyRJ6C1fhKHvbBCl8wboyKAFXStkYw==}
     engines: {node: '>= 12.13'}
     hasBin: true
@@ -4628,7 +4677,7 @@ packages:
         optional: true
     dependencies:
       '@mole-inc/bin-wrapper': 8.0.1
-      '@swc/core': 1.3.95
+      '@swc/core': 1.3.96
       commander: 7.2.0
       fast-glob: 3.3.1
       semver: 7.5.4
@@ -4636,88 +4685,88 @@ packages:
       source-map: 0.7.4
     dev: true
 
-  /@swc/core-darwin-arm64@1.3.95:
-    resolution: {integrity: sha512-VAuBAP3MNetO/yBIBzvorUXq7lUBwhfpJxYViSxyluMwtoQDhE/XWN598TWMwMl1ZuImb56d7eUsuFdjgY7pJw==}
+  /@swc/core-darwin-arm64@1.3.96:
+    resolution: {integrity: sha512-8hzgXYVd85hfPh6mJ9yrG26rhgzCmcLO0h1TIl8U31hwmTbfZLzRitFQ/kqMJNbIBCwmNH1RU2QcJnL3d7f69A==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     optional: true
 
-  /@swc/core-darwin-x64@1.3.95:
-    resolution: {integrity: sha512-20vF2rvUsN98zGLZc+dsEdHvLoCuiYq/1B+TDeE4oolgTFDmI1jKO+m44PzWjYtKGU9QR95sZ6r/uec0QC5O4Q==}
+  /@swc/core-darwin-x64@1.3.96:
+    resolution: {integrity: sha512-mFp9GFfuPg+43vlAdQZl0WZpZSE8sEzqL7sr/7Reul5McUHP0BaLsEzwjvD035ESfkY8GBZdLpMinblIbFNljQ==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     optional: true
 
-  /@swc/core-linux-arm-gnueabihf@1.3.95:
-    resolution: {integrity: sha512-oEudEM8PST1MRNGs+zu0cx5i9uP8TsLE4/L9HHrS07Ck0RJ3DCj3O2fU832nmLe2QxnAGPwBpSO9FntLfOiWEQ==}
+  /@swc/core-linux-arm-gnueabihf@1.3.96:
+    resolution: {integrity: sha512-8UEKkYJP4c8YzYIY/LlbSo8z5Obj4hqcv/fUTHiEePiGsOddgGf7AWjh56u7IoN/0uEmEro59nc1ChFXqXSGyg==}
     engines: {node: '>=10'}
     cpu: [arm]
     os: [linux]
     requiresBuild: true
     optional: true
 
-  /@swc/core-linux-arm64-gnu@1.3.95:
-    resolution: {integrity: sha512-pIhFI+cuC1aYg+0NAPxwT/VRb32f2ia8oGxUjQR6aJg65gLkUYQzdwuUmpMtFR2WVf7WVFYxUnjo4UyMuyh3ng==}
+  /@swc/core-linux-arm64-gnu@1.3.96:
+    resolution: {integrity: sha512-c/IiJ0s1y3Ymm2BTpyC/xr6gOvoqAVETrivVXHq68xgNms95luSpbYQ28rqaZC8bQC8M5zdXpSc0T8DJu8RJGw==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     optional: true
 
-  /@swc/core-linux-arm64-musl@1.3.95:
-    resolution: {integrity: sha512-ZpbTr+QZDT4OPJfjPAmScqdKKaT+wGurvMU5AhxLaf85DuL8HwUwwlL0n1oLieLc47DwIJEMuKQkYhXMqmJHlg==}
+  /@swc/core-linux-arm64-musl@1.3.96:
+    resolution: {integrity: sha512-i5/UTUwmJLri7zhtF6SAo/4QDQJDH2fhYJaBIUhrICmIkRO/ltURmpejqxsM/ye9Jqv5zG7VszMC0v/GYn/7BQ==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     optional: true
 
-  /@swc/core-linux-x64-gnu@1.3.95:
-    resolution: {integrity: sha512-n9SuHEFtdfSJ+sHdNXNRuIOVprB8nbsz+08apKfdo4lEKq6IIPBBAk5kVhPhkjmg2dFVHVo4Tr/OHXM1tzWCCw==}
+  /@swc/core-linux-x64-gnu@1.3.96:
+    resolution: {integrity: sha512-USdaZu8lTIkm4Yf9cogct/j5eqtdZqTgcTib4I+NloUW0E/hySou3eSyp3V2UAA1qyuC72ld1otXuyKBna0YKQ==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     optional: true
 
-  /@swc/core-linux-x64-musl@1.3.95:
-    resolution: {integrity: sha512-L1JrVlsXU3LC0WwmVnMK9HrOT2uhHahAoPNMJnZQpc18a0paO9fqifPG8M/HjNRffMUXR199G/phJsf326UvVg==}
+  /@swc/core-linux-x64-musl@1.3.96:
+    resolution: {integrity: sha512-QYErutd+G2SNaCinUVobfL7jWWjGTI0QEoQ6hqTp7PxCJS/dmKmj3C5ZkvxRYcq7XcZt7ovrYCTwPTHzt6lZBg==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     optional: true
 
-  /@swc/core-win32-arm64-msvc@1.3.95:
-    resolution: {integrity: sha512-YaP4x/aZbUyNdqCBpC2zL8b8n58MEpOUpmOIZK6G1SxGi+2ENht7gs7+iXpWPc0sy7X3YPKmSWMAuui0h8lgAA==}
+  /@swc/core-win32-arm64-msvc@1.3.96:
+    resolution: {integrity: sha512-hjGvvAduA3Un2cZ9iNP4xvTXOO4jL3G9iakhFsgVhpkU73SGmK7+LN8ZVBEu4oq2SUcHO6caWvnZ881cxGuSpg==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     optional: true
 
-  /@swc/core-win32-ia32-msvc@1.3.95:
-    resolution: {integrity: sha512-w0u3HI916zT4BC/57gOd+AwAEjXeUlQbGJ9H4p/gzs1zkSHtoDQghVUNy3n/ZKp9KFod/95cA8mbVF9t1+6epQ==}
+  /@swc/core-win32-ia32-msvc@1.3.96:
+    resolution: {integrity: sha512-Far2hVFiwr+7VPCM2GxSmbh3ikTpM3pDombE+d69hkedvYHYZxtTF+2LTKl/sXtpbUnsoq7yV/32c9R/xaaWfw==}
     engines: {node: '>=10'}
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
     optional: true
 
-  /@swc/core-win32-x64-msvc@1.3.95:
-    resolution: {integrity: sha512-5RGnMt0S6gg4Gc6QtPUJ3Qs9Un4sKqccEzgH/tj7V/DVTJwKdnBKxFZfgQ34OR2Zpz7zGOn889xwsFVXspVWNA==}
+  /@swc/core-win32-x64-msvc@1.3.96:
+    resolution: {integrity: sha512-4VbSAniIu0ikLf5mBX81FsljnfqjoVGleEkCQv4+zRlyZtO3FHoDPkeLVoy6WRlj7tyrRcfUJ4mDdPkbfTO14g==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     optional: true
 
-  /@swc/core@1.3.95:
-    resolution: {integrity: sha512-PMrNeuqIusq9DPDooV3FfNEbZuTu5jKAc04N3Hm6Uk2Fl49cqElLFQ4xvl4qDmVDz97n3n/C1RE0/f6WyGPEiA==}
+  /@swc/core@1.3.96:
+    resolution: {integrity: sha512-zwE3TLgoZwJfQygdv2SdCK9mRLYluwDOM53I+dT6Z5ZvrgVENmY3txvWDvduzkV+/8IuvrRbVezMpxcojadRdQ==}
     engines: {node: '>=10'}
     requiresBuild: true
     peerDependencies:
@@ -4729,16 +4778,16 @@ packages:
       '@swc/counter': 0.1.2
       '@swc/types': 0.1.5
     optionalDependencies:
-      '@swc/core-darwin-arm64': 1.3.95
-      '@swc/core-darwin-x64': 1.3.95
-      '@swc/core-linux-arm-gnueabihf': 1.3.95
-      '@swc/core-linux-arm64-gnu': 1.3.95
-      '@swc/core-linux-arm64-musl': 1.3.95
-      '@swc/core-linux-x64-gnu': 1.3.95
-      '@swc/core-linux-x64-musl': 1.3.95
-      '@swc/core-win32-arm64-msvc': 1.3.95
-      '@swc/core-win32-ia32-msvc': 1.3.95
-      '@swc/core-win32-x64-msvc': 1.3.95
+      '@swc/core-darwin-arm64': 1.3.96
+      '@swc/core-darwin-x64': 1.3.96
+      '@swc/core-linux-arm-gnueabihf': 1.3.96
+      '@swc/core-linux-arm64-gnu': 1.3.96
+      '@swc/core-linux-arm64-musl': 1.3.96
+      '@swc/core-linux-x64-gnu': 1.3.96
+      '@swc/core-linux-x64-musl': 1.3.96
+      '@swc/core-win32-arm64-msvc': 1.3.96
+      '@swc/core-win32-ia32-msvc': 1.3.96
+      '@swc/core-win32-x64-msvc': 1.3.96
 
   /@swc/counter@0.1.2:
     resolution: {integrity: sha512-9F4ys4C74eSTEUNndnER3VJ15oru2NumfQxS8geE+f3eB5xvfxpWyqE5XlVnxb/R14uoXi6SLbBwwiDSkv+XEw==}
@@ -12822,7 +12871,7 @@ packages:
       mkdirp: 1.0.4
       yallist: 4.0.0
 
-  /terser-webpack-plugin@5.3.9(@swc/core@1.3.95)(webpack@5.89.0):
+  /terser-webpack-plugin@5.3.9(@swc/core@1.3.96)(webpack@5.89.0):
     resolution: {integrity: sha512-ZuXsqE07EcggTWQjXUj+Aot/OMcD0bMKGgF63f7UxYcu5/AJF53aIpK1YoP5xR9l6s/Hy2b+t1AM0bLNPRuhwA==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -12839,12 +12888,12 @@ packages:
         optional: true
     dependencies:
       '@jridgewell/trace-mapping': 0.3.20
-      '@swc/core': 1.3.95
+      '@swc/core': 1.3.96
       jest-worker: 27.5.1
       schema-utils: 3.3.0
       serialize-javascript: 6.0.1
       terser: 5.22.0
-      webpack: 5.89.0(@swc/core@1.3.95)
+      webpack: 5.89.0(@swc/core@1.3.96)
     dev: true
 
   /terser-webpack-plugin@5.3.9(webpack@5.89.0):
@@ -13301,13 +13350,13 @@ packages:
     resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
     engines: {node: '>= 10.0.0'}
 
-  /unplugin-swc@1.4.3(@swc/core@1.3.95):
+  /unplugin-swc@1.4.3(@swc/core@1.3.96):
     resolution: {integrity: sha512-diQ2C7cpQcnAiKYnI6HTw8IlPPl6jAo/3Y59W133ZkdO1t0dDFiPDEmqtfhv5Y/odzS7sT3oEcy2iFwlcajYAg==}
     peerDependencies:
       '@swc/core': ^1.2.108
     dependencies:
       '@rollup/pluginutils': 5.0.5
-      '@swc/core': 1.3.95
+      '@swc/core': 1.3.96
       load-tsconfig: 0.2.5
       unplugin: 1.5.0
     transitivePeerDependencies:
@@ -13817,7 +13866,7 @@ packages:
       - uglify-js
     dev: true
 
-  /webpack@5.89.0(@swc/core@1.3.95):
+  /webpack@5.89.0(@swc/core@1.3.96):
     resolution: {integrity: sha512-qyfIC10pOr70V+jkmud8tMfajraGCZMBWJtrmuBymQKCrLTRejBI8STDp1MCyZu/QTdZSeacCQYpYNQVOzX5kw==}
     engines: {node: '>=10.13.0'}
     hasBin: true
@@ -13848,7 +13897,7 @@ packages:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.9(@swc/core@1.3.95)(webpack@5.89.0)
+      terser-webpack-plugin: 5.3.9(@swc/core@1.3.96)(webpack@5.89.0)
       watchpack: 2.4.0
       webpack-sources: 3.2.3
     transitivePeerDependencies:
