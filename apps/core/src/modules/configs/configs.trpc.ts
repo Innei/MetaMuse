@@ -76,11 +76,12 @@ export class ConfigsTRPCRouter extends TRPCRouterBase {
             scope: z.string(),
             key: z.string(),
             value: z.any(),
+            encrypt: z.boolean().optional(),
           }),
         )
         .mutation(async ({ input }) => {
-          const { key, scope, value } = input
-          return this.service.setKV(scope, key, value)
+          const { key, scope, value, encrypt = false } = input
+          return this.service.setKV(scope, key, value, encrypt)
         }),
     })
   }

@@ -23,8 +23,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: '',
-        destructive:
-          'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        destructive: 'bg-error text-error-foreground hover:bg-error/90',
         outline:
           'border border-foreground-700/30 bg-background hover:bg-muted text-foreground',
 
@@ -42,7 +41,7 @@ const buttonVariants = cva(
 
       color: {
         primary: 'text-primary-foreground',
-        destructive: 'text-destructive-foreground',
+        destructive: 'text-error-foreground',
         secondary: 'text-primary-foreground',
         accent: 'text-primary-foreground',
         muted: 'text-foreground',
@@ -131,7 +130,7 @@ const buttonVariants = cva(
       {
         variant: 'outline',
         color: 'destructive',
-        className: 'border-destructive text-destructive',
+        className: 'border-error text-error',
       },
       {
         variant: 'outline',
@@ -292,7 +291,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         {isLoading && (
           <span className="absolute inset-0 flex center">
-            <i className="loading-spinner" />
+            <i className="loading-spinner loading" />
           </span>
         )}
 

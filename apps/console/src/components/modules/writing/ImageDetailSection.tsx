@@ -175,6 +175,7 @@ export const ImageDetailSection: FC<ImageDetailSectionProps> = (props) => {
           </div>
           <Button
             isLoading={loading}
+            color="muted"
             className="self-end"
             size="xs"
             onClick={handleCorrectImageDimensions}

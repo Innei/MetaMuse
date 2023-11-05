@@ -94,6 +94,7 @@
       "location": "Location",
       "not_support_location": "The browser does not support location",
       "location_permission_denied": "Location permission denied",
+      "amap_key_required": "Amap api key is required",
       "search_location": "Search location",
       "search_by_keyword": "Search by keyword",
       "public_at": "Public at",

@@ -32,10 +32,16 @@ const persister = {
 } as Persister
 
 export const queryClient = new QueryClient({
+  // queryCache: new QueryCache({
+  //   onError(error, query) {
+  //     console.log('error', error)
+  //   },
+  // }),
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
       refetchOnMount: true,
+
       retry: (failureCount, error) => {
         if (error instanceof TRPCClientError) {
           if (error?.shape?.bizCode) {

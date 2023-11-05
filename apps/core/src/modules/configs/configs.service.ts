@@ -2,6 +2,7 @@ import { RedisKeys } from '@core/constants/cache.constant'
 import { CacheService } from '@core/processors/cache/cache.service'
 import { DatabaseService } from '@core/processors/database/database.service'
 import { EventManagerService } from '@core/processors/helper/services/helper.event.service'
+import { EncryptUtil } from '@core/shared/utils/encrypt.util'
 import { getRedisKey } from '@core/shared/utils/redis.util'
 import { sleep } from '@core/shared/utils/tool.utils'
 import { Injectable, Logger } from '@nestjs/common'
@@ -78,9 +79,9 @@ export class ConfigsService {
   async getKV(scope: string, key: string) {
     const nextKey = combinedKey(scope, key)
 
-    const value = await this.redis.get(nextKey)
+    const value = await this.redis.get<string>(nextKey)
     if (value) {
-      return value as any
+      return EncryptUtil.decrypt(value)
     }
     const dbValue = await this.db.prisma.configKV.findFirst({
       where: {
@@ -91,21 +92,27 @@ export class ConfigsService {
 
     if (dbValue) {
       await this.redis.set(nextKey, dbValue.value)
-      return dbValue.value
+      return EncryptUtil.decrypt(dbValue.value)
     }
   }
 
   /// set kv
   //
-  async setKV(scope: string, key: string, value: any) {
+  async setKV(scope: string, key: string, value: any, encrypt = false) {
     const nextKey = combinedKey(scope, key)
 
     value = JSON.stringify(value)
+    if (encrypt) {
+      value = EncryptUtil.encrypt(value)
+    }
     await this.redis.set(nextKey, value)
+
     await this.db.prisma.configKV.upsert({
       where: {
-        scope,
-        key,
+        key_scope: {
+          key,
+          scope,
+        },
       },
       create: {
         scope,

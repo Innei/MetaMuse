@@ -72,7 +72,11 @@ export default function EditPage_() {
 
   if (id) {
     if (isLoading) return <PageLoading />
-    console.log(error)
+
+    if (error) {
+      toast.error(error.message)
+      return null
+    }
 
     return <EditPage initialData={data} />
   }

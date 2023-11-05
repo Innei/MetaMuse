@@ -17,5 +17,11 @@ export const snowflakeGeneratorMiddleware: Prisma.Middleware = async (
       item.id = snowflake.nextId()
     })
   }
+
+  if (params.action === 'upsert') {
+    const id = snowflake.nextId()
+
+    params.args.create.id = id
+  }
   return next(params)
 }

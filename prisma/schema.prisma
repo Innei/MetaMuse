@@ -139,7 +139,7 @@ model Category {
 
 model ConfigKV {
   id    String @id @default("")
-  key   String @unique
+  key   String
   value String
   scope String
 

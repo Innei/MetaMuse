@@ -216,9 +216,6 @@ importers:
       marked:
         specifier: 9.1.5
         version: 9.1.5
-      mobx:
-        specifier: 6.10.2
-        version: 6.10.2
       monaco-editor:
         specifier: 0.44.0
         version: 0.44.0
@@ -10475,10 +10472,6 @@ packages:
     resolution: {integrity: sha512-FPUtkhtJ0efmEFGpU14x7jGbTB+s18LrzRL2KgoWz9YvcY3cPomz8tih01GbHwnGk/OmkOKfqd/RAQoc8Lm7DQ==}
     dependencies:
       obliterator: 2.0.4
-    dev: false
-
-  /mobx@6.10.2:
-    resolution: {integrity: sha512-B1UGC3ieK3boCjnMEcZSwxqRDMdzX65H/8zOHbuTY8ZhvrIjTUoLRR2TP2bPqIgYRfb3+dUigu8yMZufNjn0LQ==}
     dev: false
 
   /modify-values@1.0.1:

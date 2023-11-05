@@ -79,7 +79,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputClassName = clsxm(ctxProps.inputClassName, props.inputClassName)
 
     return (
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <div
           className={clsxm(
             {
