@@ -13,7 +13,7 @@ import {
   useSetCommentSelectionKeys,
 } from '~/components/modules/comments'
 import { CommentMobileList } from '~/components/modules/comments/CommentMobileList'
-import { CommentPagination } from '~/components/modules/comments/CommentPagation'
+import { CommentPagination } from '~/components/modules/comments/CommentPagination'
 import { useRouterQueryState } from '~/hooks/biz/use-router-query-state'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'

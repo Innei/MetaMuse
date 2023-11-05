@@ -39,7 +39,7 @@ export const DeleteConfirmButton: FC<
       }
     >
       <div className="p-4 flex">
-        <p className="text-center text-red-500 text-base font-bold">
+        <p className="text-center text-error text-base font-bold">
           {confirmText ??
             (deleteItemText
               ? t('common.confirm-delete-item', { item: deleteItemText })

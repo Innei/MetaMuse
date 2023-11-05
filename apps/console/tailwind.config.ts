@@ -1,8 +1,8 @@
-import { nextui } from '@nextui-org/react'
 import daisyui from 'daisyui'
 import type { PluginAPI } from 'tailwindcss/types/config'
 
 import { addDynamicIconSelectors } from '@iconify/tailwind'
+import { nextui } from '@nextui-org/theme'
 import typography from '@tailwindcss/typography'
 
 /** @type {import('tailwindcss').Config} */
@@ -87,7 +87,42 @@ module.exports = {
     },
   },
   daisyui: {
-    themes: ['cmyk', 'night'],
+    themes: [
+      {
+        light: {
+          primary: '#111827',
+          secondary: '#6b7280',
+          accent: '#44ADEE',
+          neutral: '#291334',
+          'base-100': '#ffffff',
+          info: '#3abff8',
+          success: '#36d399',
+
+          warning: '#fbbd23',
+
+          error: '#dc2626',
+        },
+      },
+      {
+        night: {
+          primary: '#f3f4f6',
+
+          secondary: '#9ca3af',
+
+          accent: '#22d3ee',
+
+          neutral: '#272626',
+          'base-100': '#000000',
+
+          info: '#3abff8',
+          success: '#36d399',
+
+          warning: '#fbbd23',
+
+          error: '#dc2626',
+        },
+      },
+    ],
     darkTheme: 'night',
   },
   plugins: [
@@ -97,6 +132,8 @@ module.exports = {
     typography,
     daisyui,
     nextui({
+      prefix: 'meta-muse',
+      themes: {},
       layout: {
         borderWidth: {
           small: '1px', // border-small
@@ -132,9 +169,6 @@ function addShortcutPlugin({ addUtilities }: PluginAPI) {
     '.center': {
       'align-items': 'center',
       'justify-content': 'center',
-    },
-    '.fill-content': {
-      'min-height': `calc(100vh - 17.5rem)`,
     },
   }
   addUtilities(styles)

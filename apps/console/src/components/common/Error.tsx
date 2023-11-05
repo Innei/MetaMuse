@@ -12,7 +12,7 @@ export const Error: Component<Props> = (props) => {
         props.className,
       )}
     >
-      <i className="icon-[mingcute--close-line] text-3xl text-red-500" />
+      <i className="icon-[mingcute--close-line] text-3xl text-error" />
       <span className="mt-8 text-sm">
         {props.errorText || 'Has some error...'}
       </span>

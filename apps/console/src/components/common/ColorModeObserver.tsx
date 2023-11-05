@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 
 import { useBeforeMounted } from '~/hooks/common/use-before-mounted'
 import { useTheme } from '~/hooks/common/use-theme'
@@ -8,7 +8,7 @@ export const ColorModeObserver = () => {
   useBeforeMounted(() => {
     document.documentElement.dataset.theme = theme
   })
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.documentElement.dataset.theme = theme
   }, [theme])
 

@@ -98,7 +98,7 @@ const buttonVariants = cva(
       {
         color: 'destructive',
         variant: 'text',
-        className: 'text-red-500 hover:text-red-500/90',
+        className: 'text-error hover:text-error/90',
       },
 
       {
@@ -126,7 +126,7 @@ const buttonVariants = cva(
       {
         variant: 'outline',
         color: 'secondary',
-        className: 'border-secondary text-secondborder-secondary',
+        className: 'border-secondary text-secondary',
       },
       {
         variant: 'outline',

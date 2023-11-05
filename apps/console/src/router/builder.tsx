@@ -47,9 +47,7 @@ async function builder() {
           routePath: path.replace('/page.tsx', ''),
           lazyComponent: (
             <ErrorBoundary
-              fallback={
-                <p className="text-red-500">Path: {path} render error</p>
-              }
+              fallback={<p className="text-error">Path: {path} render error</p>}
             >
               {React.createElement(React.lazy(appPages[rawPath] as any))}
             </ErrorBoundary>

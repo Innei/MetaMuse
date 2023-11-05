@@ -122,7 +122,7 @@ const Header: FC<HeaderProps> = ({
         <Button
           iconOnly
           variant="outline"
-          color="muted"
+          color="secondary"
           onClick={() => {
             setViewStyle((prev) => {
               if (prev === ViewStyle.Table) {

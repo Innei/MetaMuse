@@ -4,6 +4,8 @@ import { Suspense } from 'react'
 import { Translation } from 'react-i18next'
 import { Provider } from 'jotai'
 
+import { createTheme, MantineProvider } from '@mantine/core'
+
 import { ColorModeObserver } from './components/common/ColorModeObserver'
 import { ToasterProvider } from './components/common/ToasterProvider'
 import { FABContainer } from './components/ui/fab/FabContainer'
@@ -18,6 +20,10 @@ import { loginByToken, syncUser } from './store/user'
 loginByToken()
 syncUser()
 
+const theme = createTheme({})
+
+const RouteComponent = () => <Router />
+
 export function App() {
   return (
     <trpc.Provider client={tRpcClient} queryClient={queryClient}>
@@ -27,12 +33,14 @@ export function App() {
             <EventProvider />
 
             <FABContainer />
+            <MantineProvider theme={theme}>
+              <NextUIProvider>
+                <InitialDataProvider>
+                  <Translation>{RouteComponent}</Translation>
+                </InitialDataProvider>
+              </NextUIProvider>
+            </MantineProvider>
 
-            <NextUIProvider>
-              <InitialDataProvider>
-                <Translation>{() => <Router />}</Translation>
-              </InitialDataProvider>
-            </NextUIProvider>
             <ColorModeObserver />
             <ToasterProvider />
           </Suspense>

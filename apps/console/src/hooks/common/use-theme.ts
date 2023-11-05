@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 
@@ -16,7 +16,7 @@ export const useTheme = () => {
     setSystemTheme(mediaQuery.matches ? 'dark' : 'light')
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     updateActualTheme()
 
     mediaQuery.addListener(updateActualTheme)
@@ -27,7 +27,7 @@ export const useTheme = () => {
   }, [])
 
   // 当 theme 变化时，更新 actualTheme
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (theme === 'system') {
       updateActualTheme()
     } else {
