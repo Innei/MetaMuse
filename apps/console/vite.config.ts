@@ -13,6 +13,7 @@ export default defineConfig({
     tsconfigPath(),
     Checker({
       enableBuild: true,
+      typescript: { tsconfigPath: './tsconfig.json' },
     }),
   ],
   // alias

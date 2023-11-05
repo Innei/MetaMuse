@@ -19,8 +19,6 @@ export const NoteWeatherAndMood = () => {
           setWeather(suggestion.value)
         }}
         placeholder=" "
-        labelPlacement="outside"
-        size="sm"
         onConfirm={(value) => {
           setWeather(value)
         }}
@@ -28,9 +26,7 @@ export const NoteWeatherAndMood = () => {
 
       <Autocomplete
         placeholder=" "
-        labelPlacement="outside"
         label={t('module.notes.mood')}
-        size="sm"
         defaultValue={mood}
         suggestions={MOOD_SET.map((w) => ({ name: w, value: w }))}
         onSuggestionSelected={(suggestion) => {

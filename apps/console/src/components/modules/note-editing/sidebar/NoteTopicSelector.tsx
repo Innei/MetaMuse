@@ -17,8 +17,16 @@ export const NoteTopicSelector = () => {
       labelPlacement="outside"
       placeholder=" "
       label={t('navigator.topic')}
-      selectedKeys={useMemo(() => new Set([topicId]), [topicId])}
-      onSelectionChange={(key) => setTopicId(Array.from(key)[0])}
+      selectedKeys={useMemo(() => {
+        if (!topicId) return new Set()
+        return new Set([topicId])
+      }, [topicId])}
+      onSelectionChange={(key) => {
+        // `all` is not possible
+        if (key == 'all') return
+
+        setTopicId(Array.from(key)[0] as string)
+      }}
     >
       {(topics || []).map((topic) => (
         <SelectItem key={topic.id} value={topic.id}>

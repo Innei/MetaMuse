@@ -97,28 +97,20 @@ module.exports = {
           'base-100': '#ffffff',
           info: '#3abff8',
           success: '#36d399',
-
           warning: '#fbbd23',
-
           error: '#dc2626',
         },
       },
       {
         night: {
-          primary: '#f3f4f6',
-
+          primary: '#ECEDEE',
           secondary: '#9ca3af',
-
           accent: '#22d3ee',
-
           neutral: '#272626',
           'base-100': '#000000',
-
           info: '#3abff8',
           success: '#36d399',
-
           warning: '#fbbd23',
-
           error: '#dc2626',
         },
       },
@@ -133,7 +125,15 @@ module.exports = {
     daisyui,
     nextui({
       prefix: 'meta-muse',
-      themes: {},
+      themes: {
+        dark: {
+          colors: {
+            primary: {
+              foreground: '#111827',
+            },
+          },
+        },
+      },
       layout: {
         borderWidth: {
           small: '1px', // border-small

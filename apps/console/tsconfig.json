@@ -3,6 +3,8 @@
     "target": "ESNext",
     "useDefineForClassFields": true,
     "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
     "removeComments": true,
     "noImplicitAny": false,
     "lib": [
@@ -14,7 +16,7 @@
     "skipLibCheck": true,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Node",
@@ -42,6 +44,6 @@
   },
   "include": [
     "src",
-    "../core/src/**/*.d.ts"
-  ]
+    "../core/src/**/*.d.ts",
+  ],
 }

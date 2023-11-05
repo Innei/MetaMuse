@@ -17,8 +17,12 @@ export class ArticleService {
   ) {}
 
   private readonly articleModels = [
+    // NOTE: `console` tsc type check here will throw error
+    // @ts-ignore
     this.databaseService.prisma.note,
+    // @ts-ignore
     this.databaseService.prisma.page,
+    // @ts-ignore
     this.databaseService.prisma.post,
   ] as const
 

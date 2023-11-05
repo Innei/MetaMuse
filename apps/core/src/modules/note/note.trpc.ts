@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 import { TRPCRouter } from '@core/common/decorators/trpc.decorator'
 import { DatabaseService } from '@core/processors/database/database.service'
+import { HttpService } from '@core/processors/helper/services/helper.http.service'
 import { defineTrpcRouter } from '@core/processors/trpc/trpc.helper'
 import { tRPCService } from '@core/processors/trpc/trpc.service'
 import { SnowflakeIdDto, SnowflakeIdSchema } from '@core/shared/dto/id.dto'
@@ -9,6 +10,7 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
 
 import { NoteInputSchema, NotePagerDto } from './note.dto'
 import { NoteService } from './note.service'
+import { AMapSearch } from './types/amap'
 
 @TRPCRouter()
 @Injectable()
@@ -23,6 +25,9 @@ export class NoteTrpcRouter implements OnModuleInit {
 
   @Inject(NoteService)
   private service: NoteService
+
+  @Inject(HttpService)
+  private httpService: HttpService
 
   onModuleInit() {
     this.router = this.createRouter()
@@ -101,6 +106,37 @@ export class NoteTrpcRouter implements OnModuleInit {
           const { input } = opt
 
           await Promise.all(input.ids.map((id) => this.service.deleteById(id)))
+        }),
+
+      amapSearch: procedureAuth
+        .input(
+          z.object({
+            token: z.string(),
+            keywords: z.string(),
+          }),
+        )
+        .query(async ({ input }) => {
+          const { keywords, token } = input
+
+          const params = new URLSearchParams([
+            ['key', token],
+            ['keywords', keywords],
+          ])
+
+          return this.httpService.queryClient.fetchQuery({
+            queryKey: ['amapSearch', params.get('keywords')],
+            queryFn: async ({ signal }) => {
+              const response = await this.httpService.axiosRef
+                .get(
+                  `https://restapi.amap.com/v3/place/text?${params.toString()}`,
+                  {
+                    signal,
+                  },
+                )
+                .catch(() => null)
+              return response?.data as AMapSearch
+            },
+          })
         }),
     })
   }

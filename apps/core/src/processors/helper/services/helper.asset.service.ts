@@ -75,7 +75,7 @@ export class AssetService {
     if (!this.checkAssetPath(path)) {
       try {
         // 去线上拉取
-        const { data } = await this.httpService.axiosRef.get<string>(
+        const { data } = await this.httpService.axiosRef.get(
           this.onlineAssetPath + path,
         )
 

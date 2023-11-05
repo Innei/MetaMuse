@@ -2,18 +2,24 @@ import {
   forwardRef,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react'
+import clsx from 'clsx'
 import { AnimatePresence } from 'framer-motion'
 import Fuse from 'fuse.js'
-import { throttle } from 'lodash-es'
+import { merge, throttle } from 'lodash-es'
 import { useEventCallback } from 'usehooks-ts'
 import type { KeyboardEvent } from 'react'
 import type { InputProps } from '../input'
 
+import { stopPropagation } from '~/lib/dom'
+import { clsxm } from '~/lib/helper'
+
 import { Input } from '../input'
 import { MotionDivToBottom } from '../motion'
+import { RootPortal } from '../portal'
 
 export type Suggestion = {
   name: string
@@ -26,6 +32,12 @@ export interface AutocompleteProps extends InputProps {
   onSuggestionSelected: (suggestion: Suggestion) => void
   onConfirm?: (value: string) => void
   onEndReached?: () => void
+
+  portal?: boolean
+
+  // classnames
+
+  wrapperClassName?: string
 }
 
 export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
@@ -37,6 +49,9 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       onConfirm,
       onEndReached,
       onChange,
+      portal,
+      wrapperClassName,
+
       ...inputProps
     },
     forwardedRef,
@@ -62,7 +77,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
 
     const [isOpen, setIsOpen] = useState(false)
 
-    const ref = useRef<HTMLElement>(null)
+    const ref = useRef<HTMLDivElement>(null)
     const onBlur = useEventCallback((e: any) => {
       if (ref?.current?.contains(e.relatedTarget)) {
         return
@@ -80,6 +95,27 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
     const inputRef = useRef<HTMLInputElement>(null)
     useImperativeHandle(forwardedRef, () => inputRef.current!)
 
+    const [inputWidth, setInputWidth] = useState(0)
+    const [inputPos, setInputPos] = useState(() => ({ x: 0, y: 0 }))
+
+    useLayoutEffect(() => {
+      const $input = inputRef.current
+      if (!$input) return
+
+      const handler = () => {
+        const rect = $input.getBoundingClientRect()
+        setInputWidth(rect.width)
+        setInputPos({ x: rect.x, y: rect.y + rect.height + 6 })
+      }
+      handler()
+
+      const resizeObserver = new ResizeObserver(handler)
+      resizeObserver.observe($input)
+      return () => {
+        resizeObserver.disconnect()
+      }
+    }, [])
+
     const handleScroll = useEventCallback(
       throttle(() => {
         const { scrollHeight, scrollTop, clientHeight } = ref.current!
@@ -95,9 +131,54 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       onChange?.(e)
     })
 
+    const ListElement = (
+      <MotionDivToBottom
+        className={clsx(
+          'border-1 border-default-200 z-[101] dark:border-default-100 bg-content1 mt-1 rounded-md pointer-events-auto',
+          portal ? 'absolute  flex flex-col' : 'w-full absolute',
+        )}
+        ref={ref}
+        style={merge(
+          {},
+          portal
+            ? {
+                width: `${inputWidth}px`,
+                left: `${inputPos.x}px`,
+                top: `${inputPos.y}px`,
+              }
+            : {},
+        )}
+      >
+        {/* FIXME: https://github.com/radix-ui/primitives/issues/2125 */}
+        <ul
+          className="pointer-events-auto overflow-auto flex-grow max-h-48"
+          onWheel={stopPropagation}
+          onScroll={handleScroll}
+        >
+          {filterableSuggestions.map((suggestion) => {
+            return (
+              <li
+                className="px-4 py-3 text-sm hover:bg-default-200 dark:hover:bg-default-100 cursor-default"
+                key={suggestion.value}
+                onClick={() => {
+                  onSuggestionSelected(suggestion)
+                  setIsOpen(false)
+
+                  setInputValue(suggestion.name)
+                }}
+              >
+                {renderSuggestion(suggestion)}
+              </li>
+            )
+          })}
+        </ul>
+      </MotionDivToBottom>
+    )
+
     return (
-      <div className="relative pointer-events-auto">
+      <div className={clsxm('relative pointer-events-auto', wrapperClassName)}>
         <Input
+          value={inputValue}
           ref={inputRef}
           onFocus={() => setIsOpen(true)}
           onBlur={onBlur}
@@ -106,29 +187,9 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
           {...inputProps}
         />
         <AnimatePresence>
-          {isOpen && !!filterableSuggestions.length && (
-            <MotionDivToBottom
-              className="w-full border-1 border-default-200 dark:border-default-100 bg-content1 absolute z-50 mt-1 max-h-48 overflow-auto rounded-md"
-              onScroll={handleScroll}
-            >
-              {filterableSuggestions.map((suggestion) => {
-                return (
-                  <div
-                    className="px-4 py-3 hover:bg-default-200 dark:hover:bg-default-100 cursor-default"
-                    key={suggestion.value}
-                    onClick={() => {
-                      onSuggestionSelected(suggestion)
-                      setIsOpen(false)
-                      if (inputRef.current)
-                        inputRef.current.value = suggestion.name
-                    }}
-                  >
-                    {renderSuggestion(suggestion)}
-                  </div>
-                )
-              })}
-            </MotionDivToBottom>
-          )}
+          {isOpen &&
+            !!filterableSuggestions.length &&
+            (portal ? <RootPortal>{ListElement}</RootPortal> : ListElement)}
         </AnimatePresence>
       </div>
     )

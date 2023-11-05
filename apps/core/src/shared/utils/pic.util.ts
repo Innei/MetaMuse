@@ -30,7 +30,7 @@ export async function getAverageRGB(
     const colors = await getColors(buffer, type)
 
     return colors[0].hex()
-  } catch (err) {
+  } catch (err: any) {
     console.error(err.message)
     return undefined
   }

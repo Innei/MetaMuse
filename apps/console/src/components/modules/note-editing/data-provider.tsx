@@ -14,23 +14,38 @@ export const {
   ModelDataAtomContext,
 } = createModelDataProvider<NoteModel>()
 
-export const useNoteModelSingleFieldAtom = (key: keyof NoteModel) => {
+export const useNoteModelSingleFieldAtom = <
+  T extends keyof NoteModel = keyof NoteModel,
+>(
+  key: T,
+) => {
   const ctxAtom = useContext(ModelDataAtomContext)
-  return useAtom(
+  if (!ctxAtom)
+    throw new Error(
+      'useNoteModelSingleFieldAtom must be used inside NoteModelDataAtomProvider',
+    )
+  const atomAccessor = useAtom(
     useMemo(() => {
       return atom(
         (get) => {
           const data = get(ctxAtom)
+
           return data?.[key]
         },
         (get, set, update: any) => {
           set(ctxAtom, (prev) => {
             return produce(prev, (draft) => {
-              draft[key as any] = update
+              draft[key] = update
             })
           })
         },
       )
     }, [ctxAtom, key]),
   )
+
+  return atomAccessor as any as [
+    NonNullable<NoteModel[T]>,
+
+    (update: NoteModel[T]) => NoteModel[T] | void,
+  ]
 }

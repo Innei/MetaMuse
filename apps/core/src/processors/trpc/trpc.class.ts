@@ -6,7 +6,7 @@ interface TRPCWithRouter {
 }
 
 export abstract class TRPCRouterBase implements OnModuleInit, TRPCWithRouter {
-  protected router: ReturnType<typeof this.createRouter>
+  protected abstract router: ReturnType<typeof this.createRouter>
 
   abstract createRouter(): CreateRouterInner<any, any>
 

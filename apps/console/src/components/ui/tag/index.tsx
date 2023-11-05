@@ -102,8 +102,6 @@ const TagCompletion: FC<TagCompletionProp> = (props) => {
     inputRef.current?.focus()
   }, [])
 
-  console.log(filteredSuggestions, 'filteredSuggestions', existsTags)
-
   return (
     <Autocomplete
       ref={inputRef}

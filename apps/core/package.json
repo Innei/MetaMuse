@@ -10,6 +10,11 @@
       "git pull --rebase"
     ]
   },
+  "exports": {
+    "./*": {
+      "types": "./src/*"
+    }
+  },
   "scripts": {
     "build": "nest build --webpack",
     "dev": "npm run start",

@@ -19,7 +19,6 @@ export const useRouterQueryState = <T extends string | number>(
 
   const stateFromQuery = searchParams.get(queryKey)
   useEffect(() => {
-    console.log(stateFromQuery)
     setState(stateFromQuery as LiteralToBroad<T>)
   }, [stateFromQuery])
 

@@ -42,6 +42,29 @@ export class EventManagerService implements OnModuleInit {
     private readonly emitter2: EventEmitter2,
   ) {
     this.logger = new Logger(EventManagerService.name)
+
+    this.mapScopeToInstance = {
+      [EventScope.ALL]: [
+        this.webGateway,
+        this.adminGateway,
+        this.emitter2,
+        this.systemGateway,
+      ],
+      [EventScope.TO_VISITOR]: [this.webGateway],
+      [EventScope.TO_ADMIN]: [this.adminGateway],
+      [EventScope.TO_SYSTEM]: [this.emitter2, this.systemGateway],
+      [EventScope.TO_VISITOR_ADMIN]: [this.webGateway, this.adminGateway],
+      [EventScope.TO_SYSTEM_VISITOR]: [
+        this.emitter2,
+        this.webGateway,
+        this.systemGateway,
+      ],
+      [EventScope.TO_SYSTEM_ADMIN]: [
+        this.emitter2,
+        this.adminGateway,
+        this.systemGateway,
+      ],
+    }
   }
 
   onModuleInit() {
@@ -56,28 +79,7 @@ export class EventManagerService implements OnModuleInit {
       | EventEmitter2
       | SystemEventsGateway
     )[]
-  > = {
-    [EventScope.ALL]: [
-      this.webGateway,
-      this.adminGateway,
-      this.emitter2,
-      this.systemGateway,
-    ],
-    [EventScope.TO_VISITOR]: [this.webGateway],
-    [EventScope.TO_ADMIN]: [this.adminGateway],
-    [EventScope.TO_SYSTEM]: [this.emitter2, this.systemGateway],
-    [EventScope.TO_VISITOR_ADMIN]: [this.webGateway, this.adminGateway],
-    [EventScope.TO_SYSTEM_VISITOR]: [
-      this.emitter2,
-      this.webGateway,
-      this.systemGateway,
-    ],
-    [EventScope.TO_SYSTEM_ADMIN]: [
-      this.emitter2,
-      this.adminGateway,
-      this.systemGateway,
-    ],
-  }
+  >
 
   #key = 'event-manager'
 

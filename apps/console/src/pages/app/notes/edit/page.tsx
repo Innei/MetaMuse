@@ -44,10 +44,10 @@ const createInitialEditingData = (): NoteModel => {
       day: getDayOfYear(created),
     }),
     allowComment: true,
-    location: null,
     hasMemory: false,
 
     id: '',
+    location: null,
     coordinates: null,
     images: [],
     isPublished: true,

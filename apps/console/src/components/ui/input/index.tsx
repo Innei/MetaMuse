@@ -33,6 +33,7 @@ export interface InputProps
   labelClassName?: string
   inputClassName?: string
   isLoading?: boolean
+  endContent?: React.ReactNode
 
   errorMessage?: string
   isInvalid?: boolean
@@ -48,6 +49,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       isLoading,
       errorMessage,
       isInvalid,
+      endContent,
       ...inputProps
     } = props
     const id = useId()
@@ -166,8 +168,26 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               </MotionButtonBase>
             )}
 
+            {!isLoading && endContent && (
+              <div
+                className={rightContentVariants({
+                  placement: labelPlacement,
+                })}
+              >
+                {endContent}
+              </div>
+            )}
+
             {isLoading && (
-              <i className="loading loading-spinner h-5 w-5 absolute right-2 bottom-2 text-primary/80" />
+              <div
+                className={rightContentVariants({
+                  placement: labelPlacement,
+                })}
+              >
+                <i
+                  className="loading loading-spinner h-5 w-5 text-primary/80"
+                />
+              </div>
             )}
           </div>
         </div>
