@@ -9,13 +9,6 @@ import { AuthGuard } from './auth.guard'
 
 @Injectable()
 export class RolesGuard extends AuthGuard implements CanActivate {
-  // constructor(
-  //   @Inject(AuthService) protected readonly authService: AuthService,
-  //
-  //   @Inject(UserService) protected readonly userService: UserService,
-  // ) {
-  //   super(authService, userService)
-  // }
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = this.getRequest(context)
     let isMaster = false

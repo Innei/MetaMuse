@@ -1,4 +1,4 @@
-import { noop, omit } from 'lodash'
+import { noop, omit, pick } from 'lodash'
 
 import { BizException } from '@core/common/exceptions/biz.exception'
 import { BusinessEvents } from '@core/constants/business-event.constant'
@@ -44,7 +44,18 @@ export class NoteService {
       sortBy = 'created',
       sortOrder = -1,
       cursor,
+      year,
     } = options
+
+    if (year) {
+      filter = {
+        ...filter,
+        created: {
+          gte: new Date(`${year}-01-01`),
+          lt: new Date(`${year}-12-31`),
+        },
+      }
+    }
 
     const data = await this.db.prisma.note.paginate(
       {
@@ -83,6 +94,91 @@ export class NoteService {
       .catch(
         resourceNotFoundWrapper(new BizException(ErrorCodeEnum.NoteNotFound)),
       )
+  }
+
+  async queryNoteRanking(id: string, size: number, queryAll: boolean) {
+    const base = await this.getNoteById(id).catch(() => null)
+
+    if (!base) {
+      return {
+        data: [],
+        size: 0,
+      }
+    }
+
+    const filterOption: Prisma.NoteWhereInput = queryAll
+      ? {}
+      : {
+          isPublished: true,
+          OR: [
+            {
+              publicAt: {
+                lte: new Date(),
+              },
+            },
+            {
+              publicAt: null,
+            },
+          ],
+        }
+
+    const halfSize = size >> 1
+
+    const allowedKeys = ['nid', 'id', 'title', 'created'] as const
+
+    const baseFindManyArgs = {
+      where: {
+        ...filterOption,
+      },
+      select: {
+        nid: true,
+        id: true,
+        title: true,
+        created: true,
+      },
+      orderBy: {
+        created: 'desc',
+      },
+      take: halfSize - 1,
+    } satisfies Prisma.NoteFindManyArgs
+
+    const leadingListArgs = {
+      ...baseFindManyArgs,
+      where: {
+        created: {
+          gt: base.created,
+        },
+        ...filterOption,
+      },
+    } satisfies Prisma.NoteFindManyArgs
+
+    const tailingListArgs = {
+      ...baseFindManyArgs,
+      where: {
+        created: {
+          lt: base.created,
+        },
+        ...filterOption,
+      },
+    } satisfies Prisma.NoteFindManyArgs
+
+    const leadingList =
+      halfSize - 1 === 0
+        ? []
+        : await this.db.prisma.note.findMany(leadingListArgs)
+
+    const tailingList = !halfSize
+      ? []
+      : await this.db.prisma.note.findMany(tailingListArgs)
+
+    const safeBaseNote = pick(base, allowedKeys)
+    const data = [...leadingList, safeBaseNote, ...tailingList].sort((a, b) => {
+      return new Date(a.created).getTime() - new Date(b.created).getTime()
+    })
+    return {
+      data,
+      size: data.length,
+    }
   }
 
   async getLatestNoteId() {

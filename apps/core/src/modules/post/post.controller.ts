@@ -31,7 +31,7 @@ export class PostController {
   async get(@Param() param: SnowflakeIdDto) {
     const { id } = param
     const data = await this.service.getPostById(id)
-    this.guardPostCanVisit(data)
+    guardPostCanVisit(data)
 
     return data
   }
@@ -40,7 +40,7 @@ export class PostController {
   async getLatest(@IpLocation() ip: IpRecord) {
     const data = await this.service.getLastPost()
     if (!data) return null
-    this.guardPostCanVisit(data)
+    guardPostCanVisit(data)
     scheduleManager.schedule(() =>
       this.countingService.updateReadCount(ArticleType.Post, data.id, ip.ip),
     )
@@ -60,19 +60,18 @@ export class PostController {
       throw new BizException(ErrorCodeEnum.PostNotFound)
     }
 
-    this.guardPostCanVisit(data)
+    guardPostCanVisit(data)
     scheduleManager.schedule(() =>
       this.countingService.updateReadCount(ArticleType.Post, data.id, ip.ip),
     )
     return data
   }
-
-  guardPostCanVisit(data?: Post | null) {
-    if (!data) return data
-    if (!data.isPublished) {
-      throw new BizException(ErrorCodeEnum.PostNotPublished)
-    }
-
-    return data
+}
+const guardPostCanVisit = (data?: Post | null) => {
+  if (!data) return data
+  if (!data.isPublished) {
+    throw new BizException(ErrorCodeEnum.PostNotPublished)
   }
+
+  return data
 }

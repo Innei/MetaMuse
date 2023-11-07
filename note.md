@@ -8,12 +8,14 @@
 
 `password` always be `string` type
 
+API :
+
+/note/list -> /note/rank
 
 ## backup sql
 
 pg_dump -U postgres -h localhost -p 5432 -v -f "./t.sql" meta-muse
 pg_dump -U postgres -h localhost -p 5432 -F c -b -v -f "./t.backup" meta-muse
-
 
 要实现备份恢复前自动清空数据库（如果它存在），或者在数据库不存在时自动创建它，你可以结合使用多个 PostgreSQL 命令工具。以下是一个基本流程：
 
@@ -41,7 +43,6 @@ pg_dump -U postgres -h localhost -p 5432 -F c -b -v -f "./t.backup" meta-muse
      psql -U [username] -h [hostname] -p [port] -d [dbname] -a -f [backup_file_path]
      ```
 
-
 首先清空所有表数据，然后再倒入 sql
 
 ```sql
@@ -55,8 +56,6 @@ BEGIN
    END LOOP;
 END $$;
 ```
-
-
 
 ## UI Kit
 

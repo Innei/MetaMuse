@@ -1,7 +1,9 @@
 import { ApiController } from '@core/common/decorators/api-controller.decorator'
 import { IsOwner } from '@core/common/decorators/role.decorator'
-import { Get, Inject } from '@nestjs/common'
+import { SnowflakeIdDto } from '@core/shared/dto/id.dto'
+import { Get, Inject, Param, Query } from '@nestjs/common'
 
+import { NotePagerDto, NoteRankQueryDto } from './note.dto'
 import { NoteSchemaSerializeProjection } from './note.protect'
 import { NotePublicService } from './note.public.service'
 import { NoteService } from './note.service'
@@ -31,5 +33,26 @@ export class NoteController {
     }
 
     return data
+  }
+
+  @Get('/')
+  async gets(@Query() query: NotePagerDto) {
+    const paginate = await this.service.paginateNotes(query, {
+      isPublished: true,
+    })
+    return paginate
+  }
+
+  @Get('/rank/:id')
+  async getNoteRank(
+    @IsOwner() isOwner: boolean,
+    @Query() query: NoteRankQueryDto,
+
+    @Param() params: SnowflakeIdDto,
+  ) {
+    const { size = 10 } = query
+    const { id } = params
+
+    return this.service.queryNoteRanking(id, size, isOwner)
   }
 }
