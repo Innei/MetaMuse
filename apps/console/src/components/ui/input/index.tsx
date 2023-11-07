@@ -50,6 +50,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       errorMessage,
       isInvalid,
       endContent,
+
+      labelPlacement: _,
+      inputClassName: __,
+
       ...inputProps
     } = props
     const id = useId()
@@ -184,9 +188,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                   placement: labelPlacement,
                 })}
               >
-                <i
-                  className="loading loading-spinner h-5 w-5 text-primary/80"
-                />
+                <i className="loading loading-spinner h-5 w-5 text-primary/80" />
               </div>
             )}
           </div>

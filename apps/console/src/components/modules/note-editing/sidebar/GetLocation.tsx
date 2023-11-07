@@ -1,12 +1,10 @@
-import type { FC} from 'react';
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
-import { useEventCallback } from 'usehooks-ts'
-
-import { input } from '@nextui-org/theme'
+import { useDebounce, useEventCallback } from 'usehooks-ts'
+import type { Suggestion } from '~/components/ui/auto-completion'
+import type { FC } from 'react'
 
 import { Button, ButtonGroup, Input, Label } from '~/components/ui'
-import type { Suggestion } from '~/components/ui/auto-completion';
 import { Autocomplete } from '~/components/ui/auto-completion'
 import { useCurrentModal } from '~/components/ui/modal/stacked/context'
 import { useModalStack } from '~/components/ui/modal/stacked/provider'
@@ -16,8 +14,6 @@ import { $axios } from '~/lib/request'
 import { trpc } from '~/lib/trpc'
 
 import { useNoteModelSingleFieldAtom } from '../data-provider'
-
-const styles = input({ variant: 'faded', size: 'sm' })
 
 export const GetLocation = () => {
   const t = useI18n()
@@ -89,15 +85,15 @@ export const GetLocation = () => {
       <div className="justify-between flex-wrap flex items-center">
         <Label>{t('module.notes.get_current_location')}</Label>
         <ButtonGroup className="flex-shrink-0" variant="outline">
-          <Button
-            rounded
-            isLoading={loading}
-            className="flex items-center"
-            onClick={handleGetGeo}
-          >
-            <i className="icon-[mingcute--location-line] mr-1" />
-            {t('module.notes.location')}
-          </Button>
+          {/* <Button */}
+          {/*   rounded */}
+          {/*   isLoading={loading} */}
+          {/*   className="flex items-center" */}
+          {/*   onClick={handleGetGeo} */}
+          {/* > */}
+          {/*   <i className="icon-[mingcute--location-line] mr-1" /> */}
+          {/*   {t('module.notes.location')} */}
+          {/* </Button> */}
           <Button
             rounded
             iconOnly
@@ -158,16 +154,17 @@ const LocationSearchModal: FC<{
   const utils = trpc.useUtils()
 
   const [searchValue, setSearchValue] = useState('')
+  const debouncedSearchValue = useDebounce(searchValue, 500)
 
   const { data: searchResult, isLoading: searchPending } =
     trpc.note.amapSearch.useQuery(
       {
-        keywords: searchValue,
+        keywords: debouncedSearchValue,
         token: tokenValue!,
       },
       {
         keepPreviousData: true,
-        enabled: searchValue.length > 0 && !!tokenValue?.length,
+        enabled: debouncedSearchValue.length > 0 && !!tokenValue?.length,
       },
     )
 

@@ -4,6 +4,7 @@ import { memo, useEffect, useMemo, useState } from 'react'
 import uniqBy from 'lodash-es/uniqBy'
 import { toast } from 'sonner'
 import { useEventCallback } from 'usehooks-ts'
+import type { NoteModel } from '~/models/note'
 import type { FC } from 'react'
 
 import {
@@ -18,7 +19,6 @@ import { Button, ButtonGroup, MotionButtonBase } from '~/components/ui/button'
 import { useI18n } from '~/i18n/hooks'
 import { getDominantColor } from '~/lib/color'
 import { pickImagesFromMarkdown } from '~/lib/markdown'
-import type { NoteModel } from '~/models/note'
 
 type ArticleImage = NoteModel['images'][number]
 
@@ -55,7 +55,7 @@ export const ImageDetailSection: FC<ImageDetailSectionProps> = (props) => {
           fromText
             .map((src) => {
               const existImageInfo = originImageMap.get(src)
-              if (!existImageInfo) return
+
               return {
                 src,
                 height: existImageInfo?.height,
@@ -64,7 +64,8 @@ export const ImageDetailSection: FC<ImageDetailSectionProps> = (props) => {
                 accent: existImageInfo?.accent,
               } as any
             })
-            .concat(images),
+            .concat(images)
+            .filter(Boolean),
           'src',
         )
       : images
