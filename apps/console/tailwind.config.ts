@@ -148,6 +148,7 @@ module.exports = {
       },
     }),
     require('tailwind-scrollbar'),
+    require('tailwindcss-safe-area'),
   ],
 }
 

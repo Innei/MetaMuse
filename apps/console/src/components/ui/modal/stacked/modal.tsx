@@ -81,6 +81,7 @@ export const Modal: Component<{
     title,
     clickOutsideToDismiss,
     modalContainerClassName,
+    sheetFullScreen,
   } = item
   const modalStyle = useMemo(() => ({ zIndex: 99 + index }), [index])
   const dismiss = useCallback(
@@ -119,22 +120,21 @@ export const Modal: Component<{
     [ModalProps],
   )
 
-  const finailChildren = children
-    ? children
-    : createElement(content, ModalProps)
+  const finalChildren = children ? children : createElement(content, ModalProps)
 
   if (isMobile) {
     const drawerLength = jotaiStore.get(drawerStackAtom).length
 
     return (
       <PresentDrawer
+        fullScreen={sheetFullScreen}
         open
         zIndex={1000 + drawerLength}
         onOpenChange={onClose}
         // title={title}
         content={
           <CurrentModalContext.Provider value={ModalContextProps}>
-            {finailChildren}
+            {finalChildren}
           </CurrentModalContext.Provider>
         }
       />
@@ -158,7 +158,7 @@ export const Modal: Component<{
               <div className="contents" onClick={stopPropagation}>
                 <CustomModalComponent>
                   <CurrentModalContext.Provider value={ModalContextProps}>
-                    {finailChildren}
+                    {finalChildren}
                   </CurrentModalContext.Provider>
                 </CustomModalComponent>
               </div>
@@ -204,7 +204,7 @@ export const Modal: Component<{
 
               <div className="min-h-0 flex-shrink flex-grow overflow-auto px-4 py-2">
                 <CurrentModalContext.Provider value={ModalContextProps}>
-                  {finailChildren}
+                  {finalChildren}
                 </CurrentModalContext.Provider>
               </div>
 

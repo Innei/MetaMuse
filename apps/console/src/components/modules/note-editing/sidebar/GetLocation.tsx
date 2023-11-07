@@ -71,6 +71,7 @@ export const GetLocation = () => {
   const handleCustomSearch = useEventCallback(() => {
     present({
       title: t('module.notes.search_location'),
+      sheetFullScreen: 'half',
       content: () => (
         <LocationSearchModal
           setCoordinates={setCoordinates}
@@ -186,7 +187,7 @@ const LocationSearchModal: FC<{
   const t = useI18n()
   // TODO
   return (
-    <div className="max-w-[100vw] w-[400px] flex flex-col">
+    <div className="lg:w-[400px] flex flex-col">
       <div className="flex gap-2">
         <Autocomplete
           className="flex-grow"

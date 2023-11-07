@@ -8,4 +8,7 @@ export interface ModalProps {
   clickOutsideToDismiss?: boolean
   modalClassName?: string
   modalContainerClassName?: string
+
+  ////
+  sheetFullScreen?: boolean | 'half'
 }
