@@ -44,7 +44,7 @@
     "@socket.io/redis-adapter": "8.2.1",
     "@socket.io/redis-emitter": "5.1.0",
     "@tanstack/query-core": "5.7.2",
-    "@trpc/server": "10.43.1",
+    "@trpc/server": "10.43.2",
     "axios": "1.6.1",
     "bcrypt": "5.1.1",
     "cache-manager": "5.2.4",
