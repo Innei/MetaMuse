@@ -15,8 +15,8 @@ importers:
   .:
     dependencies:
       '@nestjs/mapped-types':
-        specifier: ^2.0.3
-        version: 2.0.3(@nestjs/common@10.2.8)(reflect-metadata@0.1.13)
+        specifier: ^2.0.4
+        version: 2.0.4(@nestjs/common@10.2.8)(reflect-metadata@0.1.13)
       cross-env:
         specifier: 7.0.3
         version: 7.0.3
@@ -64,8 +64,8 @@ importers:
         specifier: 5.0.5
         version: 5.0.5
       ts-loader:
-        specifier: 9.5.0
-        version: 9.5.0(typescript@5.2.2)(webpack@5.89.0)
+        specifier: 9.5.1
+        version: 9.5.1(typescript@5.2.2)(webpack@5.89.0)
       tsconfig-paths:
         specifier: 4.2.0
         version: 4.2.0
@@ -505,7 +505,7 @@ importers:
     devDependencies:
       '@nestjs/cli':
         specifier: 10.2.1
-        version: 10.2.1(@swc/cli@0.1.62)(@swc/core@1.3.96)
+        version: 10.2.1(@swc/cli@0.1.63)(@swc/core@1.3.96)
       '@nestjs/schematics':
         specifier: 10.0.3
         version: 10.0.3(chokidar@3.5.3)(typescript@5.2.2)
@@ -513,8 +513,8 @@ importers:
         specifier: 10.2.8
         version: 10.2.8(@nestjs/common@10.2.8)(@nestjs/core@10.2.8)
       '@swc/cli':
-        specifier: 0.1.62
-        version: 0.1.62(@swc/core@1.3.96)
+        specifier: 0.1.63
+        version: 0.1.63(@swc/core@1.3.96)
       '@swc/core':
         specifier: 1.3.96
         version: 1.3.96
@@ -1835,7 +1835,7 @@ packages:
       - webpack-cli
     dev: true
 
-  /@nestjs/cli@10.2.1(@swc/cli@0.1.62)(@swc/core@1.3.96):
+  /@nestjs/cli@10.2.1(@swc/cli@0.1.63)(@swc/core@1.3.96):
     resolution: {integrity: sha512-CAJAQwmxFZfB3RTvqz/eaXXWpyU+mZ4QSqfBYzjneTsPgF+uyOAW3yQpaLNn9Dfcv39R9UxSuAhayv6yuFd+Jg==}
     engines: {node: '>= 16.14'}
     hasBin: true
@@ -1852,7 +1852,7 @@ packages:
       '@angular-devkit/schematics': 16.2.8(chokidar@3.5.3)
       '@angular-devkit/schematics-cli': 16.2.8(chokidar@3.5.3)
       '@nestjs/schematics': 10.0.3(chokidar@3.5.3)(typescript@5.2.2)
-      '@swc/cli': 0.1.62(@swc/core@1.3.96)
+      '@swc/cli': 0.1.63(@swc/core@1.3.96)
       '@swc/core': 1.3.96
       chalk: 4.1.2
       chokidar: 3.5.3
@@ -1942,8 +1942,8 @@ packages:
       reflect-metadata: 0.1.13
     dev: false
 
-  /@nestjs/mapped-types@2.0.3(@nestjs/common@10.2.8)(reflect-metadata@0.1.13):
-    resolution: {integrity: sha512-40Zdqg98lqoF0+7ThWIZFStxgzisK6GG22+1ABO4kZiGF/Tu2FE+DYLw+Q9D94vcFWizJ+MSjNN4ns9r6hIGxw==}
+  /@nestjs/mapped-types@2.0.4(@nestjs/common@10.2.8)(reflect-metadata@0.1.13):
+    resolution: {integrity: sha512-xl+gUSp0B+ln1VSNoUftlglk8dfpUes3DHGxKZ5knuBxS5g2H/8p9/DSBOYWUfO5f4u9s6ffBPZ71WO+tbe5SA==}
     peerDependencies:
       '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0
       class-transformer: ^0.4.0 || ^0.5.0
@@ -4966,8 +4966,8 @@ packages:
       - supports-color
     dev: false
 
-  /@swc/cli@0.1.62(@swc/core@1.3.96):
-    resolution: {integrity: sha512-kOFLjKY3XH1DWLfXL1/B5MizeNorHR8wHKEi92S/Zi9Md/AK17KSqR8MgyRJ6C1fhKHvbBCl8wboyKAFXStkYw==}
+  /@swc/cli@0.1.63(@swc/core@1.3.96):
+    resolution: {integrity: sha512-EM9oxxHzmmsprYRbGqsS2M4M/Gr5Gkcl0ROYYIdlUyTkhOiX822EQiRCpPCwdutdnzH2GyaTN7wc6i0Y+CKd3A==}
     engines: {node: '>= 12.13'}
     hasBin: true
     peerDependencies:
@@ -13341,8 +13341,8 @@ packages:
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
-  /ts-loader@9.5.0(typescript@5.2.2)(webpack@5.89.0):
-    resolution: {integrity: sha512-LLlB/pkB4q9mW2yLdFMnK3dEHbrBjeZTYguaaIfusyojBgAGf5kF+O6KcWqiGzWqHk0LBsoolrp4VftEURhybg==}
+  /ts-loader@9.5.1(typescript@5.2.2)(webpack@5.89.0):
+    resolution: {integrity: sha512-rNH3sK9kGZcH9dYzC7CewQm4NtxJTjSEVRJ2DyBZR7f8/wcta+iV44UPCXc5+nzDzivKtlzV6c9P4e+oFhDLYg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       typescript: '*'

@@ -39,7 +39,7 @@
     "prisma:generate": "pnpm -C prisma run build"
   },
   "dependencies": {
-    "@nestjs/mapped-types": "^2.0.3",
+    "@nestjs/mapped-types": "^2.0.4",
     "cross-env": "7.0.3",
     "lodash": "4.17.21"
   },
@@ -57,7 +57,7 @@
     "prettier": "3.1.0",
     "prisma": "5.6.0",
     "rimraf": "5.0.5",
-    "ts-loader": "9.5.0",
+    "ts-loader": "9.5.1",
     "tsconfig-paths": "4.2.0",
     "typescript": "^5.2.2",
     "zx": "7.2.3"
