@@ -7,7 +7,8 @@
     "edit": "Edit",
     "topic": "Topic",
     "category": "Category",
-    "comment": "Comment"
+    "comment": "Comment",
+    "page": "Page"
   },
   "validator": {
     "max_length": "The maximum length is {{max}}.",
@@ -40,6 +41,7 @@
     "items": "items",
     "new-post": "New post",
     "new-note": "New note",
+    "new-page": "New page",
     "ok": "OK",
     "sure": "Sure",
     "pin": "Pin",

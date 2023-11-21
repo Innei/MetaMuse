@@ -19,6 +19,11 @@ export const enum BusinessEvents {
   // COMMENT
   COMMENT_CREATE = 'COMMENT_CREATE',
   COMMENT_DELETE = 'COMMENT_DELETE',
+
+  // PAGE
+  PAGE_CREATE = 'PAGE_CREATE',
+  PAGE_UPDATE = 'PAGE_UPDATE',
+  PAGE_DELETE = 'PAGE_DELETE',
 }
 
 export type BizEventDataMap = {
@@ -35,4 +40,7 @@ export type BizEventDataMap = {
   [BusinessEvents.NOTE_DELETE]: WithId
   [BusinessEvents.COMMENT_CREATE]: NormalizedCommentModel
   [BusinessEvents.COMMENT_DELETE]: WithId
+  [BusinessEvents.PAGE_CREATE]: NormalizedPageModel
+  [BusinessEvents.PAGE_UPDATE]: NormalizedPageModel
+  [BusinessEvents.PAGE_DELETE]: WithId
 }

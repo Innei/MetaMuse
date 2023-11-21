@@ -11,6 +11,7 @@ type BaseModelType = {
   slug?: string
   text: string
   categoryId?: string
+  subtitle?: string
 }
 
 export const BaseWritingProvider = <T extends BaseModelType>(

@@ -43,3 +43,9 @@ export const NoteRankQuerySchema = z.object({
 })
 
 export class NoteRankQueryDto extends createZodDto(NoteRankQuerySchema) {}
+
+export const NoteNidParamSchema = z.object({
+  nid: z.number().int(),
+})
+
+export class NoteNidParamDto extends createZodDto(NoteNidParamSchema) {}

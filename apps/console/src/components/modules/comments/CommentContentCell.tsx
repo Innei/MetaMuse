@@ -29,8 +29,7 @@ export const CommentContentCell = (props: NormalizedComment) => {
   return (
     <div className="flex flex-col gap-2 py-2 text-sm">
       <div className="flex gap-2 text-sm whitespace-nowrap">
-        <RelativeTime time={created} /> 于 {TitleEl}{' '}
-        {/* {isWhispers && '悄悄说'} */}
+        <RelativeTime time={created} /> 于 {TitleEl} {isWhispers && '悄悄说'}
       </div>
 
       <p className="break-words">{text}</p>

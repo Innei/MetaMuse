@@ -12,7 +12,7 @@ const bizErrorZh: Partial<Record<ErrorCodeEnum, string>> = {
   [ErrorCodeEnum.CategoryNotFound]: '该分类未找到 (｡•́︿•̀｡)',
   [ErrorCodeEnum.CategoryCannotDeleted]: '该分类中有其他文章，无法被删除',
   [ErrorCodeEnum.CategoryAlreadyExists]: '分类已存在',
-  [ErrorCodeEnum.PostSlugExists]: 'Slug 已存在',
+  [ErrorCodeEnum.SlugExists]: 'Slug 已存在',
 
   [ErrorCodeEnum.AuthFailUserNotExist]: '认证失败，用户不存在',
   [ErrorCodeEnum.AuthFail]: '认证失败，请检查用户名和密码',

@@ -56,7 +56,7 @@ const Editor = () => {
     }
   }, [])
   return (
-    <div className="border-default-200 rounded-medium focus-within:border-primary-400 relative h-0 flex-grow overflow-auto border p-3 duration-200">
+    <div className="border-default-200 rounded-medium focus-within:border-primary relative h-0 flex-grow overflow-auto border p-3 duration-200">
       <MilkdownEditor
         ref={milkdownRef}
         onMarkdownChange={handleMarkdownChange}

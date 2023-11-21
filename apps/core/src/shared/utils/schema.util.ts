@@ -1,15 +1,15 @@
 import { omit } from 'lodash'
 
 type DefaultKeys = 'id' | 'created' | 'modified' | 'deleted'
-const defaultProjectKeys = ['id', 'created', 'modified', 'deleted'] as const
+export const defaultProjectKeys = [
+  'id',
+  'created',
+  'modified',
+  'deleted',
+] as const
 
 type Projection<K extends string | number | symbol> = {
   [P in K]: true
-}
-
-type SerializedProjection<T extends object, K extends keyof T> = {
-  keys: K[]
-  serialize: (obj: T) => Omit<T, K>
 }
 
 export function createProjectionOmit<T extends object, K extends keyof T>(

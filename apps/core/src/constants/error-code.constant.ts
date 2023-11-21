@@ -17,12 +17,15 @@ export enum ErrorCodeEnum {
   CategoryCannotDeleted = 10003,
   CategoryAlreadyExists = 10004,
   PostNotPublished = 10005,
-  PostSlugExists = 10006,
+  SlugExists = 10006,
 
   NoteNotFound = 10007,
   NoteExist = 10008,
   NoteNotPublished = 10009,
   NoteTopicNotFound = 10010,
+
+  PageNotFound = 12011,
+  PageCountExceed = 12012,
 
   AuthFailUserNotExist = 20000,
   AuthFail = 20001,
@@ -63,16 +66,20 @@ export const ErrorCode = Object.freeze<Record<ErrorCodeEnum, [string, number]>>(
       400,
     ],
     [ErrorCodeEnum.CategoryAlreadyExists]: ['category already exists', 400],
-    [ErrorCodeEnum.PostSlugExists]: ['slug already exists', 400],
+    [ErrorCodeEnum.SlugExists]: ['slug already exists', 400],
     [ErrorCodeEnum.NoteNotFound]: ['note not found', 404],
     [ErrorCodeEnum.NoteNotPublished]: ['note not found', 404],
     [ErrorCodeEnum.NoteExist]: ['note already exist', 400],
     [ErrorCodeEnum.NoteTopicNotFound]: ['note topic not found', 404],
+    [ErrorCodeEnum.PageNotFound]: [
+      'page not found, please check your url',
+      404,
+    ],
+    [ErrorCodeEnum.PageCountExceed]: ['page count exceed', 400],
 
     [ErrorCodeEnum.AuthFailUserNotExist]: ['auth failed, user not exist', 400],
     [ErrorCodeEnum.AuthFail]: [
       'auth failed, please check your username and password',
-
       400,
     ],
     [ErrorCodeEnum.JWTExpired]: ['jwt expired', 401],

@@ -7,6 +7,9 @@ export const enum Routes {
 
   NoteList = '/notes/list',
   NoteEditOrNew = '/notes/edit',
+
+  PageEditOrNew = '/pages/edit',
+  PageList = '/pages/list',
 }
 
 type Noop = never
@@ -29,6 +32,14 @@ export type RouteParams<T extends Routes> = T extends Routes.Dashboard
   ? Pagination
   : T extends Routes.PostEditOrNew
   ? Partial<OnlyId>
+  : T extends Routes.NoteList
+  ? Pagination
+  : T extends Routes.NoteEditOrNew
+  ? Partial<OnlyId>
+  : T extends Routes.PageList
+  ? Noop
+  : T extends Routes.PageEditOrNew
+  ? Partial<OnlyId>
   : {}
 
 export function routeBuilder<T extends Routes>(
@@ -42,17 +53,24 @@ export function routeBuilder<T extends Routes>(
       break
     }
     case Routes.NoteEditOrNew:
+    case Routes.PageEditOrNew:
     case Routes.PostEditOrNew: {
       const p = params as Partial<OnlyId>
 
       p.id && (href += `?id=${p.id}`)
       break
     }
+    case Routes.NoteList:
     case Routes.PostList: {
       const p = params as Pagination
       href += `?page=${p.page || 1}&size=${p.size || 10}`
       break
     }
+
+    case Routes.PageList: {
+      break
+    }
+
     case Routes.Login: {
       href = '/login'
       break
