@@ -35,9 +35,9 @@ export const SlugInput = () => {
         <label>{`${urlConfig?.webUrl}/posts/${category?.slug}/`}</label>
       )}
 
-      <div className="relative ml-1 inline-flex min-w-[2rem] items-center [&_*]:leading-4 rounded-md bg-primary/5">
+      <div className="relative ml-1 inline-flex min-w-[2rem] items-center [&_*]:leading-4 rounded-md py-1 bg-primary/5 dark:bg-primary/20">
         <input
-          className="input input-xs absolute w-full translate-y-[1px] bg-transparent !outline-none"
+          className="input input-xs absolute w-full translate-y-[1px] bg-transparent !outline-none !border-0"
           value={slug}
           onChange={(e) => {
             setSlug(e.target.value)

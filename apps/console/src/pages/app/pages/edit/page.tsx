@@ -22,8 +22,8 @@ import {
   usePageModelGetModelData,
   usePageModelSetModelData,
 } from '~/components/modules/page-editing/data-provider'
+import { PageSlugInput } from '~/components/modules/page-editing/PageSlugInput'
 import { PageEditorSidebar } from '~/components/modules/page-editing/sidebar'
-import { PageSlugInput } from '~/components/modules/page-editing/SubtitleAndSlugInput'
 import { EditorLayer } from '~/components/modules/writing/EditorLayer'
 import { Button, ButtonGroup } from '~/components/ui'
 import { useI18n } from '~/i18n/hooks'

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useId } from 'react'
 import { cva } from 'class-variance-authority'
 import clsx from 'clsx'
-import { merge } from 'lodash-es'
+import { isUndefined, merge } from 'lodash-es'
 import type { ContextType, FC, PropsWithChildren } from 'react'
 
 import { clsxm } from '~/lib/helper'
@@ -37,6 +37,8 @@ export interface InputProps
 
   errorMessage?: string
   isInvalid?: boolean
+
+  bindValue?: string
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -53,6 +55,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
       labelPlacement: _,
       inputClassName: __,
+
+      bindValue,
 
       ...inputProps
     } = props
@@ -120,7 +124,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <div className="relative flex-grow">
             <input
               id={id}
-              value={inputValue}
+              value={isUndefined(bindValue) ? inputValue : bindValue}
               onChange={(e) => {
                 setValue(e.target.value)
                 onChange?.(e)

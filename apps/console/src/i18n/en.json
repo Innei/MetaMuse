@@ -54,6 +54,8 @@
     "submit": "Submit",
     "tags": "Tags",
     "title": "Title",
+    "subtitle": "Subtitle",
+    "order": "Order",
     "visit": "Visit",
     "width": "Width",
     "type": "Type",

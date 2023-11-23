@@ -14,9 +14,13 @@ export const {
   ModelDataAtomContext,
 } = createModelDataProvider<PageModel>()
 
-export const usePageModelSingleFieldAtom = (key: keyof PageModel) => {
+export const usePageModelSingleFieldAtom = <
+  T extends keyof PageModel = keyof PageModel,
+>(
+  key: T,
+) => {
   const ctxAtom = useContext(ModelDataAtomContext)
-  return useAtom(
+  const atomAccessor = useAtom(
     useMemo(() => {
       return atom(
         (get) => {
@@ -33,4 +37,10 @@ export const usePageModelSingleFieldAtom = (key: keyof PageModel) => {
       )
     }, [ctxAtom, key]),
   )
+
+  return atomAccessor as any as [
+    NonNullable<PageModel[T]>,
+
+    (update: PageModel[T]) => PageModel[T] | void,
+  ]
 }

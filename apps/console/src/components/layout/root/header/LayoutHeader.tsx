@@ -135,7 +135,7 @@ const HeaderMenu: Component = ({ className }) => {
             <Link
               to={`/${menu.path}`}
               onClick={isActive ? preventDefault : handleNav}
-              className="flex items-center relative space-x-1 rounded-xl p-2 duration-200 hover:bg-default-200"
+              className="flex items-center relative gap-1 rounded-xl p-2 duration-200 hover:bg-default-200"
             >
               {isActive && (
                 <motion.span
@@ -190,7 +190,7 @@ const SecondaryLevelMenu = () => {
               onClick={isActive ? preventDefault : undefined}
               to={`/${fullPath}`}
               className={clsx(
-                'flex items-center relative space-x-1 rounded-lg px-2 py-1 duration-200 hover:bg-default-200',
+                'flex items-center relative gap-1 rounded-lg px-2 py-1 duration-200 hover:bg-default-200',
               )}
             >
               {isActive && (
