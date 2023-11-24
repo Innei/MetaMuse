@@ -43,7 +43,7 @@
     "@nestjs/websockets": "10.2.10",
     "@socket.io/redis-adapter": "8.2.1",
     "@socket.io/redis-emitter": "5.1.0",
-    "@tanstack/query-core": "5.8.3",
+    "@tanstack/query-core": "5.8.6",
     "@trpc/server": "10.43.7",
     "axios": "1.6.2",
     "bcrypt": "5.1.1",
