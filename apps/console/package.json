@@ -34,7 +34,7 @@
     "@radix-ui/react-switch": "1.0.3",
     "@tanstack/query-core": "4.36.1",
     "@tanstack/react-query": "4.36.1",
-    "@tanstack/react-query-devtools": "5.8.6",
+    "@tanstack/react-query-devtools": "5.8.7",
     "@tanstack/react-query-persist-client": "4.36.1",
     "@trpc/client": "10.43.7",
     "@trpc/react-query": "10.43.7",
