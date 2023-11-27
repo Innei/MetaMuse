@@ -47,7 +47,7 @@ const OrderInput = () => {
       type="number"
       onChange={(e) => {
         if (isNaN(+e.target.value)) return
-        console.log(+e.target.value)
+
         setValue(+e.target.value)
       }}
     />

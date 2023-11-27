@@ -162,14 +162,12 @@ const ActionButtonGroup = ({ initialData }: { initialData?: PageModel }) => {
             payload.custom_created = new Date(currentData.created)
           }
 
-          Reflect.deleteProperty(currentData, 'category')
-
           const isCreate = !currentData.id
           const promise = isCreate
             ? createPage(payload).then((res) => {
                 toast.success(t('common.create-success'))
                 router.navigate(
-                  routeBuilder(Routes.PostEditOrNew, {
+                  routeBuilder(Routes.PageEditOrNew, {
                     id: res.id,
                   }),
                 )
@@ -182,11 +180,8 @@ const ActionButtonGroup = ({ initialData }: { initialData?: PageModel }) => {
               toast.error(err.message)
             })
             .then(() => {
-              trpcUtil.post.id.invalidate({ id: currentData.id })
-              trpcUtil.post.paginate.invalidate()
-              trpcUtil.post.relatedList.invalidate()
-
-              // TODO back to list or dialog
+              trpcUtil.page.id.invalidate({ id: currentData.id })
+              trpcUtil.page.all.invalidate()
             })
         }}
       >

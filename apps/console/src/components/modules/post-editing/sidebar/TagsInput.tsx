@@ -1,10 +1,9 @@
 import React from 'react'
-import { atom } from 'jotai'
 import type { PostTag } from '@model'
 
 import { select } from '@nextui-org/theme'
 
-import { AddTag, Tag } from '~/components/ui'
+import { AddTag, Label, Tag } from '~/components/ui'
 import { useI18n } from '~/i18n/hooks'
 import { trpc } from '~/lib/trpc'
 
@@ -16,8 +15,6 @@ import {
 const styles = select({
   variant: 'faded',
 })
-
-const tagInputAtom = atom(false)
 
 export const TagsInput = () => {
   const tags = usePostModelDataSelector((data) => data?.tags)
@@ -37,13 +34,7 @@ export const TagsInput = () => {
 
   return (
     <div>
-      <label
-        className={styles.label({
-          className: 'text-foreground',
-        })}
-      >
-        {t('common.tags')}
-      </label>
+      <Label>{t('common.tags')}</Label>
 
       <div className="mt-2 flex flex-wrap gap-2">
         {tags?.map((tag) => (
