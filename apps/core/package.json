@@ -61,7 +61,7 @@
     "image-size": "1.0.2",
     "jsonwebtoken": "9.0.2",
     "lodash": "4.17.21",
-    "marked": "9.1.6",
+    "marked": "10.0.0",
     "mime-types": "2.1.35",
     "nestjs-pretty-logger": "0.1.1",
     "nestjs-zod": "3.0.0",
