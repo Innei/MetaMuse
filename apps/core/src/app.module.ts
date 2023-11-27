@@ -1,3 +1,5 @@
+import { LoggerModule } from 'nestjs-pretty-logger'
+
 import { Module, Type } from '@nestjs/common'
 import {
   APP_FILTER,
@@ -35,7 +37,6 @@ import { CacheModule } from './processors/cache/cache.module'
 import { DatabaseModule } from './processors/database/database.module'
 import { GatewayModule } from './processors/gateway/gateway.module'
 import { HelperModule } from './processors/helper/helper.module'
-import { LoggerModule } from './processors/logger/logger.module'
 import { tRPCModule } from './processors/trpc/trpc.module'
 
 // Request ----->
