@@ -22,10 +22,11 @@ export const Spinner = forwardRef<
 
 Spinner.displayName = 'Spinner'
 
-export const AbsoluteCenterSpinner = () => {
+export const AbsoluteCenterSpinner: Component = ({ children }) => {
   return (
-    <div className="absolute inset-0 z-[10] flex items-center justify-center">
+    <div className="absolute inset-0 z-[10] flex items-center justify-center flex-col gap-6">
       <Spinner />
+      {children}
     </div>
   )
 }

@@ -77,7 +77,8 @@
     "content": "Content",
     "loading": "Loading",
     "reply": "Reply",
-    "no_content": "There is no knowledge on this planet yet, go explore elsewhere."
+    "no_content": "There is no knowledge on this planet yet, go explore elsewhere.",
+    "unknown_error": "Unknown error"
   },
   "module": {
     "writing": {
@@ -89,6 +90,9 @@
     "posts": {
       "related_posts": "Related posts",
       "select_posts": "Select posts for related"
+    },
+    "pages": {
+      "dnd_failed": "Page reorder failed."
     },
     "notes": {
       "mark_as_memory": "Mark as memory",

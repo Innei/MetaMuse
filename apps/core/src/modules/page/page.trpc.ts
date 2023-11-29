@@ -58,10 +58,7 @@ export class PageTrpcRouter implements OnModuleInit {
                 : item.text,
           }
         })
-        return {
-          ...result,
-          data: resultWithSummary,
-        }
+        return resultWithSummary.sort((b, a) => a.order - b.order)
       }),
 
       update: procedureAuth
@@ -89,6 +86,27 @@ export class PageTrpcRouter implements OnModuleInit {
           const { input } = opt
 
           await this.service.deleteById(input.id)
+        }),
+
+      reorder: procedureAuth
+        .input(
+          z.array(
+            z.object({
+              id: z.string(),
+              order: z.number(),
+            }),
+          ),
+        )
+        .mutation(async (opt) => {
+          const { input } = opt
+
+          await Promise.all(
+            input.map((item) =>
+              this.service.updateById(item.id, {
+                order: item.order,
+              }),
+            ),
+          )
         }),
 
       batchDelete: procedureAuth
