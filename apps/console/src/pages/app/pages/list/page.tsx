@@ -4,6 +4,7 @@ import { Reorder } from 'framer-motion'
 import { toast } from 'sonner'
 import type { FC } from 'react'
 
+import { useIsMobile } from '~/atoms'
 import { DeleteConfirmButton } from '~/components/biz/special-button/DeleteConfirmButton'
 import { PageError } from '~/components/common/PageError'
 import { PageLoading } from '~/components/common/PageLoading'
@@ -84,6 +85,7 @@ const DndContent = () => {
       })
   }
 
+  const isMobile = useIsMobile()
   if (isLoading || !dndItems) return <PageLoading />
   if (isError) return <PageError />
 
@@ -96,10 +98,10 @@ const DndContent = () => {
       {dndItems?.map((item) => {
         return (
           <Reorder.Item
-            drag
+            drag={!isMobile}
             key={item.id}
             value={item}
-            className="flex border flex-col gap-3 aspect-[2/1]"
+            className="flex border flex-col gap-3 aspect-[2/1] bg-background"
           >
             <div className="justify-between flex relative items-center p-2">
               <div className="rounded-sm font-medium flex-shrink w-0 flex-grow text-lg">
