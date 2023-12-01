@@ -1,0 +1,7 @@
+@keyframes flicker {
+  to {
+    mask-position:
+      50% 50%,
+      0 50%;
+  }
+}

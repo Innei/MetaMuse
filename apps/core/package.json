@@ -5,6 +5,8 @@
   "author": "Innei <https://innei.in>",
   "private": true,
   "license": "MIT",
+  "homepage": "https://github.com/innei/metamuse",
+  "issues": "https://github.com/innei/metamuse/issues",
   "bump": {
     "before": [
       "git pull --rebase"

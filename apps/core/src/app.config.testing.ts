@@ -4,8 +4,8 @@ import { argv } from 'zx-cjs'
 import { mergeArgv } from './shared/utils/env.util'
 import { isDev } from './shared/utils/environment.util'
 
-console.log(argv)
 export const PORT = argv.port || 3333
+export const DEMO_MODE = false
 export const CROSS_DOMAIN = {
   allowedOrigins: [
     'innei.in',

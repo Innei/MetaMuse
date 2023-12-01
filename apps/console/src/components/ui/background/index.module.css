@@ -11,3 +11,191 @@
     theme(colors.secondary)
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
+
+.root {
+  @apply fixed inset-0;
+
+  --spread: 20;
+  --dot: 1;
+  --size: 256;
+  --speed: 30;
+  --brightness: 1.25;
+  --intersect: source-in, xor;
+  --intersect-moz: intersect;
+  --depth: 100px;
+  --bg: conic-gradient(
+    from 180deg at 50% 70%,
+    hsla(0, 0%, 98%, 1) 0deg,
+    #dcdbd8 72.0000010728836deg,
+    #c9c3c3 144.0000021457672deg,
+    #6cbef8 216.00000858306885deg,
+    #80f1c8 288.0000042915344deg,
+    rgb(230, 163, 163) 1turn
+  );
+
+  & :global {
+    .scene {
+      background: #000;
+      border-radius: 12px;
+      transform-style: preserve-3d;
+
+      @apply relative w-full h-full;
+    }
+
+    .canvas {
+      @apply h-full w-full;
+    }
+
+    .canvas::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--bg);
+      mask:
+        radial-gradient(
+            circle at 50% 50%,
+            white calc(var(--dot) * 1px),
+            transparent calc((var(--dot) * 1px) + 0.5px)
+          )
+          50% 50% / calc(var(--spread) * 1px) calc(var(--spread) * 1px),
+        url('./noise-mask.png') calc(var(--size) * 1px) 50% /
+          calc(var(--size) * 1px) calc(var(--size) * 1px);
+      -webkit-mask-composite: var(--intersect);
+      mask-composite: var(--intersect-moz);
+      animation: flicker calc(var(--speed) * 1s) infinite linear;
+      filter: brightness(var(--brightness));
+      border-radius: 12px;
+    }
+
+    .no-mask .canvas {
+      mask: unset;
+    }
+    .dots-mask .canvas {
+      mask: radial-gradient(
+          circle at 50% 50%,
+          white calc(var(--dot) * 1px),
+          transparent calc((var(--dot) * 1px) + 0.5px)
+        )
+        50% 50% / calc(var(--spread) * 1px) calc(var(--spread) * 1px);
+    }
+    .noise-mask .canvas {
+      mask: url('./noise-mask.png') calc(var(--size) * 1px) 50% /
+        calc(var(--size) * 1px) calc(var(--size) * 1px);
+    }
+
+    .backdrop {
+      background: var(--bg);
+      position: absolute;
+      inset: 0;
+    }
+
+    .noise::before {
+      content: '';
+      background: var(--bg);
+      position: absolute;
+      inset: 0;
+      mask: url('./noise-mask.png') calc(var(--size) * 1px) 50% /
+        calc(var(--size) * 1px) calc(var(--size) * 1px);
+      animation: flicker calc(var(--speed) * 1s) infinite linear;
+    }
+
+    .dots,
+    .noise,
+    .backdrop {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+    }
+
+    .dots::before {
+      content: '';
+      background: var(--bg);
+      position: absolute;
+      inset: 0;
+      mask: radial-gradient(
+          circle at 50% 50%,
+          white calc(var(--dot) * 1px),
+          transparent calc((var(--dot) * 1px) + 0.5px)
+        )
+        50% 50% / calc(var(--spread) * 1px) calc(var(--spread) * 1px);
+    }
+
+    .dots::after,
+    .noise::after,
+    .backdrop::after,
+    .scene::after,
+    .canvas::after {
+      content: 'Dots Mask';
+      white-space: nowrap;
+      position: absolute;
+      left: calc(100% + 3rem);
+      top: 50%;
+      translate: 0 -50%;
+      font-size: 2rem;
+      color: hsl(0 0% 60%);
+      font-family: 'Geist', sans-serif;
+      font-weight: 60;
+      background: linear-gradient(white, hsl(0 0% 0%));
+      background-clip: text;
+      -webkit-background-clip: text;
+      opacity: 0;
+    }
+
+    .noise::after {
+      content: 'Noise Mask';
+    }
+
+    .backdrop::after {
+      content: 'Background';
+    }
+
+    .scene::after {
+      content: 'Backdrop';
+    }
+    .canvas::after {
+      content: 'Composite Mask';
+    }
+
+    .dots {
+      transform: translate3d(0, 0, calc(var(--depth) * 3));
+    }
+
+    .noise {
+      transform: translate3d(0, 0, calc(var(--depth) * 2));
+    }
+
+    .backdrop {
+      transform: translate3d(0, 0, var(--depth));
+    }
+
+    .scene {
+      transition:
+        transform 1s 2.5s,
+        background 1s 2.5s;
+    }
+
+    .canvas {
+      transition: transform 1s 1.5s;
+    }
+
+    .scene::after,
+    .canvas::after {
+      transition: opacity 0.5s 1s;
+    }
+
+    .backdrop,
+    .backdrop::after {
+      transition: opacity 0.5s 0.5s;
+    }
+
+    .noise,
+    .noise::after {
+      transition: opacity 0.5s 0.25s;
+    }
+
+    .dots,
+    .dots::after {
+      transition: opacity 0.5s 0s;
+    }
+  }
+}

@@ -15,6 +15,7 @@ import { BroadcastBaseGateway } from '../../gateway/base.gateway'
 import { SystemEventsGateway } from '../../gateway/system/event.gateway'
 import { WebEventsGateway } from '../../gateway/web/events.gateway'
 
+const i = 0
 export type EventManagerOptions = {
   scope?: EventScope
 
@@ -177,7 +178,9 @@ export class EventManagerService implements OnModuleInit {
   private listenSystemEvents() {
     this.emitter2.on(this.#key, (data) => {
       const { event, payload } = data
+
       console.debug(`Received event: [${event}]`, payload)
+
       // emit current event directly
       this.emitter2.emit(event, payload)
       this.#handlers.forEach((handler) => handler(event, payload))

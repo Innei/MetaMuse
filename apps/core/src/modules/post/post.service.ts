@@ -409,8 +409,14 @@ export class PostService {
             originPost.images,
             async (newImages) => {
               if (deepEqual(newImages, originPost.images)) return
-              return this.updateById(id, {
-                images: newImages,
+              return this.db.prisma.post.update({
+                where: {
+                  id,
+                },
+                data: {
+                  // @ts-expect-error
+                  images: newImages,
+                },
               })
             },
           )

@@ -7,6 +7,7 @@ import { ErrorCodeEnum } from '@core/constants/error-code.constant'
 import { HTTP_REQUEST_TIME } from '@core/constants/meta.constant'
 import { LOG_DIR } from '@core/constants/path.constant'
 import { REFLECTOR } from '@core/constants/system.constant'
+import { logger } from '@core/global/consola.global'
 import { isDev, isTest } from '@core/global/env.global'
 import { errorMessageFor } from '@core/i18n/biz-code'
 import {
@@ -60,7 +61,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const url = request.raw.url!
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
       Logger.error(exception, undefined, 'Catch')
-      console.error(exception)
+      logger.error(exception)
 
       if (!isDev) {
         this.errorLogPipe =

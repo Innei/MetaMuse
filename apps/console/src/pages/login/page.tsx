@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
 import { Avatar } from '~/components/ui/avatar'
 import { BizError } from '~/lib/biz-error'
 import { clsxm } from '~/lib/helper'
-import { useLogin, useUser } from '~/store/user'
+import { useCheckAuth, useLogin, useUser } from '~/store/user'
 
 import { Background } from '../../components/ui/background'
 
@@ -35,6 +35,17 @@ export default function LoginPage() {
     const target = to ? decodeURIComponent(to) : '/dashboard'
     nav(target, { replace: true })
   }
+
+  const { mutateAsync: checkLogged } = useCheckAuth()
+
+  const location = useLocation()
+
+  useEffect(() => {
+    checkLogged().then((yes) => {
+      if (!yes) return
+      nav('/dashboard', { replace: true })
+    })
+  }, [nav, location.pathname, checkLogged])
 
   useEffect(() => {
     const handler = () => {
@@ -70,7 +81,7 @@ export default function LoginPage() {
           }
         />
 
-        <div className="relative flex h-[35px] space-x-2 rounded-full bg-slate-50/40 px-3 py-2 backdrop-blur-xl dark:bg-slate-900/40">
+        <div className="relative flex h-[35px] space-x-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur-xl">
           <input
             ref={ref}
             className="h-full flex-grow appearance-none px-2 border-0 bg-transparent outline-none ring-0 font-mono"

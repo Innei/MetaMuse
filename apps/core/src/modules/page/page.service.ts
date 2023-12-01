@@ -53,7 +53,7 @@ export class PageService {
       },
     })
 
-    await this.notifyPostUpdate(BusinessEvents.PAGE_DELETE, id)
+    await this.notifyUpdate(BusinessEvents.PAGE_DELETE, id)
   }
 
   async checkSlugIsAvailable(slug: string) {
@@ -101,13 +101,17 @@ export class PageService {
       if (!isAvailable) throw new BizException(ErrorCodeEnum.SlugExists)
     }
 
-    const result = await this.db.prisma.page.update({
-      where: { id },
-      data: this.dtoToPage(data, 'update'),
-    })
+    const result = await this.updateBypass(id, data)
 
     this.after(BusinessEvents.PAGE_UPDATE, result)
     return result
+  }
+
+  private updateBypass(id: string, data: PagePatchDto) {
+    return this.db.prisma.page.update({
+      where: { id },
+      data: this.dtoToPage(data, 'update'),
+    })
   }
 
   private dtoToPage(dto: PageDto, type: 'create'): Prisma.PageCreateInput
@@ -147,21 +151,22 @@ export class PageService {
           .saveImageDimensionsFromMarkdownText(
             model.text,
             model.images,
-            (newImages) => {
-              return this.updateById(model.id, {
+            async (newImages) => {
+              await this.updateBypass(model.id, {
                 images: newImages,
               })
+              return await this.notifyUpdate(event, model.id)
             },
           )
           .catch((err) => {
             this.logger.warn(`Save image dimensions failed, ${err?.message}`)
           }),
-        this.notifyPostUpdate(BusinessEvents.PAGE_CREATE, model.id),
+        this.notifyUpdate(event, model.id),
       ]),
     )
   }
 
-  private async notifyPostUpdate(
+  private async notifyUpdate(
     type:
       | BusinessEvents.PAGE_CREATE
       | BusinessEvents.PAGE_UPDATE
@@ -174,7 +179,7 @@ export class PageService {
         const result = await this.getPageById(id).catch(() => null)
         if (!result) return
         await this.eventManger.emit(type, result, {
-          scope: EventScope.TO_SYSTEM_VISITOR,
+          scope: EventScope.TO_SYSTEM,
         })
 
         break

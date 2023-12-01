@@ -2,15 +2,18 @@ import { AxiosRequestConfig } from 'axios'
 import { argv } from 'zx-cjs'
 
 import { parseBooleanishValue } from './constants/parser.utilt'
+import { logger } from './global/consola.global'
 import { mergeArgv } from './shared/utils/env.util'
 import { isDev } from './shared/utils/environment.util'
 import { machineIdSync } from './shared/utils/machine.util'
 
 export const API_VERSION = 1
 
-console.log(argv)
+logger.info(argv)
 
 export const PORT = mergeArgv('port') || 3333
+
+export const DEMO_MODE = argv.demo || false
 
 export const CROSS_DOMAIN = {
   allowedOrigins: [

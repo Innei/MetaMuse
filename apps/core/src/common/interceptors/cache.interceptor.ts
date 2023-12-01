@@ -18,6 +18,7 @@ import {
   ExecutionContext,
   Inject,
   Injectable,
+  Logger,
   NestInterceptor,
   RequestMethod,
 } from '@nestjs/common'
@@ -29,6 +30,7 @@ import { HttpAdapterHost, Reflector } from '@nestjs/core'
  */
 @Injectable()
 export class HttpCacheInterceptor implements NestInterceptor {
+  private readonly logger = new Logger(HttpCacheInterceptor.name)
   constructor(
     private readonly cacheManager: CacheService,
     @Inject(SYSTEM.REFLECTOR) private readonly reflector: Reflector,
@@ -85,7 +87,7 @@ export class HttpCacheInterceptor implements NestInterceptor {
             ),
           )
     } catch (error) {
-      console.error(error)
+      this.logger.error(error)
 
       return call$
     }

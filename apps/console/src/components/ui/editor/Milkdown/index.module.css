@@ -5,7 +5,7 @@
 .editor {
   @apply leading-loose;
 
-  caret-color: theme(colors.primary-500);
+  caret-color: theme(colors.primary);
 }
 
 .editor,

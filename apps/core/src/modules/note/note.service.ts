@@ -260,7 +260,10 @@ export class NoteService {
     return input
   }
 
-  async updateById(id: string, data: NotePatchDto) {
+  // TODO
+  updateById = this.updateBypass
+
+  private async updateBypass(id: string, data: NotePatchDto) {
     // TODO check topic
     return this.db.prisma.note.update({
       where: {
@@ -292,7 +295,7 @@ export class NoteService {
           data.text,
           data.images,
           (images) => {
-            return this.updateById(note.id, {
+            return this.updateBypass(note.id, {
               images,
             })
           },

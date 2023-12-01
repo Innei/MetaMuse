@@ -1,6 +1,8 @@
 import getColors from 'get-image-colors'
 import { marked } from 'marked'
 
+import { logger } from '@core/global/consola.global'
+
 export const pickImagesFromMarkdown = (text: string) => {
   const ast = marked.lexer(text)
   const images = [] as string[]
@@ -31,7 +33,7 @@ export async function getAverageRGB(
 
     return colors[0].hex()
   } catch (err: any) {
-    console.error(err.message)
+    logger.error(err)
     return undefined
   }
 }
