@@ -43,10 +43,10 @@
     "camelcase-keys": "9.1.2",
     "class-variance-authority": "0.7.0",
     "dayjs": "1.11.10",
-    "foxact": "0.2.26",
-    "framer-motion": "10.16.12",
+    "foxact": "0.2.27",
+    "framer-motion": "10.16.15",
     "fuse.js": "7.0.0",
-    "i18next": "23.7.7",
+    "i18next": "23.7.8",
     "i18next-browser-languagedetector": "7.2.0",
     "idb-keyval": "6.2.1",
     "immer": "10.0.3",
@@ -104,6 +104,6 @@
     "typescript": "5.2.2",
     "vite": "4.5.1",
     "vite-plugin-checker": "0.6.2",
-    "vite-tsconfig-paths": "4.2.1"
+    "vite-tsconfig-paths": "4.2.2"
   }
 }
