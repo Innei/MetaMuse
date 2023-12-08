@@ -31,7 +31,7 @@
     "slugify": "1.6.6",
     "snakecase-keys": "5.4.7",
     "unplugin-swc": "1.4.2",
-    "vite": "4.4.11",
+    "vite": "4.4.12",
     "vite-tsconfig-paths": "4.2.1",
     "vitest": "0.34.6",
     "zod": "3.22.4",
