@@ -62,7 +62,7 @@
     "openai": "4.19.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-error-boundary": "4.0.11",
+    "react-error-boundary": "4.0.12",
     "react-i18next": "13.5.0",
     "react-responsive-masonry": "2.1.7",
     "react-router-dom": "6.18.0",
@@ -102,7 +102,7 @@
     "tailwindcss-variable-colors": "0.0.2",
     "ts-toolbelt": "9.6.0",
     "typescript": "5.2.2",
-    "vite": "5.0.9",
+    "vite": "5.0.10",
     "vite-plugin-checker": "0.6.2",
     "vite-tsconfig-paths": "4.2.2"
   }
