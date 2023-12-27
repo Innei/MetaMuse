@@ -94,7 +94,7 @@
     "@types/lodash": "4.14.202",
     "@types/mime-types": "2.1.4",
     "@types/nodemailer": "6.4.14",
-    "@types/supertest": "2.0.16",
+    "@types/supertest": "6.0.2",
     "@types/ua-parser-js": "0.7.39",
     "@types/workerpool": "6.4.7",
     "dotenv-cli": "7.3.0",
