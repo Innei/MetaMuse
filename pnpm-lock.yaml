@@ -494,8 +494,8 @@ importers:
         specifier: 5.1.2
         version: 5.1.2
       workerpool:
-        specifier: 8.0.0
-        version: 8.0.0
+        specifier: 9.1.0
+        version: 9.1.0
       zod:
         specifier: 3.22.4
         version: 3.22.4
@@ -9299,7 +9299,7 @@ packages:
       semver: 7.5.4
       tapable: 2.2.1
       typescript: 5.2.2
-      webpack: 5.89.0(@swc/core@1.3.101)
+      webpack: 5.89.0
     dev: true
 
   /form-data-encoder@1.7.2:
@@ -15021,8 +15021,8 @@ packages:
     resolution: {integrity: sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==}
     dev: true
 
-  /workerpool@8.0.0:
-    resolution: {integrity: sha512-aoLtwqMXoYVA1JV+t8uCLo7sXkF4Q1Ijrn7954X2IVyysk2bv2Il7C9sVJH8xk9xJAL0FNgR+hPOhmvnMk/P5Q==}
+  /workerpool@9.1.0:
+    resolution: {integrity: sha512-+wRWfm9yyJghvXLSHMQj3WXDxHbibHAQmRrWbqKBfy0RjftZNeQaW+Std5bSYc83ydkrxoPTPOWVlXUR9RWJdQ==}
     dev: false
 
   /wrap-ansi@6.2.0:
