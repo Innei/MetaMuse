@@ -102,7 +102,7 @@
     "tailwindcss-variable-colors": "0.0.2",
     "ts-toolbelt": "9.6.0",
     "typescript": "5.2.2",
-    "vite": "5.0.12",
+    "vite": "5.0.13",
     "vite-plugin-checker": "0.6.2",
     "vite-tsconfig-paths": "4.2.2"
   }
