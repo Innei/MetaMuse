@@ -467,8 +467,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0(@nestjs/common@10.2.10)(@nestjs/core@10.2.10)(zod@3.22.4)
       nodemailer:
-        specifier: 6.9.7
-        version: 6.9.7
+        specifier: 6.9.9
+        version: 6.9.9
       passport:
         specifier: 0.6.0
         version: 0.6.0
@@ -11660,8 +11660,8 @@ packages:
     resolution: {integrity: sha512-uYr7J37ae/ORWdZeQ1xxMJe3NtdmqMC/JZK+geofDrkLUApKRHPd18/TxtBOJ4A0/+uUIliorNrfYV6s1b02eQ==}
     dev: true
 
-  /nodemailer@6.9.7:
-    resolution: {integrity: sha512-rUtR77ksqex/eZRLmQ21LKVH5nAAsVicAtAYudK7JgwenEDZ0UIQ1adUGqErz7sMkWYxWTTU1aeP2Jga6WQyJw==}
+  /nodemailer@6.9.9:
+    resolution: {integrity: sha512-dexTll8zqQoVJEZPwQAKzxxtFn0qTnjdQTchoU6Re9BUUGBJiOy3YMn/0ShTW6J5M0dfQ1NeDeRTTl4oIWgQMA==}
     engines: {node: '>=6.0.0'}
     dev: false
 
